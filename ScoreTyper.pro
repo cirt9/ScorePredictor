@@ -1,8 +1,7 @@
 TEMPLATE = subdirs
 CONFIG+=ordered
 SUBDIRS = \
-    ScoreTyperClient \
-    ScoreTyperServer
+    ScoreTyperClient
 
 app.depends = src
 tests.depends = src
