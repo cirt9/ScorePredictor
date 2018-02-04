@@ -4,9 +4,9 @@ import QtQuick.Controls 2.2
 Page {
     id: aboutPage
 
-    header: Label {
+    Text {
         text: qsTr("About")
-        horizontalAlignment: Text.AlignHCenter
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 
     Button {

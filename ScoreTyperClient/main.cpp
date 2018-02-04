@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQMLContext>
+#include "backend.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +12,10 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    QScopedPointer<BackEnd> backend(new BackEnd);
+    engine.rootContext()->setContextProperty("backend", backend.data());
+
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
