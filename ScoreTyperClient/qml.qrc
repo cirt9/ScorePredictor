@@ -3,7 +3,9 @@
         <file>qtquickcontrols2.conf</file>
         <file>main.qml</file>
     </qresource>
-    <qresource prefix="/components"/>
+    <qresource prefix="/components">
+        <file>IconButton.qml</file>
+    </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
         <file>AboutPage.qml</file>

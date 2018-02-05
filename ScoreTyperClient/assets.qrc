@@ -2,4 +2,9 @@
     <qresource prefix="/fonts">
         <file>fonts/PROMESH-Regular.ttf</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>icons/icons8_About.png</file>
+        <file>icons/icons8_Settings.png</file>
+        <file>icons/icons8_Shutdown.png</file>
+    </qresource>
 </RCC>

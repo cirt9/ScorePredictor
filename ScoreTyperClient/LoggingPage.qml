@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
+import "../components"
 
 Page {
     id: loggingPage
@@ -32,123 +33,113 @@ Page {
         anchors.centerIn: inputContainer
         spacing: 5
 
-        Row {
-            TextField {
-                id: nicknameInput
-                placeholderText: "Nickname"
-                selectByMouse: true
-                maximumLength: 20
+        TextField {
+            id: nicknameInput
+            placeholderText: qsTr("Nickname")
+            selectByMouse: true
+            maximumLength: 20
 
-                font.pointSize: 15
-                width: 350
+            font.pointSize: 15
+            width: 350
+        }
+
+        TextField {
+            id: passwordInput
+            placeholderText: qsTr("Password")
+            echoMode: TextInput.Password
+            selectByMouse: true
+
+            width: 350
+            maximumLength: 30
+            font.pointSize: 15
+        }
+
+        Item {
+            width: 350
+            height: 25
+
+            Text {
+                id: loggingReplyText
+                anchors.right: parent.right
+                anchors.top: parent.top
+
+                color: "#A60000"
+                font.pointSize: 10
             }
         }
 
-        Row {
-            TextField {
-                id: passwordInput
-                placeholderText: "Password"
-                echoMode: TextInput.Password
-                selectByMouse: true
+        Item {
+            height: 50
+            width: 350
 
-                width: 350
-                maximumLength: 25
-                font.pointSize: 15
-            }
-        }
+            Button {
+                id: loginButton
+                text: qsTr("LOGIN")
 
-        Row {
-            Item {
-                width: 350
-                height: 25
+                width: 150
+                font.pointSize: 16
+                font.bold: true
+                anchors.centerIn: parent
 
-                Text {
-                    id: loggingReplyText
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-
-                    color: "#A60000"
-                    font.pointSize: 10
-                }
-            }
-        }
-
-        Row {
-            Item {
-                height: 50
-                width: 350
-
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 10
-
-                    Button {
-                        id: loginButton
-                        text: qsTr("LOGIN")
-
-                        width: 150
-                        font.pointSize: 20
-
-                        onClicked: {
-                            if(backend.login(nicknameInput.text, passwordInput.text))
-                            {
-                                console.log(true)
-                            }
-                            else
-                            {
-                                console.log(false)
-                            }
-                        }
+                onClicked: {
+                    if(backend.login(nicknameInput.text, passwordInput.text))
+                    {
+                        console.log(true)
                     }
-
-                    Button {
-                        id: registerButton
-                        text: qsTr("REGISTER")
-
-                        width: 150
-                        font.pointSize: 20
+                    else
+                    {
+                        console.log(false)
                     }
                 }
             }
+
+            Text {
+                id: registerButton
+                text: "REGISTER"
+                color: "#ccc288"
+                font.pointSize: 12
+                font.bold: true
+
+                anchors.top: loginButton.bottom
+                anchors.horizontalCenter: loginButton.horizontalCenter
+            }
         }
+    }
+
+    Item {
+        id: navigationIconsContainer
+
+        width: 110
+        height: 50
+        anchors.top: inputContainer.bottom
+        anchors.right: inputContainer.right
 
         Row {
+            anchors.centerIn: parent
+            spacing: 10
 
-            Item {
-                height: 50
-                width: 350
+            IconButton {
+                id: settingsButton
+                width: 30
+                height: 30
+                imageSource: "qrc://assets/icons/icons/icons8_Settings.png"
+                onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
+            }
 
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 5
+            IconButton {
+                id: aboutButton
+                width: 30
+                height: 30
+                imageSource: "qrc://assets/icons/icons/icons8_About.png"
+                onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
+            }
 
-                    Button {
-                        id: settingsButton
-                        text: qsTr("Settings")
-
-                        width: 100
-
-                        onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
-                    }
-
-                    Button {
-                        id: aboutButton
-                        text: qsTr("About")
-
-                        width: 100
-
-                        onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
-                    }
-
-                    Button {
-                        id: quitButton
-                        text: qsTr("Quit")
-
-                        width: 100
-
-                        onClicked: Qt.quit()
-                    }
-                }
+            IconButton {
+                id: quitButton
+                width: 30
+                height: 30
+                imageSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
+                onClicked: Qt.quit()
             }
         }
     }
