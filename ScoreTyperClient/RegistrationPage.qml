@@ -53,6 +53,17 @@ Page {
             font.pointSize: 15
         }
 
+        TextField {
+            id: passwordConfirmationInput
+            placeholderText: qsTr("Confirm password")
+            echoMode: TextInput.Password
+            selectByMouse: true
+
+            width: 350
+            maximumLength: 30
+            font.pointSize: 15
+        }
+
         Item {
             width: 350
             height: 15
@@ -73,28 +84,17 @@ Page {
 
             Button {
                 id: loginButton
-                text: qsTr("LOGIN")
+                text: qsTr("REGISTER")
 
                 width: 150
                 font.pointSize: 16
                 font.bold: true
                 anchors.centerIn: parent
-
-                onClicked: {
-                    if(backend.login(nicknameInput.text, passwordInput.text))
-                    {
-                        console.log(true)
-                    }
-                    else
-                    {
-                        console.log(false)
-                    }
-                }
             }
 
             TextButton {
                 id: registerButton
-                text: qsTr("REGISTER")
+                text: qsTr("LOGIN")
                 textColor: "#ccc288"
                 textColorHovered: "#E6AF33"
                 fontSize: 10
@@ -103,46 +103,9 @@ Page {
                 anchors.top: loginButton.bottom
                 anchors.horizontalCenter: loginButton.horizontalCenter
 
-                onClicked: mainWindow.pushPage("qrc:/pages/RegistrationPage.qml")
-            }
-        }
-    }
-
-    Item {
-        id: navigationIconsContainer
-
-        width: 110
-        height: 50
-        anchors.top: inputContainer.bottom
-        anchors.right: inputContainer.right
-
-        Row {
-            anchors.centerIn: parent
-            spacing: 10
-
-            IconButton {
-                id: settingsButton
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_Settings.png"
-                onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
-            }
-
-            IconButton {
-                id: aboutButton
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_About.png"
-                onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
-            }
-
-            IconButton {
-                id: quitButton
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
-                onClicked: Qt.quit()
+                onClicked: mainWindow.popPage()
             }
         }
     }
 }
+

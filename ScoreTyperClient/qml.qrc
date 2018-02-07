@@ -5,10 +5,13 @@
     </qresource>
     <qresource prefix="/components">
         <file>IconButton.qml</file>
+        <file>TextButton.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
         <file>AboutPage.qml</file>
         <file>SettingsPage.qml</file>
+        <file>RegistrationPage.qml</file>
+        <file>UserProfilePage.qml</file>
     </qresource>
 </RCC>

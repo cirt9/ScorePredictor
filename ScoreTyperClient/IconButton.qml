@@ -3,8 +3,8 @@ import QtQuick 2.0
 Item  {
     id: root
 
-    property url imageSource
-    property int imageMargin: 3
+    property url iconSource
+    property int iconMargin: 3
     property int backgroundRadius: 3
     property int backgroundRadiusOnPressed: 8
     property color backgroundColor: "#ccc288"
@@ -20,14 +20,11 @@ Item  {
     }
 
     Image {
-        source: imageSource
+        source: iconSource
         fillMode: Image.PreserveAspectFit
 
         anchors.fill: parent
-        anchors.topMargin: imageMargin
-        anchors.bottomMargin: imageMargin
-        anchors.leftMargin: imageMargin
-        anchors.rightMargin: imageMargin
+        anchors.margins: iconMargin
     }
 
     MouseArea {
