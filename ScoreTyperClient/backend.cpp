@@ -7,7 +7,7 @@ BackEnd::BackEnd(QObject *parent) : QObject(parent)
 
 bool BackEnd::login(const QString & login, const QString & password)
 {
-    if(login == QString("1") && password == QString("2"))
+    if(login == QString("") && password == QString(""))
         return true;
     else
         return false;

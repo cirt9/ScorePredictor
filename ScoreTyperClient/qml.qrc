@@ -6,6 +6,7 @@
     <qresource prefix="/components">
         <file>IconButton.qml</file>
         <file>TextButton.qml</file>
+        <file>CustomTabButton.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
@@ -13,5 +14,9 @@
         <file>SettingsPage.qml</file>
         <file>RegistrationPage.qml</file>
         <file>UserProfilePage.qml</file>
+        <file>NavigationPage.qml</file>
+        <file>FriendsPage.qml</file>
+        <file>TournamentsPage.qml</file>
+        <file>TournamentCreatorPage.qml</file>
     </qresource>
 </RCC>

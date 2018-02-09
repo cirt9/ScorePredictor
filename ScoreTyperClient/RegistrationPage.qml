@@ -96,7 +96,7 @@ Page {
                 id: registerButton
                 text: qsTr("LOGIN")
                 textColor: "#ccc288"
-                textColorHovered: "#E6AF33"
+                textColorHovered: "#ffd700"
                 fontSize: 10
                 bold: true
 

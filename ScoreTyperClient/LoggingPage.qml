@@ -82,13 +82,9 @@ Page {
 
                 onClicked: {
                     if(backend.login(nicknameInput.text, passwordInput.text))
-                    {
-                        console.log(true)
-                    }
+                        pushPage("qrc:/pages/NavigationPage.qml")
                     else
-                    {
-                        console.log(false)
-                    }
+                        loggingReplyText.text = "Incorrect nickname or password"
                 }
             }
 
@@ -96,7 +92,7 @@ Page {
                 id: registerButton
                 text: qsTr("REGISTER")
                 textColor: "#ccc288"
-                textColorHovered: "#E6AF33"
+                textColorHovered: "#ffd700"
                 fontSize: 10
                 bold: true
 

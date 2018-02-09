@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 Page {
     Text {
-        text: "Profile"
+        text: "Tournament creator"
         anchors.centerIn: parent
     }
 }
