@@ -6,7 +6,8 @@
     <qresource prefix="/components">
         <file>IconButton.qml</file>
         <file>TextButton.qml</file>
-        <file>CustomTabButton.qml</file>
+        <file>CheckableTabButton.qml</file>
+        <file>ClickableTabButton.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>

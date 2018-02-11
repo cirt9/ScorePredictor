@@ -33,25 +33,24 @@ Page {
         currentIndex: navigationView.currentIndex
         spacing: 0
 
-        CustomTabButton {
+        CheckableTabButton {
             text: qsTr("Profile")
         }
 
-        CustomTabButton {
+        CheckableTabButton {
             text: qsTr("Tournaments")
         }
 
-        CustomTabButton {
+        CheckableTabButton {
             text: qsTr("Creator")
         }
 
-        CustomTabButton {
+        CheckableTabButton {
             text: qsTr("Friends")
         }
 
-        CustomTabButton {
+        ClickableTabButton {
             text: qsTr("Logout")
-            checkable: false
             onClicked: mainWindow.popPage()
         }
     }
