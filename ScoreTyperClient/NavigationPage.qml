@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import "../components"
 
 Page {
-    id: root
+    id: navigationPage
 
     SwipeView {
         id: navigationView

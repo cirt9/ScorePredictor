@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import "../components"
 
 Page {
-    id: loggingPage
+    id: registrationPage
 
     FontLoader { id: titleFont; source: "qrc://assets/fonts/fonts/PROMESH-Regular.ttf" }
 
