@@ -19,6 +19,10 @@ ApplicationWindow {
        initialItem: LoggingPage {}
    }
 
+    property color colorA: "#ccc288"
+    property color colorB: "#d1474e"
+    property color colorC: "#ffd700"
+
     function pushPage(page) {
         pagesView.push(page)
     }

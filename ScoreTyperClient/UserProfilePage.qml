@@ -18,7 +18,7 @@ Page {
             RowLayout {
                 id: topRowLayout
                 anchors.fill: parent
-                spacing: 25
+                spacing: 15
 
                 ColumnLayout {
                     id: avatarLayout
@@ -26,28 +26,27 @@ Page {
                     Layout.preferredWidth: 100
 
                     Rectangle {
-                        id: userAvatarImage
+                        id: userAvatar
                         Layout.preferredWidth: 100
                         Layout.preferredHeight: 100
 
                         Text {
-                            text: ".jpg"
                             anchors.centerIn: parent
+                            text: ".jpg"
                         }
                     }
 
                     Button {
-                        id: changeAvatarButton
-                        text: "Change"
+                        id: avatarChangeButton
                         Layout.fillHeight: true
                         Layout.preferredHeight: 25
                         Layout.preferredWidth: 100
+                        text: "Change"
                     }
                 }
 
                 TextArea {
-                    id: userDescription
-
+                    id: profileDescription
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     Layout.preferredWidth: 500
@@ -59,7 +58,6 @@ Page {
 
                 Rectangle {
                     id: prizes
-
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     Layout.preferredWidth: 500
@@ -74,22 +72,22 @@ Page {
 
         GroupBox {
             id: bottomRowBox
-
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             RowLayout {
-                id: bottomRowLayout
+                id: bottomRowLayout                
                 anchors.fill: parent
+                spacing: 15
 
                 ColumnLayout {
-                    id: leftColumnLayout
+                    id: leftColumnLayout                    
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    Layout.preferredWidth: 600
+                    Layout.preferredWidth: avatarLayout.width + profileDescription.width + topRowLayout.spacing
 
                     Rectangle {
-                        id: currentTournamentsContainer
+                        id: currentTournamentsContainer                        
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.preferredHeight: 400
@@ -101,7 +99,7 @@ Page {
                     }
 
                     Rectangle {
-                        id: recentTournamentsContainer
+                        id: recentTournamentsContainer                        
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.preferredHeight: 400
@@ -114,10 +112,10 @@ Page {
                 }
 
                 Rectangle {
-                    id: statsContainer
+                    id: statsContainer                    
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    Layout.preferredWidth: 500
+                    Layout.preferredWidth: prizes.width
 
                     Text {
                         text: "Stats"

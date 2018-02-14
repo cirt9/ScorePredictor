@@ -10,7 +10,7 @@ Page {
     Text {
         id: title
         text: "Score Typer"
-        color: "#ccc288"
+        color: mainWindow.colorA
         font { family: titleFont.name; pixelSize: 90; bold: true}
 
         y: parent.height / 30
@@ -73,7 +73,7 @@ Page {
                 anchors.right: parent.right
                 anchors.top: parent.top
 
-                color: "#D1474E"
+                color: mainWindow.colorB
                 font.pointSize: 10
             }
         }
@@ -95,8 +95,8 @@ Page {
             TextButton {
                 id: registerButton
                 text: qsTr("LOGIN")
-                textColor: "#ccc288"
-                textColorHovered: "#ffd700"
+                textColor: mainWindow.colorA
+                textColorHovered: mainWindow.colorC
                 fontSize: 10
                 bold: true
 
