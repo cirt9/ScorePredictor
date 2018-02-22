@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+//
+#include <tcpserver.h>
+//
 
 int main(int argc, char *argv[])
 {
@@ -8,6 +11,13 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+
+    //
+
+    TcpServer server;
+    server.startServer(QHostAddress::Any, 5000);
+
+    //
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
