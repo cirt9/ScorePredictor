@@ -5,29 +5,75 @@ TcpConnection::TcpConnection(QObject * parent) : QObject(parent)
     qDebug() << "Connection created";
 }
 
-void TcpConnection::setSocket(qintptr descriptor)
+void TcpConnection::accept(qintptr descriptor)
 {
+    qDebug() << "Accepting connection " << descriptor;
+
     socket = new QTcpSocket(this);
+    connect(socket, &QTcpSocket::connected, this, &TcpConnection::connected);
+    connect(socket, &QTcpSocket::disconnected, this, &TcpConnection::disconnected);
+    connect(socket, &QTcpSocket::readyRead, this, &TcpConnection::read);
+    connect(socket, &QTcpSocket::stateChanged, this, &TcpConnection::stateChanged);
+    connect(socket, static_cast<void (QTcpSocket::*) (QAbstractSocket::SocketError)>(&QTcpSocket::error),
+            this, &TcpConnection::error);
 
-    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(read()));
+    if(!socket->setSocketDescriptor(descriptor))
+    {
+        qDebug() << "Could not accept connection";
+        return;
+    }
 
-    socket->setSocketDescriptor(descriptor);
-    qDebug() << "Client connected";
+    qDebug() << "Connection " << descriptor << "accepted";
+
+    emit started();
+}
+
+void TcpConnection::quit()
+{
+    qDebug() << "Connection quitting...";
+    socket->disconnectFromHost();
+
+    emit finished();
 }
 
 void TcpConnection::connected()
 {
-    qDebug() << "Client connected (slot)";
+    if(!sender())
+        return;
+
+    qDebug() << "Client connected";
 }
 
 void TcpConnection::disconnected()
 {
-    qDebug() << "Client disconnected (slot)";
+    if(!sender())
+        return;
+
+    qDebug() << "Client disconnected";
+
+    emit finished();
 }
 
 void TcpConnection::read()
 {
+    if(!sender())
+        return;
+
     qDebug() << socket->readAll();
+}
+
+void TcpConnection::stateChanged(QAbstractSocket::SocketState state)
+{
+    if(!sender())
+        return;
+
+    qDebug() << "State changed" << state;
+}
+
+void TcpConnection::error(QAbstractSocket::SocketError error)
+{
+    if(!sender())
+        return;
+
+    qDebug() << "Error:" << error;
 }

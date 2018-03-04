@@ -2,7 +2,6 @@
 #define TCPCONNECTION_H
 
 #include <QTcpSocket>
-#include <QThreadPool>
 
 #include <QDebug>
 
@@ -13,16 +12,24 @@ class TcpConnection : public QObject
 private:
     QTcpSocket * socket;
 
+private slots:
+    void read();
+    void stateChanged(QAbstractSocket::SocketState state);
+    void error(QAbstractSocket::SocketError error);
+    void connected();
+    void disconnected();
+
 public:
     explicit TcpConnection(QObject * parent = nullptr);
     ~TcpConnection() {}
 
-    void setSocket(qintptr descriptor);
-
 public slots:
-    void connected();
-    void disconnected();
-    void read();
+    void accept(qintptr descriptor);
+    void quit();
+
+signals:
+    void started();
+    void finished();
 };
 
 #endif // TCPCONNECTION_H

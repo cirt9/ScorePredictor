@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     tcpserver.cpp \
-    tcpconnection.cpp
+    tcpconnection.cpp \
+    tcpconnections.cpp
 
 RESOURCES += qml.qrc \
     ../ScoreTyperClient/assets.qrc
@@ -32,4 +33,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     tcpserver.h \
-    tcpconnection.h
+    tcpconnection.h \
+    tcpconnections.h

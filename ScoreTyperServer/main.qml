@@ -11,4 +11,39 @@ ApplicationWindow {
     height: Screen.desktopAvailableHeight / 1.5
     minimumHeight: 600
     minimumWidth: 800
+
+    Button {
+        anchors.centerIn: parent
+        text: "Start"
+        onClicked: server.startServer(5000)
+    }
+
+    Button {
+        text: "Stop"
+        onClicked: server.closeServer()
+    }
+
+    onClosing: {
+        server.closeServer()
+
+        if(!server.isSafeToTerminate())
+        {
+            close.accepted = false
+            terminationTimer.start()
+        }
+    }
+
+    Timer {
+        id: terminationTimer
+        interval: 5000
+        repeat: true
+        onTriggered: {
+            if(server.isSafeToTerminate())
+            {
+                console.log("Tick")
+                close.accepted = true
+                Qt.quit()
+            }
+        }
+    }
 }
