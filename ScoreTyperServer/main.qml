@@ -35,12 +35,12 @@ ApplicationWindow {
 
     Timer {
         id: terminationTimer
-        interval: 5000
+        interval: 1000
         repeat: true
         onTriggered: {
             if(server.isSafeToTerminate())
             {
-                console.log("Tick")
+                terminationTimer.stop()
                 close.accepted = true
                 Qt.quit()
             }

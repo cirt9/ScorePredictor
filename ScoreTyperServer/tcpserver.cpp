@@ -3,7 +3,6 @@
 TcpServer::TcpServer(QObject * parent) : QTcpServer(parent)
 {
     QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
-    connect(this, &TcpServer::finished, this, &TcpServer::stopListening);
 
     qDebug() << "Server created";
 }
@@ -30,6 +29,8 @@ void TcpServer::closeServer()
         return;
 
     emit quit();
+    qDebug() << "Terminating listening";
+    close();
 }
 
 void TcpServer::createConnectionsPool()
@@ -98,12 +99,6 @@ void TcpServer::poolFinished()
 void TcpServer::poolUpdated()
 {
     info();
-}
-
-void TcpServer::stopListening()
-{
-    QTcpServer::close();
-    qDebug() << "Listening terminated";
 }
 
 bool TcpServer::isSafeToTerminate()

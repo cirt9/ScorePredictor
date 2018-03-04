@@ -19,9 +19,6 @@ protected:
     void incomingConnection(qintptr descriptor);
     void createConnectionsPool();
 
-private slots:
-    void stopListening();
-
 public:
     explicit TcpServer(QObject * parent = nullptr);
     ~TcpServer() {}

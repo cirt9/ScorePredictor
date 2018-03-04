@@ -83,7 +83,7 @@ TcpConnection * TcpConnections::addConnection(qintptr descriptor)
     TcpConnection * connection = new TcpConnection(this);
 
     connect(connection, &TcpConnection::started, this, &TcpConnections::connectionStarted, Qt::QueuedConnection);
-    connect(connection, &TcpConnection::finished, this, &TcpConnections::connectionFinished, Qt::QueuedConnection);
+    connect(connection, &TcpConnection::finished, this, &TcpConnections::connectionFinished, Qt::DirectConnection);
     connect(this, &TcpConnections::quit, connection, &TcpConnection::quit, Qt::QueuedConnection);
 
     connections.append(connection);
