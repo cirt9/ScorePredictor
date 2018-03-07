@@ -1,7 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQMLContext>
-#include "backend.h"
+
+#include <backend.h>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,7 @@ int main(int argc, char *argv[])
 
     QScopedPointer<BackEnd> backend(new BackEnd);
     engine.rootContext()->setContextProperty("backend", backend.data());
+    engine.rootContext()->setContextProperty("client", backend->getClient());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

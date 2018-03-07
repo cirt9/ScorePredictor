@@ -32,8 +32,6 @@ void TcpConnection::quit()
 {
     qDebug() << "Connection quitting...";
     socket->disconnectFromHost();
-
-    //emit finished();
 }
 
 void TcpConnection::connected()

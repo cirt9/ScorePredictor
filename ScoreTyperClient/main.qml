@@ -23,6 +23,10 @@ ApplicationWindow {
     property color colorB: "#d1474e"
     property color colorC: "#ffd700"
 
+    onClosing: {
+        client.disconnectFromServer()
+    }
+
     function pushPage(page) {
         pagesView.push(page)
     }

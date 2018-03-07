@@ -18,14 +18,6 @@ void TcpConnections::run()
     emit finished();
 }
 
-int TcpConnections::count()
-{
-    QMutexLocker locker(&mutex);
-    int numberOfConnections = connections.count();
-
-    return numberOfConnections;
-}
-
 void TcpConnections::connectionStarted()
 {
     TcpConnection * connection = qobject_cast<TcpConnection *>(sender());
@@ -90,4 +82,12 @@ TcpConnection * TcpConnections::addConnection(qintptr descriptor)
     connection->accept(descriptor);
 
     return connection;
+}
+
+int TcpConnections::count()
+{
+    QMutexLocker locker(&mutex);
+    int numberOfConnections = connections.count();
+
+    return numberOfConnections;
 }
