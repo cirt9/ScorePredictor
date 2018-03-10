@@ -2,8 +2,11 @@
 
 BackEnd::BackEnd(QObject * parent) : QObject(parent)
 {
-    client = new TcpClient(this);
-    client->connectToServer(QHostAddress("127.0.0.1"), 5000);
+    client = nullptr;
+    workerThread = new QThread(this);
+    workerThread->start();
+
+    connectToServer(QHostAddress("127.0.0.1"), 5000);
 }
 
 bool BackEnd::login(const QString & login, const QString & password)
@@ -14,7 +17,26 @@ bool BackEnd::login(const QString & login, const QString & password)
         return false;
 }
 
-TcpClient * BackEnd::getClient() const
+void BackEnd::connectToServer(const QHostAddress & address, quint16 port)
 {
-    return client;
+    if(!client)
+    {
+        client = new TcpClient();
+        connect(workerThread, &QThread::finished, client, &TcpClient::disconnectFromServer);
+        connect(workerThread, &QThread::finished, client, &TcpClient::deleteLater);
+        connect(this, &BackEnd::connectingToServer, client, &TcpClient::connectToServer, Qt::QueuedConnection);
+
+        client->moveToThread(workerThread);
+        emit connectingToServer(address, port);
+    }
+}
+
+void BackEnd::close()
+{
+    qDebug() << "Quitting thread";
+
+    workerThread->quit();
+    workerThread->wait();
+
+    qDebug() << "Closing";
 }

@@ -36,17 +36,11 @@ void TcpConnection::quit()
 
 void TcpConnection::connected()
 {
-    if(!sender())
-        return;
-
     qDebug() << "Client connected";
 }
 
 void TcpConnection::disconnected()
 {
-    if(!sender())
-        return;
-
     qDebug() << "Client disconnected";
 
     emit finished();
@@ -54,24 +48,15 @@ void TcpConnection::disconnected()
 
 void TcpConnection::read()
 {
-    if(!sender())
-        return;
-
     qDebug() << socket->readAll();
 }
 
 void TcpConnection::stateChanged(QAbstractSocket::SocketState state)
 {
-    if(!sender())
-        return;
-
     qDebug() << "State changed" << state;
 }
 
 void TcpConnection::error(QAbstractSocket::SocketError error)
 {
-    if(!sender())
-        return;
-
     qDebug() << "Error:" << error;
 }

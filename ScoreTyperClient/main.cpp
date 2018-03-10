@@ -14,9 +14,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
+    qRegisterMetaType<QHostAddress>("QHostAddress");
+
     QScopedPointer<BackEnd> backend(new BackEnd);
     engine.rootContext()->setContextProperty("backend", backend.data());
-    engine.rootContext()->setContextProperty("client", backend->getClient());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

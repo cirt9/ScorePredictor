@@ -24,7 +24,7 @@ ApplicationWindow {
     property color colorC: "#ffd700"
 
     onClosing: {
-        client.disconnectFromServer()
+        backend.close()
     }
 
     function pushPage(page) {

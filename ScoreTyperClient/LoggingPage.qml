@@ -137,7 +137,7 @@ Page {
                 height: 30
                 iconSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
                 onClicked: {
-                    client.disconnectFromServer()
+                    backend.close()
                     Qt.quit()
                 }
             }

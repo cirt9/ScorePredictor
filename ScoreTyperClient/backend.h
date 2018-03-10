@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHostAddress>
+#include <QThread>
 #include <tcpclient.h>
 
 class BackEnd : public QObject
@@ -11,13 +12,20 @@ class BackEnd : public QObject
 
 private:
     TcpClient * client;
+    QThread * workerThread;
+
+    void connectToServer(const QHostAddress & address, quint16 port);
 
 public:
     explicit BackEnd(QObject * parent = nullptr);
     ~BackEnd() {}
 
+    Q_INVOKABLE void close();
+
     Q_INVOKABLE bool login(const QString & login, const QString & password);
-    TcpClient * getClient() const;
+
+signals:
+    void connectingToServer(const QHostAddress & address, quint16 port);
 };
 
 #endif // BACKEND_H

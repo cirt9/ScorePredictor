@@ -25,6 +25,15 @@ bool TcpClient::connectToServer(const QHostAddress & address, quint16 port)
         return false;
 }
 
+void TcpClient::disconnectFromServer()
+{
+    if(!(clientSocket->state() == QTcpSocket::ConnectedState))
+        return;
+
+    qDebug() << "Disconnecting from server";
+    clientSocket->disconnectFromHost();
+}
+
 void TcpClient::connected()
 {
     qDebug() << "Connected";
@@ -34,12 +43,6 @@ void TcpClient::disconnected()
 {
     qDebug() << "Disconnected";
     emit finished();
-}
-
-void TcpClient::disconnectFromServer()
-{
-    qDebug() << "Disconnecting from server";
-    clientSocket->disconnectFromHost();
 }
 
 void TcpClient::read()

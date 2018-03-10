@@ -22,8 +22,8 @@ public:
     ~TcpClient() {}
 
 public slots:
-    Q_INVOKABLE bool connectToServer(const QHostAddress & address, quint16 port);
-    Q_INVOKABLE void disconnectFromServer();
+    bool connectToServer(const QHostAddress & address, quint16 port);
+    void disconnectFromServer();
 
 signals:
     void started();
