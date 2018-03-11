@@ -19,5 +19,6 @@
         <file>FriendsPage.qml</file>
         <file>TournamentsPage.qml</file>
         <file>TournamentCreatorPage.qml</file>
+        <file>ConnectingPage.qml</file>
     </qresource>
 </RCC>

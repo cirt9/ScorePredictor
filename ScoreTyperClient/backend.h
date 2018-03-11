@@ -4,28 +4,26 @@
 #include <QObject>
 #include <QHostAddress>
 #include <QThread>
-#include <tcpclient.h>
+#include <tcpclientwrapper.h>
 
 class BackEnd : public QObject
 {
     Q_OBJECT
 
 private:
-    TcpClient * client;
     QThread * workerThread;
-
-    void connectToServer(const QHostAddress & address, quint16 port);
+    TcpClientWrapper * clientWrapper;
 
 public:
     explicit BackEnd(QObject * parent = nullptr);
     ~BackEnd() {}
 
     Q_INVOKABLE void close();
+    Q_INVOKABLE void connectToServer();
+
+    TcpClientWrapper * getClientWrapper() const;
 
     Q_INVOKABLE bool login(const QString & login, const QString & password);
-
-signals:
-    void connectingToServer(const QHostAddress & address, quint16 port);
 };
 
 #endif // BACKEND_H

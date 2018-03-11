@@ -28,6 +28,11 @@ public slots:
 signals:
     void started();
     void finished();
+    void remoteHostClosed();
+    void hostNotFound();
+    void connectionRefused();
+    void networkError();
+    void unidentifiedError();
 };
 
 #endif // TCPCLIENT_H

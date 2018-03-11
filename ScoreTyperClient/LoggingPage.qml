@@ -82,7 +82,7 @@ Page {
 
                 onClicked: {
                     if(backend.login(nicknameInput.text, passwordInput.text))
-                        pushPage("qrc:/pages/NavigationPage.qml")
+                        mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
                     else
                         loggingReplyText.text = "Incorrect nickname or password"
                 }
@@ -120,6 +120,7 @@ Page {
                 width: 30
                 height: 30
                 iconSource: "qrc://assets/icons/icons/icons8_Settings.png"
+
                 onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
             }
 
@@ -128,6 +129,7 @@ Page {
                 width: 30
                 height: 30
                 iconSource: "qrc://assets/icons/icons/icons8_About.png"
+
                 onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
             }
 
@@ -136,10 +138,8 @@ Page {
                 width: 30
                 height: 30
                 iconSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
-                onClicked: {
-                    backend.close()
-                    Qt.quit()
-                }
+
+                onClicked: mainWindow.close()
             }
         }
     }

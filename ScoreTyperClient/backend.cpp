@@ -2,33 +2,14 @@
 
 BackEnd::BackEnd(QObject * parent) : QObject(parent)
 {
-    client = nullptr;
     workerThread = new QThread(this);
+    clientWrapper = new TcpClientWrapper(this);
+    connect(workerThread, &QThread::finished, clientWrapper->getClient(), &TcpClient::disconnectFromServer);
+
     workerThread->start();
+    clientWrapper->getClient()->moveToThread(workerThread);
 
-    connectToServer(QHostAddress("127.0.0.1"), 5000);
-}
-
-bool BackEnd::login(const QString & login, const QString & password)
-{
-    if(login == QString("") && password == QString(""))
-        return true;
-    else
-        return false;
-}
-
-void BackEnd::connectToServer(const QHostAddress & address, quint16 port)
-{
-    if(!client)
-    {
-        client = new TcpClient();
-        connect(workerThread, &QThread::finished, client, &TcpClient::disconnectFromServer);
-        connect(workerThread, &QThread::finished, client, &TcpClient::deleteLater);
-        connect(this, &BackEnd::connectingToServer, client, &TcpClient::connectToServer, Qt::QueuedConnection);
-
-        client->moveToThread(workerThread);
-        emit connectingToServer(address, port);
-    }
+    connectToServer();
 }
 
 void BackEnd::close()
@@ -39,4 +20,22 @@ void BackEnd::close()
     workerThread->wait();
 
     qDebug() << "Closing";
+}
+
+void BackEnd::connectToServer()
+{
+    clientWrapper->connectToServer(QHostAddress("127.0.0.1"), 5000);
+}
+
+TcpClientWrapper * BackEnd::getClientWrapper() const
+{
+    return clientWrapper;
+}
+
+bool BackEnd::login(const QString & login, const QString & password)
+{
+    if(login == QString("") && password == QString(""))
+        return true;
+    else
+        return false;
 }

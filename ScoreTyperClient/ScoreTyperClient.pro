@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     backend.cpp \
-    tcpclient.cpp
+    tcpclient.cpp \
+    tcpclientwrapper.cpp
 
 RESOURCES += qml.qrc \
     assets.qrc
@@ -32,4 +33,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     backend.h \
-    tcpclient.h
+    tcpclient.h \
+    tcpclientwrapper.h

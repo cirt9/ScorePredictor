@@ -14,6 +14,9 @@ TcpClient::TcpClient(QObject * parent) : QObject(parent)
 
 bool TcpClient::connectToServer(const QHostAddress & address, quint16 port)
 {
+    if(clientSocket->state() == QTcpSocket::ConnectedState)
+        return false;
+
     clientSocket->connectToHost(address, port);
 
     if(clientSocket->waitForConnected())
@@ -58,4 +61,18 @@ void TcpClient::stateChanged(QAbstractSocket::SocketState state)
 void TcpClient::error(QAbstractSocket::SocketError error)
 {
     qDebug() << "Error:" << error;
+
+    if(error == QAbstractSocket::RemoteHostClosedError)
+        emit remoteHostClosed();
+
+    else if(error == QAbstractSocket::HostNotFoundError)
+        emit hostNotFound();
+
+    else if(error == QAbstractSocket::ConnectionRefusedError)
+        emit connectionRefused();
+
+    else if(error == QAbstractSocket::NetworkError)
+        emit networkError();
+    else
+        emit unidentifiedError();
 }

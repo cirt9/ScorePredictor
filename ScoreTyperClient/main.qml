@@ -16,16 +16,14 @@ ApplicationWindow {
     StackView {
        id: pagesView
        anchors.fill: parent
-       initialItem: LoggingPage {}
+       initialItem: ConnectingPage {}
    }
 
     property color colorA: "#ccc288"
     property color colorB: "#d1474e"
     property color colorC: "#ffd700"
 
-    onClosing: {
-        backend.close()
-    }
+    onClosing: closeApp()
 
     function pushPage(page) {
         pagesView.push(page)
@@ -33,5 +31,15 @@ ApplicationWindow {
 
     function popPage() {
         pagesView.pop()
+    }
+
+    function popAllPages() {
+        while(pagesView.depth > 1)
+            pagesView.pop()
+    }
+
+    function closeApp() {
+        backend.close()
+        Qt.quit()
     }
 }
