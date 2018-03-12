@@ -33,7 +33,7 @@ ApplicationWindow {
         pagesView.pop()
     }
 
-    function popAllPages() {
+    function popToInitialPage() {
         while(pagesView.depth > 1)
             pagesView.pop()
     }

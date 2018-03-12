@@ -22,7 +22,10 @@ Page {
             width: 210
             enabled: false
 
-            onClicked: backend.connectToServer()
+            onClicked: {
+                disableButtons()
+                backend.connectToServer()
+            }
         }
 
         Row {
@@ -43,7 +46,6 @@ Page {
                 id: quitButton
                 text: "Quit"
                 width: 100
-                enabled: false
 
                 onClicked: mainWindow.closeApp()
             }
@@ -53,10 +55,26 @@ Page {
     Connections {
         target: clientWrapper
         onConnected: mainWindow.pushPage("qrc:/pages/LoggingPage.qml")
-        onServerClosed: mainWindow.popAllPages()
-        onServerNotFound: mainWindow.popPage()//unlock buttons
-        onConnectionRefused: mainWindow.popPage() //unlock buttons
-        onNetworkError: mainWindow.popPage() //back to connecting page with unlocked buttons
-        onUnidentifiedError: mainWindow.popPage() //back to connecting page with unlocked buttons
+        onServerClosed: mainWindow.popToInitialPage()
+        onServerNotFound: enableButtons()
+        onConnectionRefused: enableButtons()
+        onNetworkError: {
+            mainWindow.popToInitialPage()
+            enableButtons()
+        }
+        onUnidentifiedError: {
+            mainWindow.popToInitialPage()
+            enableButtons()
+        }
+    }
+
+    function enableButtons() {
+        connectButton.enabled = true
+        settingsButton.enabled = true
+    }
+
+    function disableButtons() {
+        connectButton.enabled = false
+        settingsButton.enabled = false
     }
 }
