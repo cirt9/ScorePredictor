@@ -1,4 +1,4 @@
-QT += quick network
+QT += quick network sql
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -15,7 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp \
     tcpserver.cpp \
     tcpconnection.cpp \
-    tcpconnections.cpp
+    tcpconnections.cpp \
+    dbconnection.cpp
 
 RESOURCES += qml.qrc \
     ../ScoreTyperClient/assets.qrc
@@ -34,4 +35,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     tcpserver.h \
     tcpconnection.h \
-    tcpconnections.h
+    tcpconnections.h \
+    dbconnection.h
