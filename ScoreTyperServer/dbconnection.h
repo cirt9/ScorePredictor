@@ -18,6 +18,7 @@ private:
     const static QString INITIAL_CONNECTION_NAME;
 
     bool isConnected();
+    void clearConnection();
 
 public:
     explicit DbConnection();

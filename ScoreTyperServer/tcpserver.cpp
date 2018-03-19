@@ -1,19 +1,10 @@
 #include "tcpserver.h"
 
-//
-#include <dbconnection.h>
-//
-
 TcpServer::TcpServer(QObject * parent) : QTcpServer(parent)
 {
     QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
 
     qDebug() << "Server created";
-
-    //
-        DbConnection dbConnection;
-        dbConnection.connect("testConnection");
-    //
 }
 
 bool TcpServer::startServer(quint16 port, const QHostAddress & address)

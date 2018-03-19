@@ -33,24 +33,23 @@ bool DbConnection::connect(const QString & connectionName, const QString & datab
     connection.setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE");
     connection = QSqlDatabase::addDatabase(driver, connectionName);
     connection.setDatabaseName(databaseName);
+    name = connectionName;
 
     if(connection.open())
     {
         qDebug() << "Database connection opened" << this;
-        name = connectionName;
         return true;
     }
-
     qDebug() << "Couldn't open database connection" << connection.lastError() << this;
+    clearConnection();
+
     return false;
 }
 
 void DbConnection::close()
 {
     connection.close();
-    connection = QSqlDatabase();
-    QSqlDatabase::removeDatabase(name);
-    name = INITIAL_CONNECTION_NAME;
+    clearConnection();
     qDebug() << "Database connection closed" << this;
 }
 
@@ -69,4 +68,11 @@ bool DbConnection::isConnected()
     }
     qDebug() << "Database is not connected" << this;
     return false;
+}
+
+void DbConnection::clearConnection()
+{
+    connection = QSqlDatabase();
+    QSqlDatabase::removeDatabase(name);
+    name = INITIAL_CONNECTION_NAME;
 }
