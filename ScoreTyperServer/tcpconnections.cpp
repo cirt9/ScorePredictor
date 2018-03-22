@@ -2,6 +2,7 @@
 
 TcpConnections::TcpConnections(QObject * parent) : QObject(parent)
 {
+    dbConnection = nullptr;
     qDebug() << "Connections created";
 }
 
@@ -16,6 +17,12 @@ void TcpConnections::run()
     qDebug() << this << "Connections finished";
 
     emit finished();
+}
+
+void TcpConnections::init()
+{
+    dbConnection = new DbConnection(this);
+    dbConnection->connect(QString::number(DbConnection::numberOfOpenedConnections()));
 }
 
 void TcpConnections::connectionStarted()

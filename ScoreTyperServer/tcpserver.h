@@ -4,6 +4,7 @@
 #include <QTcpServer>
 #include <QThreadPool>
 #include <tcpconnections.h>
+#include <QTimer>
 
 #include <QDebug>
 

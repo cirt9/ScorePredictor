@@ -7,6 +7,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <tcpconnection.h>
+#include <dbconnection.h>
 
 #include <QDebug>
 
@@ -18,6 +19,7 @@ private:
     QEventLoop * loop;
     QMutex mutex;
     QList<TcpConnection *> connections;
+    DbConnection * dbConnection;
 
     TcpConnection * addConnection(qintptr descriptor);
 
@@ -33,6 +35,8 @@ public slots:
     void connectionStarted();
     void connectionFinished();
     void close();
+
+    void init();
 
 signals:
     void quit();

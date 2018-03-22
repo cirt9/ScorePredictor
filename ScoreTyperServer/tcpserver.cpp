@@ -44,6 +44,7 @@ void TcpServer::createConnectionsPool()
     connect(pool, &TcpConnections::updated, this, &TcpServer::poolUpdated, Qt::QueuedConnection);
 
     QThreadPool::globalInstance()->start(pool);
+    QTimer::singleShot(0, pool, &TcpConnections::init);
 }
 
 void TcpServer::incomingConnection(qintptr descriptor)
