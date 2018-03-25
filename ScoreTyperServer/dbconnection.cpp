@@ -12,11 +12,6 @@ DbConnection::DbConnection(QObject * parent) : QObject(parent)
     qDebug() << "Creating db connection" << this;
 }
 
-DbConnection::~DbConnection()
-{
-    close();
-}
-
 bool DbConnection::connect(const QString & connectionName, const QString & databaseName, const QString & driver)
 {
     if(isConnected() || connectionName == INITIAL_CONNECTION_NAME)

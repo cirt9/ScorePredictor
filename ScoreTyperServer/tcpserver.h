@@ -3,8 +3,8 @@
 
 #include <QTcpServer>
 #include <QThreadPool>
-#include <tcpconnections.h>
 #include <QTimer>
+#include <tcpconnectionswrapper.h>
 
 #include <QDebug>
 
@@ -13,12 +13,12 @@ class TcpServer : public QTcpServer
     Q_OBJECT
 
 private:
-    QList<TcpConnections *> connectionsPools;
+    QList<TcpConnectionsWrapper *> connectionPools;
     void info();
 
 protected:
     void incomingConnection(qintptr descriptor);
-    void createConnectionsPool();
+    void createConnectionPool();
 
 public:
     explicit TcpServer(QObject * parent = nullptr);
@@ -36,7 +36,7 @@ public slots:
     void poolUpdated();
 
 signals:
-    void connectionPending(qintptr descriptor, TcpConnections * connectionsPool);
+    void connectionPending(qintptr descriptor, TcpConnectionsWrapper * connectionPool);
     void quit();
     void finished();
 

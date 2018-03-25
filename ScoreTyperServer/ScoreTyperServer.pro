@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     tcpserver.cpp \
     tcpconnection.cpp \
     tcpconnections.cpp \
-    dbconnection.cpp
+    dbconnection.cpp \
+    tcpconnectionswrapper.cpp
 
 RESOURCES += qml.qrc \
     ../ScoreTyperClient/assets.qrc
@@ -36,4 +37,5 @@ HEADERS += \
     tcpserver.h \
     tcpconnection.h \
     tcpconnections.h \
-    dbconnection.h
+    dbconnection.h \
+    tcpconnectionswrapper.h

@@ -18,7 +18,7 @@ bool TcpServer::startServer(quint16 port, const QHostAddress & address)
     qDebug() << this << "Creating connection pools: " << QThreadPool::globalInstance()->maxThreadCount();
 
     for(int i=0; i<QThreadPool::globalInstance()->maxThreadCount(); i++)
-        createConnectionsPool();
+        createConnectionPool();
 
     return true;
 }
@@ -33,35 +33,32 @@ void TcpServer::closeServer()
     close();
 }
 
-void TcpServer::createConnectionsPool()
+void TcpServer::createConnectionPool()
 {
-    TcpConnections * pool = new TcpConnections();
-    connectionsPools.append(pool);
+    TcpConnectionsWrapper * pool = new TcpConnectionsWrapper(this);
+    connectionPools.append(pool);
 
-    connect(this, &TcpServer::quit, pool, &TcpConnections::close, Qt::QueuedConnection);
-    connect(pool, &TcpConnections::finished, this, &TcpServer::poolFinished, Qt::BlockingQueuedConnection);
-    connect(this, &TcpServer::connectionPending, pool, &TcpConnections::connectionPending, Qt::QueuedConnection);
-    connect(pool, &TcpConnections::updated, this, &TcpServer::poolUpdated, Qt::QueuedConnection);
-
-    QThreadPool::globalInstance()->start(pool);
-    QTimer::singleShot(0, pool, &TcpConnections::init);
+    connect(this, &TcpServer::quit, pool, &TcpConnectionsWrapper::close);
+    connect(pool, &TcpConnectionsWrapper::finished, this, &TcpServer::poolFinished);
+    connect(this, &TcpServer::connectionPending, pool, &TcpConnectionsWrapper::connectionPending);
+    connect(pool, &TcpConnectionsWrapper::updated, this, &TcpServer::poolUpdated);
 }
 
 void TcpServer::incomingConnection(qintptr descriptor)
 {
     qDebug() << "Incoming connection..." << descriptor;
 
-    if(connectionsPools.count() == 0)
+    if(connectionPools.count() == 0)
     {
         qDebug() << "No connection pools";
         return;
     }
 
-    TcpConnections * selectedPool = nullptr;
+    TcpConnectionsWrapper * selectedPool = nullptr;
 
     qDebug() << this << "Getting free pool";
 
-    for(auto pool : connectionsPools)
+    for(auto pool : connectionPools)
     {
         if(!selectedPool)
         {
@@ -69,7 +66,7 @@ void TcpServer::incomingConnection(qintptr descriptor)
             continue;
         }
 
-        if(pool->count() < selectedPool->count())
+        if(pool->getNumberOfConnections() < selectedPool->getNumberOfConnections())
             selectedPool = pool;
     }
 
@@ -79,9 +76,9 @@ void TcpServer::incomingConnection(qintptr descriptor)
 
 void TcpServer::poolFinished()
 {
-    TcpConnections * pool = qobject_cast<TcpConnections *>(sender());
+    TcpConnectionsWrapper * pool = qobject_cast<TcpConnectionsWrapper *>(sender());
 
-    qDebug() << "Finishing pool" << pool;
+    qDebug() << "Finishing pool in wrapper" << pool;
 
     if(!pool)
     {
@@ -89,11 +86,12 @@ void TcpServer::poolFinished()
         return;
     }
 
-    qDebug() << this << "Removing pool" << pool;
+    qDebug() << this << "Removing pool in wrapper" << pool;
 
-    connectionsPools.removeAll(pool);
+    connectionPools.removeAll(pool);
+    pool->deleteLater();
 
-    if(connectionsPools.count() == 0)
+    if(connectionPools.count() == 0)
         emit finished();
 }
 
@@ -104,7 +102,7 @@ void TcpServer::poolUpdated()
 
 bool TcpServer::isSafeToTerminate()
 {
-    if(numberOfClients() == 0 && connectionsPools.count() == 0 && !isListening())
+    if(numberOfClients() == 0 && connectionPools.count() == 0 && !isListening())
         return true;
 
     return false;
@@ -114,8 +112,8 @@ int TcpServer::numberOfClients() const
 {
     int totalNumberOfClients = 0;
 
-    for(auto connections : connectionsPools)
-        totalNumberOfClients += connections->count();
+    for(auto pool : connectionPools)
+        totalNumberOfClients += pool->getNumberOfConnections();
 
     return totalNumberOfClients;
 }
@@ -126,10 +124,10 @@ void TcpServer::info()
 
     qDebug() << "-------------------";
 
-    for(auto pool : connectionsPools)
+    for(auto pool : connectionPools)
     {
-        totalNumberOfClients += pool->count();
-        qDebug() << "Connections(" << pool << "): " << pool->count() << "clients";
+        totalNumberOfClients += pool->getNumberOfConnections();
+        qDebug() << "Connections in wrapper(" << pool << "): " << pool->getNumberOfConnections() << "clients";
     }
 
     qDebug() << "Total number of clients: " << totalNumberOfClients;

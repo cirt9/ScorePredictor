@@ -26,7 +26,7 @@ private:
 
 public:
     explicit DbConnection(QObject * parent = nullptr);
-    ~DbConnection();
+    ~DbConnection() {}
 
     bool connect(const QString & connectionName, const QString & databaseName = DATABASE_NAME,
                  const QString & driver = DRIVER_NAME);

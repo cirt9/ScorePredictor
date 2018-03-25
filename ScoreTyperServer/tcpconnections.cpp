@@ -2,27 +2,19 @@
 
 TcpConnections::TcpConnections(QObject * parent) : QObject(parent)
 {
-    dbConnection = nullptr;
+    //dbConnection = nullptr;
     qDebug() << "Connections created";
-}
-
-void TcpConnections::run()
-{
-    qDebug() << this << "Connections starting";
-
-    loop = new QEventLoop();
-    connect(this, &TcpConnections::quit, loop, &QEventLoop::quit);
-    loop->exec();
-
-    qDebug() << this << "Connections finished";
-
-    emit finished();
 }
 
 void TcpConnections::init()
 {
+    /*
+    if(dbConnection)
+        return;
+
     dbConnection = new DbConnection(this);
     dbConnection->connect(QString::number(DbConnection::numberOfOpenedConnections()));
+    */
 }
 
 void TcpConnections::connectionStarted()
@@ -50,14 +42,11 @@ void TcpConnections::connectionFinished()
 
     qDebug() << this << "Connection was removed";
 
-    emit updated();
+    emit connectionsDecreased();
 }
 
-void TcpConnections::connectionPending(qintptr descriptor, TcpConnections * pool)
+void TcpConnections::connectionPending(qintptr descriptor)
 {
-    if(pool != this)
-        return;
-
     qDebug() << this << "Accepting connection" << descriptor;
 
     TcpConnection * connection = addConnection(descriptor);
@@ -67,34 +56,30 @@ void TcpConnections::connectionPending(qintptr descriptor, TcpConnections * pool
         qDebug() << "Could not add connection";
         return;
     }
-    emit updated();
+    emit connectionsIncreased();
 }
 
 void TcpConnections::close()
 {
     qDebug() << this << "Closing connections";
 
-    emit quit();
+    //dbConnection->close();
+
+    for(auto connection : connections)
+        connection->quit();
+
+    emit finished();
 }
 
 TcpConnection * TcpConnections::addConnection(qintptr descriptor)
 {
     TcpConnection * connection = new TcpConnection(this);
 
-    connect(connection, &TcpConnection::started, this, &TcpConnections::connectionStarted, Qt::QueuedConnection);
-    connect(connection, &TcpConnection::finished, this, &TcpConnections::connectionFinished, Qt::DirectConnection);
-    connect(this, &TcpConnections::quit, connection, &TcpConnection::quit, Qt::QueuedConnection);
+    connect(connection, &TcpConnection::started, this, &TcpConnections::connectionStarted);
+    connect(connection, &TcpConnection::finished, this, &TcpConnections::connectionFinished);
 
     connections.append(connection);
     connection->accept(descriptor);
 
     return connection;
-}
-
-int TcpConnections::count()
-{
-    QMutexLocker locker(&mutex);
-    int numberOfConnections = connections.count();
-
-    return numberOfConnections;
 }
