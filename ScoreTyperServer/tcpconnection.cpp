@@ -2,7 +2,7 @@
 
 TcpConnection::TcpConnection(QObject * parent) : QObject(parent)
 {
-    qDebug() << "Connection created";
+    qDebug() << "Connection created" << this;
 }
 
 void TcpConnection::accept(qintptr descriptor)
@@ -19,7 +19,7 @@ void TcpConnection::accept(qintptr descriptor)
 
     if(!socket->setSocketDescriptor(descriptor))
     {
-        qDebug() << "Could not accept connection";
+        qDebug() << "Could not accept connection" << descriptor;
         return;
     }
 
@@ -30,18 +30,18 @@ void TcpConnection::accept(qintptr descriptor)
 
 void TcpConnection::quit()
 {
-    qDebug() << "Connection quitting...";
+    qDebug() << "Connection quitting..." << this;
     socket->disconnectFromHost();
 }
 
 void TcpConnection::connected()
 {
-    qDebug() << "Client connected";
+    qDebug() << "Client connected" << this;
 }
 
 void TcpConnection::disconnected()
 {
-    qDebug() << "Client disconnected";
+    qDebug() << "Client disconnected" << this;
 
     emit finished();
 }
@@ -53,10 +53,10 @@ void TcpConnection::read()
 
 void TcpConnection::stateChanged(QAbstractSocket::SocketState state)
 {
-    qDebug() << "State changed" << state;
+    qDebug() << "State changed" << state << "in" << this;
 }
 
 void TcpConnection::error(QAbstractSocket::SocketError error)
 {
-    qDebug() << "Error:" << error;
+    qDebug() << "Error:" << error << "in" << this;
 }

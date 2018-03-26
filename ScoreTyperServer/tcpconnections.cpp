@@ -3,7 +3,7 @@
 TcpConnections::TcpConnections(QObject * parent) : QObject(parent)
 {
     //dbConnection = nullptr;
-    qDebug() << "Connections created";
+    qDebug() << "Connections created" << this;
 }
 
 void TcpConnections::init()
@@ -24,7 +24,7 @@ void TcpConnections::connectionStarted()
     if(!connection)
         return;
 
-    qDebug() << this << "Connection started";
+    qDebug() << "Connection started" << this;
 }
 
 void TcpConnections::connectionFinished()
@@ -36,7 +36,6 @@ void TcpConnections::connectionFinished()
 
     qDebug() << this << "Connection finished" << connection;
 
-    QMutexLocker locker(&mutex);
     connections.removeAll(connection);
     connection->deleteLater();
 
@@ -53,7 +52,7 @@ void TcpConnections::connectionPending(qintptr descriptor)
 
     if(!connection)
     {
-        qDebug() << "Could not add connection";
+        qDebug() << "Could not add connection in " << this;
         return;
     }
     emit connectionsIncreased();

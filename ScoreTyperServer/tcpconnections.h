@@ -2,8 +2,6 @@
 #define TCPCONNECTIONS_H
 
 #include <QObject>
-#include <QMutex>
-#include <QMutexLocker>
 #include <tcpconnection.h>
 #include <dbconnection.h>
 
@@ -14,7 +12,6 @@ class TcpConnections : public QObject
     Q_OBJECT
 
 private:
-    QMutex mutex;
     QList<TcpConnection *> connections;
     //DbConnection * dbConnection;
 
