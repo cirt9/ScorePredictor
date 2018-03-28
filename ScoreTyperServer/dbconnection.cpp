@@ -41,7 +41,6 @@ bool DbConnection::connect(const QString & connectionName, const QString & datab
     }
     qDebug() << "Couldn't open database connection" << connection.lastError() << this;
     clearConnection();
-
     return false;
 }
 
@@ -73,6 +72,7 @@ bool DbConnection::isConnected()
 void DbConnection::clearConnection()
 {
     connection = QSqlDatabase();
+
     QSqlDatabase::removeDatabase(name);
 
     if(connectionsList.contains(name))

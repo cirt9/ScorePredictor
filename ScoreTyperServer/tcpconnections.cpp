@@ -1,20 +1,22 @@
 #include "tcpconnections.h"
 
+QMutex TcpConnections::mutex;
+
 TcpConnections::TcpConnections(QObject * parent) : QObject(parent)
 {
-    //dbConnection = nullptr;
+    dbConnection = nullptr;
     qDebug() << "Connections created" << this;
 }
 
 void TcpConnections::init()
 {
-    /*
     if(dbConnection)
         return;
 
+    QMutexLocker locker(&mutex);
+
     dbConnection = new DbConnection(this);
-    dbConnection->connect(QString::number(DbConnection::numberOfOpenedConnections()));
-    */
+    dbConnection->connect(QString::number(dbConnection->numberOfOpenedConnections()));
 }
 
 void TcpConnections::connectionStarted()
@@ -61,8 +63,8 @@ void TcpConnections::connectionPending(qintptr descriptor)
 void TcpConnections::close()
 {
     qDebug() << this << "Closing connections";
-
-    //dbConnection->close();
+    QMutexLocker locker(&mutex);
+    dbConnection->close();
 
     for(auto connection : connections)
         connection->quit();

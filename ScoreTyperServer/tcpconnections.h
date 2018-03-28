@@ -4,6 +4,8 @@
 #include <QObject>
 #include <tcpconnection.h>
 #include <dbconnection.h>
+#include <QMutex>
+#include <QMutexLocker>
 
 #include <QDebug>
 
@@ -13,7 +15,8 @@ class TcpConnections : public QObject
 
 private:
     QList<TcpConnection *> connections;
-    //DbConnection * dbConnection;
+    DbConnection * dbConnection;
+    static QMutex mutex;
 
     TcpConnection * addConnection(qintptr descriptor);
 
