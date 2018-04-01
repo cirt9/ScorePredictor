@@ -20,10 +20,9 @@ public:
 
     Q_INVOKABLE void close();
     Q_INVOKABLE void connectToServer();
+    Q_INVOKABLE void login(const QString & nickname, const QString & password);
 
     TcpClientWrapper * getClientWrapper() const;
-
-    Q_INVOKABLE bool login(const QString & login, const QString & password);
 };
 
 #endif // BACKEND_H

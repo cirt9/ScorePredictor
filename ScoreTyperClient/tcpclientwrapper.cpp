@@ -11,6 +11,7 @@ TcpClientWrapper::TcpClientWrapper(QObject * parent) : QObject(parent)
     connect(client, &TcpClient::networkError, this, &TcpClientWrapper::networkError);
     connect(client, &TcpClient::unidentifiedError, this, &TcpClientWrapper::unidentifiedError);
     connect(this, &TcpClientWrapper::connectingToServer, client, &TcpClient::connectToServer, Qt::QueuedConnection);
+    connect(this, &TcpClientWrapper::sendData, client, &TcpClient::send, Qt::QueuedConnection);
 }
 
 TcpClientWrapper::~TcpClientWrapper()

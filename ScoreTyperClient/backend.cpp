@@ -27,15 +27,12 @@ void BackEnd::connectToServer()
     clientWrapper->connectToServer(QHostAddress("127.0.0.1"), 5000);
 }
 
+void BackEnd::login(const QString & nickname, const QString & password)
+{
+    emit clientWrapper->sendData(nickname+password);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;
-}
-
-bool BackEnd::login(const QString & login, const QString & password)
-{
-    if(login == QString("") && password == QString(""))
-        return true;
-    else
-        return false;
 }

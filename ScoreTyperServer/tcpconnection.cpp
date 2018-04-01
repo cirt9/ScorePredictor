@@ -1,5 +1,7 @@
 #include "tcpconnection.h"
-
+//
+#include <packet.h>
+//
 TcpConnection::TcpConnection(QObject * parent) : QObject(parent)
 {
     qDebug() << "Connection created" << this;
@@ -25,6 +27,13 @@ void TcpConnection::accept(qintptr descriptor)
 
     qDebug() << "Connection " << descriptor << "accepted";
 
+    //
+    QVariantList data;
+    data << Packet::PACKET_ID_LOGIN << "LOGIN" << "PASSWORD";
+
+    Packet packet(data);
+    socket->write(packet.getSerializedData());
+    //
     emit started();
 }
 

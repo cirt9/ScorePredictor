@@ -24,6 +24,7 @@ public:
 public slots:
     bool connectToServer(const QHostAddress & address, quint16 port);
     void disconnectFromServer();
+    void send(const QString & data);
 
 signals:
     void started();

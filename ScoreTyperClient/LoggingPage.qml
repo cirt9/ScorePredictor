@@ -81,10 +81,12 @@ Page {
                 anchors.centerIn: parent
 
                 onClicked: {
-                    if(backend.login(nicknameInput.text, passwordInput.text))
+                    backend.login(nicknameInput.text, passwordInput.text)
+                    mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
+                    /*if(backend.login(nicknameInput.text, passwordInput.text))
                         mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
                     else
-                        loggingReplyText.text = "Incorrect nickname or password"
+                        loggingReplyText.text = "Incorrect nickname or password"*/
                 }
             }
 

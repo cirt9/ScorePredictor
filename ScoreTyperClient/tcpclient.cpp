@@ -1,5 +1,7 @@
 #include "tcpclient.h"
-
+//
+#include <../ScoreTyperServer/packet.h>
+//
 TcpClient::TcpClient(QObject * parent) : QObject(parent)
 {
     clientSocket = new QTcpSocket(this);
@@ -37,6 +39,11 @@ void TcpClient::disconnectFromServer()
     clientSocket->disconnectFromHost();
 }
 
+void TcpClient::send(const QString & data)
+{
+    qDebug() << data;
+}
+
 void TcpClient::connected()
 {
     qDebug() << "Connected";
@@ -50,7 +57,15 @@ void TcpClient::disconnected()
 
 void TcpClient::read()
 {
-    qDebug() << clientSocket->readAll();
+    //qDebug() << clientSocket->readAll();
+    QDataStream in(clientSocket);
+    in.setVersion(QDataStream::Qt_5_10);
+
+    quint16 packetSize;
+    in >> packetSize;
+
+    Packet packet(in);
+    //
 }
 
 void TcpClient::stateChanged(QAbstractSocket::SocketState state)
