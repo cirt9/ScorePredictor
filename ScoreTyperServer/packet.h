@@ -13,6 +13,7 @@ private:
     QVariantList data;
     QByteArray serializedData;
     bool corrupted;
+    QString error;
 
     static const QVariant START_OF_PACKET;
     static const QVariant END_OF_PACKET;
@@ -22,6 +23,7 @@ private:
     void serialize();
     void unserialize(QDataStream & in);
     void clean();
+    void validatePacket();
 
 public:
     explicit Packet(const QVariantList & packetData);
@@ -33,7 +35,9 @@ public:
 
     QVariantList getUnserializedData() const;
     QByteArray getSerializedData() const;
+
     bool isCorrupted() const;
+    QString lastError() const;
 
     static const QVariant PACKET_ID_LOGIN;
 };

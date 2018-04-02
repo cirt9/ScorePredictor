@@ -32,7 +32,11 @@ void TcpConnection::accept(qintptr descriptor)
     data << Packet::PACKET_ID_LOGIN << "LOGIN" << "PASSWORD";
 
     Packet packet(data);
-    socket->write(packet.getSerializedData());
+
+    if(!packet.isCorrupted())
+        socket->write(packet.getSerializedData());
+    else
+        qDebug() << packet.lastError();
     //
     emit started();
 }

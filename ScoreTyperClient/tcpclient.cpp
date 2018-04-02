@@ -65,6 +65,8 @@ void TcpClient::read()
     in >> packetSize;
 
     Packet packet(in);
+    if(packet.isCorrupted())
+        qDebug() << packet.lastError();
     //
 }
 

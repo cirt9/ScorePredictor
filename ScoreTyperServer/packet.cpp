@@ -22,50 +22,42 @@ Packet::Packet(QDataStream & in)
 
 void Packet::serialize()
 {
-    if(corrupted)
-    {
-        qDebug() << "No data to serialize";
-        clean();
-        return;
-    }
-
-    if(data[0] < PACKET_ID_MIN || data[0] > PACKET_ID_MAX)
-    {
-        qDebug() << "Wrong packet id";
-        corrupted = true;
-        clean();
-        return;
-    }
+    validatePacket();
 
     QDataStream out(&serializedData, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_10);
-
     out << quint16(0);
     out << START_OF_PACKET;
 
     for(auto dataElement : data)
+    {
+        if(dataElement == START_OF_PACKET || dataElement == END_OF_PACKET)
+        {
+            error = "Too much start/end markers.";
+            corrupted = true;
+            clean();
+            return;
+        }
         out << dataElement;
+    }
 
     out << END_OF_PACKET;
-
     out.device()->seek(0);
     out << quint16(serializedData.size() - sizeof(quint16));
-    qDebug() << "Packet serialized";
 }
 
 void Packet::unserialize(QDataStream & in)
 {
-    QVariant sof;
-    in >> sof;
+    QVariant sop;
+    in >> sop;
 
-    if(sof != START_OF_PACKET)
+    if(sop != START_OF_PACKET)
     {
-        qDebug() << "Packet corrupted. Start of packet marker missing.";
+        error = "Start of packet marker not found.";
         corrupted = true;
         clean();
         return;
     }
-
     bool endOfPacketFound = false;
 
     while(!in.atEnd())
@@ -75,7 +67,6 @@ void Packet::unserialize(QDataStream & in)
 
         if(var == END_OF_PACKET)
         {
-            qDebug() << "End of packet reached";
             endOfPacketFound = true;
             break;
         }
@@ -85,7 +76,7 @@ void Packet::unserialize(QDataStream & in)
 
     if(!endOfPacketFound)
     {
-        qDebug() << "End of packet not found";
+        error = "End of packet marker not found.";
         corrupted = true;
         clean();
         return;
@@ -96,8 +87,30 @@ void Packet::unserialize(QDataStream & in)
         qDebug() << dataElement;
 }
 
-void Packet::setSerializedData(const QVariantList &packetData)
+void Packet::validatePacket()
 {
+    if(corrupted)
+        return;
+
+    else if(data.count() == 0)
+    {
+        error = "No data.";
+        corrupted = true;
+        clean();
+    }
+
+    else if(data[0] < PACKET_ID_MIN || data[0] > PACKET_ID_MAX)
+    {
+        error = "Wrong packet id.";
+        corrupted = true;
+        clean();
+    }
+}
+
+void Packet::setSerializedData(const QVariantList & packetData)
+{
+    clean();
+    error.clear();
     corrupted = false;
     data = packetData;
     serialize();
@@ -105,6 +118,8 @@ void Packet::setSerializedData(const QVariantList &packetData)
 
 void Packet::setUnserializedData(QDataStream & in)
 {
+    clean();
+    error.clear();
     corrupted = false;
     unserialize(in);
     serialize();
@@ -129,4 +144,9 @@ QByteArray Packet::getSerializedData() const
 bool Packet::isCorrupted() const
 {
     return corrupted;
+}
+
+QString Packet::lastError() const
+{
+    return error;
 }
