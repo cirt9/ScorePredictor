@@ -29,7 +29,9 @@ void BackEnd::connectToServer()
 
 void BackEnd::login(const QString & nickname, const QString & password)
 {
-    emit clientWrapper->sendData(nickname+password);
+    QVariantList data;
+    data << Packet::PACKET_ID_LOGIN << nickname << password;
+    emit clientWrapper->sendData(data);
 }
 
 TcpClientWrapper * BackEnd::getClientWrapper() const

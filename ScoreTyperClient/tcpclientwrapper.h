@@ -26,7 +26,7 @@ signals:
     void connectionRefused();
     void networkError();
     void unidentifiedError();
-    void sendData(const QString & data);
+    void sendData(const QVariantList & data);
 };
 
 #endif // TCPCLIENTWRAPPER_H

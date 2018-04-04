@@ -18,7 +18,7 @@ private:
     DbConnection * dbConnection;
     static QMutex mutex;
 
-    TcpConnection * addConnection(qintptr descriptor);
+    TcpConnection * createConnection(qintptr descriptor);
 
 public:
     explicit TcpConnections(QObject * parent = nullptr);

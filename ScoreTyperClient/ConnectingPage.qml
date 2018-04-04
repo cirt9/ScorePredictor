@@ -55,7 +55,10 @@ Page {
     Connections {
         target: clientWrapper
         onConnected: mainWindow.pushPage("qrc:/pages/LoggingPage.qml")
-        onServerClosed: mainWindow.popToInitialPage()
+        onServerClosed: {
+            mainWindow.popToInitialPage()
+            enableButtons()
+        }
         onServerNotFound: enableButtons()
         onConnectionRefused: enableButtons()
         onNetworkError: {

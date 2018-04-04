@@ -2,6 +2,7 @@
 #define TCPCLIENT_H
 
 #include <QTcpSocket>
+#include <../ScoreTyperServer/packet.h>
 
 class TcpClient : public QObject
 {
@@ -9,6 +10,7 @@ class TcpClient : public QObject
 
 private:
     QTcpSocket * clientSocket;
+    quint16 nextPacketSize;
 
 private slots:
     void read();
@@ -24,7 +26,7 @@ public:
 public slots:
     bool connectToServer(const QHostAddress & address, quint16 port);
     void disconnectFromServer();
-    void send(const QString & data);
+    void send(const QVariantList & data);
 
 signals:
     void started();

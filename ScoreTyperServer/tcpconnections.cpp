@@ -50,7 +50,7 @@ void TcpConnections::connectionPending(qintptr descriptor)
 {
     qDebug() << this << "Accepting connection" << descriptor;
 
-    TcpConnection * connection = addConnection(descriptor);
+    TcpConnection * connection = createConnection(descriptor);
 
     if(!connection)
     {
@@ -72,7 +72,7 @@ void TcpConnections::close()
     emit finished();
 }
 
-TcpConnection * TcpConnections::addConnection(qintptr descriptor)
+TcpConnection * TcpConnections::createConnection(qintptr descriptor)
 {
     TcpConnection * connection = new TcpConnection(this);
 

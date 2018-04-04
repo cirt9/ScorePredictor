@@ -2,6 +2,7 @@
 #define TCPCONNECTION_H
 
 #include <QTcpSocket>
+#include <packet.h>
 
 #include <QDebug>
 
@@ -11,6 +12,7 @@ class TcpConnection : public QObject
 
 private:
     QTcpSocket * socket;
+    quint16 nextPacketSize;
 
 private slots:
     void read();

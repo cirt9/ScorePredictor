@@ -1,9 +1,8 @@
 #include "tcpconnection.h"
-//
-#include <packet.h>
-//
+
 TcpConnection::TcpConnection(QObject * parent) : QObject(parent)
 {
+    nextPacketSize = 0;
     qDebug() << "Connection created" << this;
 }
 
@@ -26,18 +25,6 @@ void TcpConnection::accept(qintptr descriptor)
     }
 
     qDebug() << "Connection " << descriptor << "accepted";
-
-    //
-    QVariantList data;
-    data << Packet::PACKET_ID_LOGIN << "LOGIN" << "PASSWORD";
-
-    Packet packet(data);
-
-    if(!packet.isCorrupted())
-        socket->write(packet.getSerializedData());
-    else
-        qDebug() << packet.lastError();
-    //
     emit started();
 }
 
@@ -61,7 +48,33 @@ void TcpConnection::disconnected()
 
 void TcpConnection::read()
 {
-    qDebug() << socket->readAll();
+    QDataStream in(socket);
+    in.setVersion(QDataStream::Qt_5_10);
+
+    if(nextPacketSize == 0)
+    {
+        if(socket->bytesAvailable() < sizeof(quint16))
+        {
+            qDebug() << "Not enough bytes to read packet size";
+            return;
+        }
+        in >> nextPacketSize;
+        qDebug() << "Packet size: " << nextPacketSize;
+    }
+
+    if(socket->bytesAvailable() < nextPacketSize)
+    {
+        qDebug() << "Not enough bytes to read packet. Bytes: " << socket->bytesAvailable() << "Packet size: " << nextPacketSize;
+        return;
+    }
+
+    Packet packet(in);
+    if(packet.isCorrupted())
+        qDebug() << packet.lastError();
+    else
+        qDebug() << "Packet processed successfully";
+    nextPacketSize = 0;
+    //read();
 }
 
 void TcpConnection::stateChanged(QAbstractSocket::SocketState state)

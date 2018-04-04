@@ -1,10 +1,9 @@
 #include "tcpclient.h"
-//
-#include <../ScoreTyperServer/packet.h>
-//
+
 TcpClient::TcpClient(QObject * parent) : QObject(parent)
 {
     clientSocket = new QTcpSocket(this);
+    nextPacketSize = 0;
 
     connect(clientSocket, &QTcpSocket::connected, this, &TcpClient::connected);
     connect(clientSocket, &QTcpSocket::disconnected, this, &TcpClient::disconnected);
@@ -23,6 +22,7 @@ bool TcpClient::connectToServer(const QHostAddress & address, quint16 port)
 
     if(clientSocket->waitForConnected())
     {
+        nextPacketSize = 0;
         emit started();
         return true;
     }
@@ -39,9 +39,16 @@ void TcpClient::disconnectFromServer()
     clientSocket->disconnectFromHost();
 }
 
-void TcpClient::send(const QString & data)
+void TcpClient::send(const QVariantList & data)
 {
-    qDebug() << data;
+    qDebug() << "Sending data:" << data;
+
+    Packet packet(data);
+
+    if(!packet.isCorrupted())
+        clientSocket->write(packet.getSerializedData());
+    else
+        qDebug() << packet.lastError();
 }
 
 void TcpClient::connected()
@@ -57,17 +64,33 @@ void TcpClient::disconnected()
 
 void TcpClient::read()
 {
-    //qDebug() << clientSocket->readAll();
     QDataStream in(clientSocket);
     in.setVersion(QDataStream::Qt_5_10);
 
-    quint16 packetSize;
-    in >> packetSize;
+    if(nextPacketSize == 0)
+    {
+        if(clientSocket->bytesAvailable() < sizeof(quint16))
+        {
+            qDebug() << "No bytes to read.";
+            return;
+        }
+        in >> nextPacketSize;
+        qDebug() << "Packet size: " << nextPacketSize;
+    }
+
+    if(clientSocket->bytesAvailable() < nextPacketSize)
+    {
+        qDebug() << "Not enough bytes to read packet. Bytes: " << clientSocket->bytesAvailable() << "Packet size: " << nextPacketSize;
+        return;
+    }
 
     Packet packet(in);
     if(packet.isCorrupted())
         qDebug() << packet.lastError();
-    //
+    else
+        qDebug() << "Packet processed successfully";
+    nextPacketSize = 0;
+    //read();
 }
 
 void TcpClient::stateChanged(QAbstractSocket::SocketState state)
