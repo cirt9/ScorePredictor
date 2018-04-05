@@ -69,7 +69,7 @@ Page {
             height: 15
 
             Text {
-                id: loggingReplyText
+                id: registeringReplyText
                 anchors.right: parent.right
                 anchors.top: parent.top
 
@@ -83,25 +83,32 @@ Page {
             width: 350
 
             Button {
-                id: loginButton
+                id: registerButton
                 text: qsTr("REGISTER")
 
                 width: 150
                 font.pointSize: 16
                 font.bold: true
                 anchors.centerIn: parent
+
+                onClicked: {
+                    if(passwordInput.text === passwordConfirmationInput.text)
+                        backend.registerAccount(nicknameInput.text, passwordInput.text)
+                    else
+                        registeringReplyText.text = qsTr("These passwords do not match.")
+                }
             }
 
             TextButton {
-                id: registerButton
+                id: loginButton
                 text: qsTr("LOGIN")
                 textColor: mainWindow.colorA
                 textColorHovered: mainWindow.colorC
                 fontSize: 10
                 bold: true
 
-                anchors.top: loginButton.bottom
-                anchors.horizontalCenter: loginButton.horizontalCenter
+                anchors.top: registerButton.bottom
+                anchors.horizontalCenter: registerButton.horizontalCenter
 
                 onClicked: mainWindow.popPage()
             }

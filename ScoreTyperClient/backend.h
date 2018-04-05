@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE void close();
     Q_INVOKABLE void connectToServer();
     Q_INVOKABLE void login(const QString & nickname, const QString & password);
+    Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
 
     TcpClientWrapper * getClientWrapper() const;
 };

@@ -4,7 +4,7 @@ const QVariant Packet::START_OF_PACKET = QString("<SoP>");
 const QVariant Packet::END_OF_PACKET = QString("</EoP>");
 const QVariant Packet::PACKET_ID_MIN = 0;
 const QVariant Packet::PACKET_ID_MAX = 0;
-const QVariant Packet::PACKET_ID_LOGIN = 0;
+const QVariant Packet::PACKET_ID_REGISTER = 0;
 
 Packet::Packet(const QVariantList & packetData)
 {

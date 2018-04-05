@@ -39,7 +39,7 @@ public:
     bool isCorrupted() const;
     QString lastError() const;
 
-    static const QVariant PACKET_ID_LOGIN;
+    static const QVariant PACKET_ID_REGISTER;
 };
 
 #endif // PACKET_H
