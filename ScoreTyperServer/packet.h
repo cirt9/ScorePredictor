@@ -26,8 +26,8 @@ private:
     void validatePacket();
 
 public:
-    explicit Packet(const QVariantList & packetData);
-    explicit Packet(QDataStream & in);
+    Packet(const QVariantList & packetData);
+    Packet(QDataStream & in);
     ~Packet() {}
 
     void setSerializedData(const QVariantList & packetData);

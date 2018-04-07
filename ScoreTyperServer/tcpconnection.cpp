@@ -72,9 +72,21 @@ void TcpConnection::read()
     if(packet.isCorrupted())
         qDebug() << packet.lastError();
     else
-        qDebug() << "Packet processed successfully";
+        emit packetArrived(packet);
     nextPacketSize = 0;
     //read();
+}
+
+void TcpConnection::send(const QVariantList & data)
+{
+    qDebug() << "Sending data:" << data;
+
+    Packet packet(data);
+
+    if(!packet.isCorrupted())
+        socket->write(packet.getSerializedData());
+    else
+        qDebug() << packet.lastError();
 }
 
 void TcpConnection::stateChanged(QAbstractSocket::SocketState state)

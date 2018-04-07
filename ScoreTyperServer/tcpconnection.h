@@ -28,10 +28,12 @@ public:
 public slots:
     void accept(qintptr descriptor);
     void quit();
+    void send(const QVariantList & data);
 
 signals:
     void started();
     void finished();
+    void packetArrived(Packet & packet);
 };
 
 #endif // TCPCONNECTION_H

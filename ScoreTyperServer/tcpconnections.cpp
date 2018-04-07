@@ -21,7 +21,7 @@ void TcpConnections::init()
 
 void TcpConnections::connectionStarted()
 {
-    TcpConnection * connection = qobject_cast<TcpConnection *>(sender());
+    QPointer<TcpConnection> connection = qobject_cast<TcpConnection *>(sender());
 
     if(!connection)
         return;
@@ -31,7 +31,7 @@ void TcpConnections::connectionStarted()
 
 void TcpConnections::connectionFinished()
 {
-    TcpConnection * connection = qobject_cast<TcpConnection *>(sender());
+    QPointer<TcpConnection> connection = qobject_cast<TcpConnection *>(sender());
 
     if(!connection)
         return;
@@ -50,7 +50,7 @@ void TcpConnections::connectionPending(qintptr descriptor)
 {
     qDebug() << this << "Accepting connection" << descriptor;
 
-    TcpConnection * connection = createConnection(descriptor);
+    QPointer<TcpConnection> connection = createConnection(descriptor);
 
     if(!connection)
     {
@@ -72,15 +72,30 @@ void TcpConnections::close()
     emit finished();
 }
 
-TcpConnection * TcpConnections::createConnection(qintptr descriptor)
+QPointer<TcpConnection> TcpConnections::createConnection(qintptr descriptor)
 {
-    TcpConnection * connection = new TcpConnection(this);
+    QPointer<TcpConnection> connection = new TcpConnection(this);
 
     connect(connection, &TcpConnection::started, this, &TcpConnections::connectionStarted);
     connect(connection, &TcpConnection::finished, this, &TcpConnections::connectionFinished);
+    connect(connection, &TcpConnection::packetArrived, this, &TcpConnections::processPacket);
 
     connections.append(connection);
     connection->accept(descriptor);
 
     return connection;
+}
+
+void TcpConnections::processPacket(Packet & packet)
+{
+    qDebug() << packet.getUnserializedData();
+
+    /*QVariantList data = packet.getUnserializedData();
+    int packetId = data[0].toInt();
+    do something depending on packetId
+    possibly send reply to client
+
+    QPointer<TcpConnection> connection = qobject_cast<TcpConnection *>(sender());
+    if(connection)
+        connection->send();*/
 }
