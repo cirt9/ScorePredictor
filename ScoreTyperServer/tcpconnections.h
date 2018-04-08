@@ -8,6 +8,7 @@
 #include <QMutexLocker>
 #include <QPointer>
 #include <packet.h>
+#include <serverpacketprocessor.h>
 
 #include <QDebug>
 
@@ -23,7 +24,7 @@ private:
     QPointer<TcpConnection> createConnection(qintptr descriptor);
 
 private slots:
-    void processPacket(Packet & packet);
+    void processPacket(const Packet & packet);
 
 public:
     explicit TcpConnections(QObject * parent = nullptr);

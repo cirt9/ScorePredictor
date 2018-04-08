@@ -33,7 +33,7 @@ public slots:
 signals:
     void started();
     void finished();
-    void packetArrived(Packet & packet);
+    void packetArrived(const Packet & packet);
 };
 
 #endif // TCPCONNECTION_H

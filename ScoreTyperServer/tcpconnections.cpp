@@ -86,9 +86,13 @@ QPointer<TcpConnection> TcpConnections::createConnection(qintptr descriptor)
     return connection;
 }
 
-void TcpConnections::processPacket(Packet & packet)
+void TcpConnections::processPacket(const Packet & packet)
 {
     qDebug() << packet.getUnserializedData();
+
+    ServerPacketProcessor packetProcessor(dbConnection);
+
+    packetProcessor.processPacket(packet);
 
     /*QVariantList data = packet.getUnserializedData();
     int packetId = data[0].toInt();

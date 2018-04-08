@@ -39,18 +39,6 @@ void TcpClient::disconnectFromServer()
     clientSocket->disconnectFromHost();
 }
 
-void TcpClient::send(const QVariantList & data)
-{
-    qDebug() << "Sending data:" << data;
-
-    Packet packet(data);
-
-    if(!packet.isCorrupted())
-        clientSocket->write(packet.getSerializedData());
-    else
-        qDebug() << packet.lastError();
-}
-
 void TcpClient::connected()
 {
     qDebug() << "Connected";
@@ -91,6 +79,18 @@ void TcpClient::read()
         qDebug() << "Packet processed successfully";
     nextPacketSize = 0;
     //read();
+}
+
+void TcpClient::send(const QVariantList & data)
+{
+    qDebug() << "Sending data:" << data;
+
+    Packet packet(data);
+
+    if(!packet.isCorrupted())
+        clientSocket->write(packet.getSerializedData());
+    else
+        qDebug() << packet.lastError();
 }
 
 void TcpClient::stateChanged(QAbstractSocket::SocketState state)

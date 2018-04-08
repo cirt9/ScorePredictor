@@ -17,8 +17,8 @@ private:
 
     static const QVariant START_OF_PACKET;
     static const QVariant END_OF_PACKET;
-    static const QVariant PACKET_ID_MIN;
-    static const QVariant PACKET_ID_MAX;
+    static const int PACKET_ID_MIN = 0;
+    static const int PACKET_ID_MAX = 0;
 
     void serialize();
     void unserialize(QDataStream & in);
@@ -39,7 +39,7 @@ public:
     bool isCorrupted() const;
     QString lastError() const;
 
-    static const QVariant PACKET_ID_REGISTER;
+    static const int PACKET_ID_REGISTER = 0;
 };
 
 #endif // PACKET_H

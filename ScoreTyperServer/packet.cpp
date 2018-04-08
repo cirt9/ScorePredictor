@@ -2,9 +2,6 @@
 
 const QVariant Packet::START_OF_PACKET = QString("<SoP>");
 const QVariant Packet::END_OF_PACKET = QString("</EoP>");
-const QVariant Packet::PACKET_ID_MIN = 0;
-const QVariant Packet::PACKET_ID_MAX = 0;
-const QVariant Packet::PACKET_ID_REGISTER = 0;
 
 Packet::Packet(const QVariantList & packetData)
 {
@@ -99,7 +96,7 @@ void Packet::validatePacket()
         clean();
     }
 
-    else if(data[0] < PACKET_ID_MIN || data[0] > PACKET_ID_MAX)
+    else if(data[0].toInt() < PACKET_ID_MIN || data[0].toInt() > PACKET_ID_MAX)
     {
         error = "Wrong packet id.";
         corrupted = true;
