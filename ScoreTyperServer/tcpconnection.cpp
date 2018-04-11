@@ -70,7 +70,10 @@ void TcpConnection::read()
 
     Packet packet(in);
     if(packet.isCorrupted())
+    {
+        flushSocket();
         qDebug() << packet.lastError();
+    }
     else
         emit packetArrived(packet);
     nextPacketSize = 0;
@@ -87,6 +90,12 @@ void TcpConnection::send(const QVariantList & data)
         socket->write(packet.getSerializedData());
     else
         qDebug() << packet.lastError();
+}
+
+void TcpConnection::flushSocket()
+{
+    if(socket->bytesAvailable())
+        socket->readAll();
 }
 
 void TcpConnection::stateChanged(QAbstractSocket::SocketState state)

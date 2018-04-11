@@ -14,6 +14,8 @@ private:
     QTcpSocket * socket;
     quint16 nextPacketSize;
 
+    void flushSocket();
+
 private slots:
     void read();
     void stateChanged(QAbstractSocket::SocketState state);

@@ -9,8 +9,10 @@ class TcpClient : public QObject
     Q_OBJECT
 
 private:
-    QTcpSocket * clientSocket;
+    QTcpSocket * socket;
     quint16 nextPacketSize;
+
+    void flushSocket();
 
 private slots:
     void read();

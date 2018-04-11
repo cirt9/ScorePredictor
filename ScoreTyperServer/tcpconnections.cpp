@@ -4,7 +4,6 @@ QMutex TcpConnections::mutex;
 
 TcpConnections::TcpConnections(QObject * parent) : QObject(parent)
 {
-    dbConnection = nullptr;
     qDebug() << "Connections created" << this;
 }
 
@@ -15,7 +14,7 @@ void TcpConnections::init()
 
     QMutexLocker locker(&mutex);
 
-    dbConnection = new DbConnection(this);
+    dbConnection = QSharedPointer<DbConnection>(new DbConnection(this));
     dbConnection->connect(QString::number(dbConnection->numberOfOpenedConnections()));
 }
 
@@ -94,11 +93,7 @@ void TcpConnections::processPacket(const Packet & packet)
 
     packetProcessor.processPacket(packet);
 
-    /*QVariantList data = packet.getUnserializedData();
-    int packetId = data[0].toInt();
-    do something depending on packetId
-    possibly send reply to client
-
+    /*
     QPointer<TcpConnection> connection = qobject_cast<TcpConnection *>(sender());
     if(connection)
         connection->send();*/

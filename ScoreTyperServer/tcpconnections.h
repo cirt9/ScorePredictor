@@ -9,6 +9,7 @@
 #include <QPointer>
 #include <packet.h>
 #include <serverpacketprocessor.h>
+#include <QSharedPointer>
 
 #include <QDebug>
 
@@ -18,7 +19,7 @@ class TcpConnections : public QObject
 
 private:
     QList<QPointer<TcpConnection> > connections;
-    DbConnection * dbConnection;
+    QSharedPointer<DbConnection> dbConnection;
     static QMutex mutex;
 
     QPointer<TcpConnection> createConnection(qintptr descriptor);

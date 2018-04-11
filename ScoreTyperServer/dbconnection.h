@@ -7,7 +7,7 @@
 
 #include <QDebug>
 
-class DbConnection : QObject
+class DbConnection : public QObject
 {
     Q_OBJECT
 
@@ -21,18 +21,20 @@ private:
     const static QString DRIVER_NAME;
     const static QString INITIAL_CONNECTION_NAME;
 
-    bool isConnected();
     void clearConnection();
 
 public:
     explicit DbConnection(QObject * parent = nullptr);
     ~DbConnection() {}
 
-    bool connect(const QString & connectionName, const QString & databaseName = DATABASE_NAME,
+    bool connect(const QString & connesctionName, const QString & databaseName = DATABASE_NAME,
                  const QString & driver = DRIVER_NAME);
     void close();
 
+    QSqlQuery exec(const QString & query = QString()) const;
+
     static int numberOfOpenedConnections();
+    bool isConnected();
 };
 
 #endif // DBCONNECTION_H

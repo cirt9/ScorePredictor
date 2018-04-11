@@ -3,14 +3,18 @@
 
 #include <packet.h>
 #include <dbconnection.h>
+#include <query.h>
+#include <QSharedPointer>
 
 class ServerPacketProcessor
 {
 private:
-    DbConnection * dbConnection;
+    QSharedPointer<DbConnection> dbConnection;
+
+    void registerUser(const QVariantList & userData);
 
 public:
-    explicit ServerPacketProcessor(DbConnection * connection);
+    explicit ServerPacketProcessor(QSharedPointer<DbConnection> connection);
     ~ServerPacketProcessor() {}
 
     void processPacket(const Packet & packet);

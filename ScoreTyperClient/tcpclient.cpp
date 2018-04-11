@@ -2,25 +2,25 @@
 
 TcpClient::TcpClient(QObject * parent) : QObject(parent)
 {
-    clientSocket = new QTcpSocket(this);
+    socket = new QTcpSocket(this);
     nextPacketSize = 0;
 
-    connect(clientSocket, &QTcpSocket::connected, this, &TcpClient::connected);
-    connect(clientSocket, &QTcpSocket::disconnected, this, &TcpClient::disconnected);
-    connect(clientSocket, &QTcpSocket::readyRead, this, &TcpClient::read);
-    connect(clientSocket, &QTcpSocket::stateChanged, this, &TcpClient::stateChanged);
-    connect(clientSocket, static_cast<void (QTcpSocket::*) (QAbstractSocket::SocketError)>(&QTcpSocket::error),
+    connect(socket, &QTcpSocket::connected, this, &TcpClient::connected);
+    connect(socket, &QTcpSocket::disconnected, this, &TcpClient::disconnected);
+    connect(socket, &QTcpSocket::readyRead, this, &TcpClient::read);
+    connect(socket, &QTcpSocket::stateChanged, this, &TcpClient::stateChanged);
+    connect(socket, static_cast<void (QTcpSocket::*) (QAbstractSocket::SocketError)>(&QTcpSocket::error),
             this, &TcpClient::error);
 }
 
 bool TcpClient::connectToServer(const QHostAddress & address, quint16 port)
 {
-    if(clientSocket->state() == QTcpSocket::ConnectedState)
+    if(socket->state() == QTcpSocket::ConnectedState)
         return false;
 
-    clientSocket->connectToHost(address, port);
+    socket->connectToHost(address, port);
 
-    if(clientSocket->waitForConnected())
+    if(socket->waitForConnected())
     {
         nextPacketSize = 0;
         emit started();
@@ -32,11 +32,11 @@ bool TcpClient::connectToServer(const QHostAddress & address, quint16 port)
 
 void TcpClient::disconnectFromServer()
 {
-    if(!(clientSocket->state() == QTcpSocket::ConnectedState))
+    if(!(socket->state() == QTcpSocket::ConnectedState))
         return;
 
     qDebug() << "Disconnecting from server";
-    clientSocket->disconnectFromHost();
+    socket->disconnectFromHost();
 }
 
 void TcpClient::connected()
@@ -52,12 +52,12 @@ void TcpClient::disconnected()
 
 void TcpClient::read()
 {
-    QDataStream in(clientSocket);
+    QDataStream in(socket);
     in.setVersion(QDataStream::Qt_5_10);
 
     if(nextPacketSize == 0)
     {
-        if(clientSocket->bytesAvailable() < sizeof(quint16))
+        if(socket->bytesAvailable() < sizeof(quint16))
         {
             qDebug() << "No bytes to read.";
             return;
@@ -66,15 +66,18 @@ void TcpClient::read()
         qDebug() << "Packet size: " << nextPacketSize;
     }
 
-    if(clientSocket->bytesAvailable() < nextPacketSize)
+    if(socket->bytesAvailable() < nextPacketSize)
     {
-        qDebug() << "Not enough bytes to read packet. Bytes: " << clientSocket->bytesAvailable() << "Packet size: " << nextPacketSize;
+        qDebug() << "Not enough bytes to read packet. Bytes: " << socket->bytesAvailable() << "Packet size: " << nextPacketSize;
         return;
     }
 
     Packet packet(in);
     if(packet.isCorrupted())
+    {
+        flushSocket();
         qDebug() << packet.lastError();
+    }
     else
         qDebug() << "Packet processed successfully";
     nextPacketSize = 0;
@@ -88,9 +91,15 @@ void TcpClient::send(const QVariantList & data)
     Packet packet(data);
 
     if(!packet.isCorrupted())
-        clientSocket->write(packet.getSerializedData());
+        socket->write(packet.getSerializedData());
     else
         qDebug() << packet.lastError();
+}
+
+void TcpClient::flushSocket()
+{
+    if(socket->bytesAvailable())
+        socket->readAll();
 }
 
 void TcpClient::stateChanged(QAbstractSocket::SocketState state)

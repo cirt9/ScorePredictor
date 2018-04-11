@@ -69,6 +69,11 @@ bool DbConnection::isConnected()
     return false;
 }
 
+QSqlQuery DbConnection::exec(const QString & query) const
+{
+    return connection.exec(query);
+}
+
 void DbConnection::clearConnection()
 {
     connection = QSqlDatabase();
