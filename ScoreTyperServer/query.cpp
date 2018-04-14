@@ -15,3 +15,15 @@ bool Query::isUserRegistered(const QString & nickname)
     else
         return false;
 }
+
+bool Query::registerUser(const QString & nickname, const QString & password)
+{
+    QString queryString = "INSERT INTO user (nickname, password) VALUES "
+                          "('" + nickname + "', '" + password + "');";
+    QSqlQuery query = dbConnection->exec(queryString);
+
+    if(query.numRowsAffected() > 0)
+        return true;
+    else
+        return false;
+}

@@ -77,7 +77,6 @@ void TcpConnection::read()
     else
         emit packetArrived(packet);
     nextPacketSize = 0;
-    //read();
 }
 
 void TcpConnection::send(const QVariantList & data)

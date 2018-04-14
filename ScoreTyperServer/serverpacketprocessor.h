@@ -6,18 +6,23 @@
 #include <query.h>
 #include <QSharedPointer>
 
-class ServerPacketProcessor
+class ServerPacketProcessor: public QObject
 {
+    Q_OBJECT
+
 private:
     QSharedPointer<DbConnection> dbConnection;
 
     void registerUser(const QVariantList & userData);
 
 public:
-    explicit ServerPacketProcessor(QSharedPointer<DbConnection> connection);
+    explicit ServerPacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);
     ~ServerPacketProcessor() {}
 
     void processPacket(const Packet & packet);
+
+signals:
+    void response(const QVariantList & data);
 };
 
 #endif // SERVERPACKETPROCESSOR_H

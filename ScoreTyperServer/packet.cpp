@@ -28,7 +28,8 @@ void Packet::serialize()
 
     for(auto dataElement : data)
     {
-        if(dataElement == START_OF_PACKET || dataElement == END_OF_PACKET)
+        if( (dataElement == START_OF_PACKET && dataElement.type() == START_OF_PACKET.type()) ||
+            (dataElement == END_OF_PACKET && dataElement.type() == END_OF_PACKET.type()) )
         {
             error = "Too much start/end markers.";
             corrupted = true;
@@ -62,7 +63,7 @@ void Packet::unserialize(QDataStream & in)
         QVariant var;
         in >> var;
 
-        if(var == END_OF_PACKET)
+        if(var == END_OF_PACKET && var.type() == END_OF_PACKET.type())
         {
             endOfPacketFound = true;
             break;

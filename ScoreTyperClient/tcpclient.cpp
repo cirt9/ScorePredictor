@@ -81,7 +81,6 @@ void TcpClient::read()
     else
         qDebug() << "Packet processed successfully";
     nextPacketSize = 0;
-    //read();
 }
 
 void TcpClient::send(const QVariantList & data)
