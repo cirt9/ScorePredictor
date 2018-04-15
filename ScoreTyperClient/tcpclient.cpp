@@ -79,7 +79,7 @@ void TcpClient::read()
         qDebug() << packet.lastError();
     }
     else
-        qDebug() << "Packet processed successfully";
+        emit packetArrived(packet);
     nextPacketSize = 0;
 }
 

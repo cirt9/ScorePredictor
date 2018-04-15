@@ -30,7 +30,9 @@ bool DbConnection::connect(const QString & connectionName, const QString & datab
     connectionsList.append(connectionName);
     name = connectionName;
 
-    connection.setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE");
+    if(driver == DRIVER_NAME)
+        setConnectOptions();
+
     connection = QSqlDatabase::addDatabase(driver, connectionName);
     connection.setDatabaseName(databaseName);
 
@@ -72,6 +74,12 @@ bool DbConnection::isConnected()
 QSqlQuery DbConnection::exec(const QString & query) const
 {
     return connection.exec(query);
+}
+
+void DbConnection::setConnectOptions()
+{
+    connection.setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE=1;"
+                                 "QSQLITE_BUSY_TIMEOUT=10000;");
 }
 
 void DbConnection::clearConnection()

@@ -38,6 +38,7 @@ signals:
     void connectionRefused();
     void networkError();
     void unidentifiedError();
+    void packetArrived(const Packet & packet);
 };
 
 #endif // TCPCLIENT_H

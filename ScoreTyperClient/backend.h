@@ -5,6 +5,7 @@
 #include <QHostAddress>
 #include <QThread>
 #include <tcpclientwrapper.h>
+#include <clientpacketprocessorwrapper.h>
 
 class BackEnd : public QObject
 {
@@ -13,6 +14,7 @@ class BackEnd : public QObject
 private:
     QThread * workerThread;
     TcpClientWrapper * clientWrapper;
+    ClientPacketProcessorWrapper * packetProcessorWrapper;
 
 public:
     explicit BackEnd(QObject * parent = nullptr);

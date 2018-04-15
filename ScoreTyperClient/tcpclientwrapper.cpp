@@ -10,18 +10,13 @@ TcpClientWrapper::TcpClientWrapper(QObject * parent) : QObject(parent)
     connect(client, &TcpClient::connectionRefused, this, &TcpClientWrapper::connectionRefused);
     connect(client, &TcpClient::networkError, this, &TcpClientWrapper::networkError);
     connect(client, &TcpClient::unidentifiedError, this, &TcpClientWrapper::unidentifiedError);
-    connect(this, &TcpClientWrapper::connectingToServer, client, &TcpClient::connectToServer, Qt::QueuedConnection);
+    connect(this, &TcpClientWrapper::connectToServer, client, &TcpClient::connectToServer, Qt::QueuedConnection);
     connect(this, &TcpClientWrapper::sendData, client, &TcpClient::send, Qt::QueuedConnection);
 }
 
 TcpClientWrapper::~TcpClientWrapper()
 {
     client->deleteLater();
-}
-
-void TcpClientWrapper::connectToServer(const QHostAddress & address, quint16 port)
-{
-    emit connectingToServer(address, port);
 }
 
 TcpClient * TcpClientWrapper::getClient() const

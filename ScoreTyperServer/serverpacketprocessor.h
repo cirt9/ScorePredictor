@@ -19,6 +19,7 @@ public:
     explicit ServerPacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);
     ~ServerPacketProcessor() {}
 
+public slots:
     void processPacket(const Packet & packet);
 
 signals:

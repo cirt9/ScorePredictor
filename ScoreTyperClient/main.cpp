@@ -15,10 +15,11 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     qRegisterMetaType<QHostAddress>("QHostAddress");
+    qRegisterMetaType<Packet>("Packet");
 
     QScopedPointer<BackEnd> backend(new BackEnd);
     engine.rootContext()->setContextProperty("backend", backend.data());
-    engine.rootContext()->setContextProperty("clientWrapper", backend->getClientWrapper());
+    engine.rootContext()->setContextProperty("serverConnection", backend->getClientWrapper());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

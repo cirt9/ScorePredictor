@@ -3,6 +3,11 @@
 const QVariant Packet::START_OF_PACKET = QString("<SoP>");
 const QVariant Packet::END_OF_PACKET = QString("</EoP>");
 
+Packet::Packet()
+{
+    corrupted = true;
+}
+
 Packet::Packet(const QVariantList & packetData)
 {
     corrupted = false;

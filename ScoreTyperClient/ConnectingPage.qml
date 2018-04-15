@@ -53,7 +53,7 @@ Page {
     }
 
     Connections {
-        target: clientWrapper
+        target: serverConnection
         onConnected: mainWindow.pushPage("qrc:/pages/LoggingPage.qml")
         onServerClosed: {
             mainWindow.popToInitialPage()

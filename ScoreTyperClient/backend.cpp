@@ -6,8 +6,13 @@ BackEnd::BackEnd(QObject * parent) : QObject(parent)
     clientWrapper = new TcpClientWrapper(this);
     connect(workerThread, &QThread::finished, clientWrapper->getClient(), &TcpClient::disconnectFromServer);
 
+    packetProcessorWrapper = new ClientPacketProcessorWrapper(this);
+    connect(clientWrapper->getClient(), &TcpClient::packetArrived, packetProcessorWrapper->getPacketProcessor(),
+            &ClientPacketProcessor::processPacket, Qt::QueuedConnection);
+
     workerThread->start();
     clientWrapper->getClient()->moveToThread(workerThread);
+    packetProcessorWrapper->getPacketProcessor()->moveToThread(workerThread);
 
     connectToServer();
 }
@@ -24,7 +29,7 @@ void BackEnd::close()
 
 void BackEnd::connectToServer()
 {
-    clientWrapper->connectToServer(QHostAddress("127.0.0.1"), 5000);
+    emit clientWrapper->connectToServer(QHostAddress("127.0.0.1"), 5000);
 }
 
 void BackEnd::login(const QString & nickname, const QString & password)

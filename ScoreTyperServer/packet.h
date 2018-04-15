@@ -26,6 +26,7 @@ private:
     void validatePacket();
 
 public:
+    Packet();
     Packet(const QVariantList & packetData);
     Packet(QDataStream & in);
     ~Packet() {}

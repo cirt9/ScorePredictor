@@ -15,11 +15,10 @@ public:
     explicit TcpClientWrapper(QObject * parent = nullptr);
     ~TcpClientWrapper();
 
-    void connectToServer(const QHostAddress & address, quint16 port);
     TcpClient * getClient() const;
 
 signals:
-    void connectingToServer(const QHostAddress & address, quint16 port);
+    void connectToServer(const QHostAddress & address, quint16 port);
     void connected();
     void serverClosed();
     void serverNotFound();

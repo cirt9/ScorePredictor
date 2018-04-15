@@ -21,6 +21,7 @@ private:
     const static QString DRIVER_NAME;
     const static QString INITIAL_CONNECTION_NAME;
 
+    void setConnectOptions();
     void clearConnection();
 
 public:
