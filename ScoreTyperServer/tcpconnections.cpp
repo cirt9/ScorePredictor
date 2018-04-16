@@ -15,6 +15,7 @@ void TcpConnections::init()
     QMutexLocker locker(&mutex);
 
     dbConnection = QSharedPointer<DbConnection>(new DbConnection(this));
+    dbConnection->setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE=1;QSQLITE_BUSY_TIMEOUT=10000;");
     dbConnection->connect(QString::number(dbConnection->numberOfOpenedConnections()));
 }
 

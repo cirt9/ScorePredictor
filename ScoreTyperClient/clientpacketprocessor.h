@@ -20,7 +20,7 @@ public slots:
     void processPacket(const Packet & packet);
 
 signals:
-    void registrationReply(bool reply, const QString & message);
+    void registrationReply(bool replyState, const QString & message);
 };
 
 #endif // CLIENTPACKETPROCESSOR_H

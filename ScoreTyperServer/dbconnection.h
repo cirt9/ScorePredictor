@@ -21,7 +21,6 @@ private:
     const static QString DRIVER_NAME;
     const static QString INITIAL_CONNECTION_NAME;
 
-    void setConnectOptions();
     void clearConnection();
 
 public:
@@ -32,6 +31,7 @@ public:
                  const QString & driver = DRIVER_NAME);
     void close();
 
+    void setConnectOptions(const QString & options = QString());
     QSqlQuery exec(const QString & query = QString()) const;
 
     static int numberOfOpenedConnections();

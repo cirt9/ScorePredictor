@@ -17,7 +17,7 @@ public:
     ClientPacketProcessor * getPacketProcessor() const;
 
 signals:
-    void registrationReply(bool reply, const QString & message);
+    void registrationReply(bool replyState, const QString & message);
 };
 
 #endif // CLIENTPACKETPROCESSORWRAPPER_H

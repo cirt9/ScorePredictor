@@ -53,3 +53,8 @@ TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;
 }
+
+ClientPacketProcessorWrapper * BackEnd::getPacketProcessorWrapper() const
+{
+    return packetProcessorWrapper;
+}

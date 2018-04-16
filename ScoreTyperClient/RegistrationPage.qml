@@ -114,5 +114,12 @@ Page {
             }
         }
     }
+
+    Connections {
+        target: packetProcessor
+        onRegistrationReply: {
+            console.log(replyState, message)
+        }
+    }
 }
 

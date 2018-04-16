@@ -26,6 +26,7 @@ public:
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
 
     TcpClientWrapper * getClientWrapper() const;
+    ClientPacketProcessorWrapper * getPacketProcessorWrapper() const;
 };
 
 #endif // BACKEND_H
