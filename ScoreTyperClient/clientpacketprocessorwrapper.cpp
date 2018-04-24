@@ -6,6 +6,8 @@ ClientPacketProcessorWrapper::ClientPacketProcessorWrapper(QObject * parent) : Q
 
     connect(packetProcessor, &ClientPacketProcessor::registrationReply,
             this, &ClientPacketProcessorWrapper::registrationReply);
+    connect(packetProcessor, &ClientPacketProcessor::loggingReply,
+            this, &ClientPacketProcessorWrapper::loggingReply);
 }
 
 ClientPacketProcessorWrapper::~ClientPacketProcessorWrapper()

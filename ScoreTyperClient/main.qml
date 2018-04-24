@@ -22,6 +22,7 @@ ApplicationWindow {
     property color colorA: "#ccc288"
     property color colorB: "#d1474e"
     property color colorC: "#ffd700"
+    property color colorD: "#00C322"
 
     onClosing: closeApp()
 

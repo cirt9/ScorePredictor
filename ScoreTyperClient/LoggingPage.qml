@@ -59,8 +59,7 @@ Page {
 
             Text {
                 id: loggingReplyText
-                anchors.right: parent.right
-                anchors.top: parent.top
+                anchors.centerIn: parent
 
                 color: mainWindow.colorB
                 font.pointSize: 10
@@ -80,14 +79,7 @@ Page {
                 font.bold: true
                 anchors.centerIn: parent
 
-                onClicked: {
-                    backend.login(nicknameInput.text, passwordInput.text)
-                    mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
-                    /*if(backend.login(nicknameInput.text, passwordInput.text))
-                        mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
-                    else
-                        loggingReplyText.text = "Incorrect nickname or password"*/
-                }
+                onClicked: backend.login(nicknameInput.text, passwordInput.text)
             }
 
             TextButton {
@@ -143,6 +135,16 @@ Page {
 
                 onClicked: mainWindow.close()
             }
+        }
+    }
+
+    Connections {
+        target: packetProcessor
+        onLoggingReply: {
+            if(replyState)
+                mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
+            else
+                loggingReplyText.text = message;
         }
     }
 }

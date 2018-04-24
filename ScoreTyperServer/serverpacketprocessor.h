@@ -14,6 +14,7 @@ private:
     QSharedPointer<DbConnection> dbConnection;
 
     void registerUser(const QVariantList & userData);
+    void loginUser(const QVariantList & userData);
 
 public:
     explicit ServerPacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);

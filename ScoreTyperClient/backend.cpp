@@ -34,12 +34,9 @@ void BackEnd::connectToServer()
 
 void BackEnd::login(const QString & nickname, const QString & password)
 {
-    /*
     QVariantList data;
-    data << nickname << password;
+    data << Packet::PACKET_ID_LOGIN << nickname << password;
     emit clientWrapper->sendData(data);
-    */
-    qDebug() << "to do" << nickname << password;
 }
 
 void BackEnd::registerAccount(const QString & nickname, const QString & password)

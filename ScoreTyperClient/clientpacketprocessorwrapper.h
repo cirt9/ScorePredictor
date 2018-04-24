@@ -18,6 +18,7 @@ public:
 
 signals:
     void registrationReply(bool replyState, const QString & message);
+    void loggingReply(bool replyState, const QString & message);
 };
 
 #endif // CLIENTPACKETPROCESSORWRAPPER_H

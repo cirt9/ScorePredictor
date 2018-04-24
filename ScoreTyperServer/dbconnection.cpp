@@ -75,7 +75,6 @@ QSqlQuery DbConnection::exec(const QString & query) const
 
 void DbConnection::setConnectOptions(const QString & options)
 {
-    qDebug() << "Connect options set !!!";
     connection.setConnectOptions(options);
 }
 

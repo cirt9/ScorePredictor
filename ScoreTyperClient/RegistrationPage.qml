@@ -70,8 +70,7 @@ Page {
 
             Text {
                 id: registeringReplyText
-                anchors.right: parent.right
-                anchors.top: parent.top
+                anchors.centerIn: parent
 
                 color: mainWindow.colorB
                 font.pointSize: 10
@@ -118,7 +117,11 @@ Page {
     Connections {
         target: packetProcessor
         onRegistrationReply: {
-            console.log(replyState, message)
+            if(replyState)
+                registeringReplyText.color = mainWindow.colorD
+            else
+                registeringReplyText.color = mainWindow.colorB
+            registeringReplyText.text = message
         }
     }
 }

@@ -14,12 +14,18 @@ void ClientPacketProcessor::processPacket(const Packet & packet)
     switch(packetId)
     {
     case Packet::PACKET_ID_REGISTER: manageRegistrationReply(data); break;
+    case Packet::PACKET_ID_LOGIN: manageLoggingReply(data); break;
 
     default: break;
     }
 }
 
-void ClientPacketProcessor::manageRegistrationReply(const QVariantList & userData)
+void ClientPacketProcessor::manageRegistrationReply(const QVariantList & replyData)
 {
-    emit registrationReply(userData[0].toBool(), userData[1].toString());
+    emit registrationReply(replyData[0].toBool(), replyData[1].toString());
+}
+
+void ClientPacketProcessor::manageLoggingReply(const QVariantList & replyData)
+{
+    emit loggingReply(replyData[0].toBool(), replyData[1].toString());
 }

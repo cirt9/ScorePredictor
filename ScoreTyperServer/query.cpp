@@ -27,3 +27,15 @@ bool Query::registerUser(const QString & nickname, const QString & password)
     else
         return false;
 }
+
+bool Query::isPasswordCorrect(const QString & nickname, const QString & password)
+{
+    QString queryString = "SELECT 1 FROM user WHERE nickname = '" + nickname +
+            "' AND password = '" + password + "';";
+    QSqlQuery query = dbConnection->exec(queryString);
+
+    if(query.first())
+        return true;
+    else
+        return false;
+}

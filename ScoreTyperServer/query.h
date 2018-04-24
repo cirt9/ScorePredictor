@@ -18,6 +18,7 @@ public:
 
     bool isUserRegistered(const QString & nickname);
     bool registerUser(const QString & nickname, const QString & password);
+    bool isPasswordCorrect(const QString & nickname, const QString & password);
 };
 
 #endif // QUERY_H

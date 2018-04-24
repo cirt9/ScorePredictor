@@ -17,6 +17,7 @@ void ServerPacketProcessor::processPacket(const Packet & packet)
     switch(packetId)
     {
     case Packet::PACKET_ID_REGISTER: registerUser(data); break;
+    case Packet::PACKET_ID_LOGIN: loginUser(data); break;
 
     default: break;
     }
@@ -46,6 +47,34 @@ void ServerPacketProcessor::registerUser(const QVariantList & userData)
             qDebug() << "User not registered";
             responseData << QVariant(false) << QVariant(QString("A problem occured. Account could not be created."));
         }
+    }
+    emit response(responseData);
+}
+
+void ServerPacketProcessor::loginUser(const QVariantList & userData)
+{
+    Query query(dbConnection);
+    QVariantList responseData;
+    responseData << Packet::PACKET_ID_LOGIN;
+
+    if(query.isUserRegistered(userData[0].toString()))
+    {
+        qDebug() << "User exists";
+        if(query.isPasswordCorrect(userData[0].toString(), userData[1].toString()))
+        {
+            qDebug() << "Password is correct";
+            responseData << QVariant(true) << QVariant(QString("Logging in was successfull."));
+        }
+        else
+        {
+            qDebug() << "Invalid password";
+            responseData << QVariant(false) << QVariant(QString("Invalid password."));
+        }
+    }
+    else
+    {
+        qDebug() << "User does not exists";
+        responseData << QVariant(false) << QVariant(QString("Invalid nickname."));
     }
     emit response(responseData);
 }
