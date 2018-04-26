@@ -10,8 +10,8 @@ ApplicationWindow {
 
     width: Screen.desktopAvailableWidth / 1.5
     height: Screen.desktopAvailableHeight / 1.5
-    minimumHeight: 600
-    minimumWidth: 800
+    minimumWidth: 1150
+    minimumHeight: 650
 
     StackView {
        id: pagesView

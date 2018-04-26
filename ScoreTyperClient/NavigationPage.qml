@@ -13,6 +13,8 @@ Page {
 
         UserProfilePage {
             id: userProfilePage
+
+            Component.onCompleted: console.log(currentUser.username)
         }
 
         TournamentsPage {

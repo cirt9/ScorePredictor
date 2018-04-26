@@ -142,7 +142,10 @@ Page {
         target: packetProcessor
         onLoggingReply: {
             if(replyState)
+            {
+                currentUser.username = message;
                 mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
+            }
             else
                 loggingReplyText.text = message;
         }

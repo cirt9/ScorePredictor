@@ -2,6 +2,7 @@
 
 BackEnd::BackEnd(QObject * parent) : QObject(parent)
 {
+    currentUser = new User(this);
     workerThread = new QThread(this);
     clientWrapper = new TcpClientWrapper(this);
     connect(workerThread, &QThread::finished, clientWrapper->getClient(), &TcpClient::disconnectFromServer);
@@ -46,6 +47,13 @@ void BackEnd::registerAccount(const QString & nickname, const QString & password
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::downloadUserProfile(const QString & nickname)
+{
+    QVariantList data;
+    data << Packet::PACKET_ID_DOWNLOAD_USER_PROFILE << nickname;
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;
@@ -54,4 +62,9 @@ TcpClientWrapper * BackEnd::getClientWrapper() const
 ClientPacketProcessorWrapper * BackEnd::getPacketProcessorWrapper() const
 {
     return packetProcessorWrapper;
+}
+
+User * BackEnd::getCurrentUser() const
+{
+    return currentUser;
 }

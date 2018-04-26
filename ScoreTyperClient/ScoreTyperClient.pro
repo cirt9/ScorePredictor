@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     tcpclientwrapper.cpp \
     ../ScoreTyperServer/packet.cpp \
     clientpacketprocessor.cpp \
-    clientpacketprocessorwrapper.cpp
+    clientpacketprocessorwrapper.cpp \
+    user.cpp
 
 RESOURCES += qml.qrc \
     assets.qrc
@@ -40,4 +41,5 @@ HEADERS += \
     tcpclientwrapper.h \
     ../ScoreTyperServer/packet.h \
     clientpacketprocessor.h \
-    clientpacketprocessorwrapper.h
+    clientpacketprocessorwrapper.h \
+    user.h

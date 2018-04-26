@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.3
 Page {
     id: userProfilePage
 
+    property string profileDescription
+
     ColumnLayout {
         id: mainLayout
         anchors.fill: parent
@@ -37,21 +39,23 @@ Page {
                     }
 
                     Button {
-                        id: avatarChangeButton
+                        id: profileEditButton
                         Layout.fillHeight: true
                         Layout.preferredHeight: 25
                         Layout.preferredWidth: 100
-                        text: "Change"
+                        text: "Edit"
                     }
                 }
 
                 TextArea {
-                    id: profileDescription
+                    id: profileDescriptionArea
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     Layout.preferredWidth: 500
 
+                    text: profileDescription
                     placeholderText: qsTr("Description...")
+                    readOnly: true
                     selectByMouse: true
                     wrapMode: TextEdit.Wrap
                 }
@@ -84,7 +88,7 @@ Page {
                     id: leftColumnLayout                    
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    Layout.preferredWidth: avatarLayout.width + profileDescription.width + topRowLayout.spacing
+                    Layout.preferredWidth: avatarLayout.width + profileDescriptionArea.width + topRowLayout.spacing
 
                     Rectangle {
                         id: currentTournamentsContainer                        

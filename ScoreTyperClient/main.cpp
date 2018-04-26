@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("backend", backend.data());
     engine.rootContext()->setContextProperty("serverConnection", backend->getClientWrapper());
     engine.rootContext()->setContextProperty("packetProcessor", backend->getPacketProcessorWrapper());
+    engine.rootContext()->setContextProperty("currentUser", backend->getCurrentUser());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

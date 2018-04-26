@@ -63,7 +63,7 @@ void ServerPacketProcessor::loginUser(const QVariantList & userData)
         if(query.isPasswordCorrect(userData[0].toString(), userData[1].toString()))
         {
             qDebug() << "Password is correct";
-            responseData << QVariant(true) << QVariant(QString("Logging in was successfull."));
+            responseData << QVariant(true) << QVariant(userData[0].toString());
         }
         else
         {
