@@ -14,7 +14,7 @@ Page {
         UserProfilePage {
             id: userProfilePage
 
-            Component.onCompleted: console.log(currentUser.username)
+            Component.onCompleted: backend.downloadUserProfile(currentUser.username)
         }
 
         TournamentsPage {

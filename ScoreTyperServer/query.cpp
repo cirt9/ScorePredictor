@@ -39,3 +39,13 @@ bool Query::isPasswordCorrect(const QString & nickname, const QString & password
     else
         return false;
 }
+
+QSqlQuery Query::getUserProfile(const QString & nickname)
+{
+    QString queryString = "SELECT description FROM user "
+            "INNER JOIN user_profile on user.id = user_profile.user_id "
+            "WHERE user.nickname='" + nickname + "';";
+    QSqlQuery query = dbConnection->exec(queryString);
+
+    return query;
+}

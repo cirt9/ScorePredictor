@@ -15,6 +15,7 @@ void ClientPacketProcessor::processPacket(const Packet & packet)
     {
     case Packet::PACKET_ID_REGISTER: manageRegistrationReply(data); break;
     case Packet::PACKET_ID_LOGIN: manageLoggingReply(data); break;
+    case Packet::PACKET_ID_DOWNLOAD_USER_PROFILE: manageProfileDownloadReply(data); break;
 
     default: break;
     }
@@ -28,4 +29,9 @@ void ClientPacketProcessor::manageRegistrationReply(const QVariantList & replyDa
 void ClientPacketProcessor::manageLoggingReply(const QVariantList & replyData)
 {
     emit loggingReply(replyData[0].toBool(), replyData[1].toString());
+}
+
+void ClientPacketProcessor::manageProfileDownloadReply(const QVariantList & replyData)
+{
+    emit profileDownloadRedply(replyData[0].toString());
 }

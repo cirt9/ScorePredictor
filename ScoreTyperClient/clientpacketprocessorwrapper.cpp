@@ -8,6 +8,8 @@ ClientPacketProcessorWrapper::ClientPacketProcessorWrapper(QObject * parent) : Q
             this, &ClientPacketProcessorWrapper::registrationReply);
     connect(packetProcessor, &ClientPacketProcessor::loggingReply,
             this, &ClientPacketProcessorWrapper::loggingReply);
+    connect(packetProcessor, &ClientPacketProcessor::profileDownloadRedply,
+            this, &ClientPacketProcessorWrapper::profileDownloadReply);
 }
 
 ClientPacketProcessorWrapper::~ClientPacketProcessorWrapper()
@@ -15,7 +17,7 @@ ClientPacketProcessorWrapper::~ClientPacketProcessorWrapper()
     packetProcessor->deleteLater();
 }
 
-ClientPacketProcessor *ClientPacketProcessorWrapper::getPacketProcessor() const
+ClientPacketProcessor * ClientPacketProcessorWrapper::getPacketProcessor() const
 {
     return packetProcessor;
 }
