@@ -36,21 +36,21 @@ void BackEnd::connectToServer()
 void BackEnd::login(const QString & nickname, const QString & password)
 {
     QVariantList data;
-    data << Packet::PACKET_ID_LOGIN << nickname << password;
+    data << Packet::ID_LOGIN << nickname << password;
     emit clientWrapper->sendData(data);
 }
 
 void BackEnd::registerAccount(const QString & nickname, const QString & password)
 {
     QVariantList data;
-    data << Packet::PACKET_ID_REGISTER << nickname << password;
+    data << Packet::ID_REGISTER << nickname << password;
     emit clientWrapper->sendData(data);
 }
 
 void BackEnd::downloadUserProfile(const QString & nickname)
 {
     QVariantList data;
-    data << Packet::PACKET_ID_DOWNLOAD_USER_PROFILE << nickname;
+    data << Packet::ID_DOWNLOAD_USER_PROFILE << nickname;
     emit clientWrapper->sendData(data);
 }
 

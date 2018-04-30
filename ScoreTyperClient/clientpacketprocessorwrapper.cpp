@@ -10,6 +10,8 @@ ClientPacketProcessorWrapper::ClientPacketProcessorWrapper(QObject * parent) : Q
             this, &ClientPacketProcessorWrapper::loggingReply);
     connect(packetProcessor, &ClientPacketProcessor::profileDownloadRedply,
             this, &ClientPacketProcessorWrapper::profileDownloadReply);
+    connect(packetProcessor, &ClientPacketProcessor::requestError,
+            this, &ClientPacketProcessorWrapper::requestError);
 }
 
 ClientPacketProcessorWrapper::~ClientPacketProcessorWrapper()

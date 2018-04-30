@@ -16,9 +16,9 @@ void ServerPacketProcessor::processPacket(const Packet & packet)
 
     switch(packetId)
     {
-    case Packet::PACKET_ID_REGISTER: registerUser(data); break;
-    case Packet::PACKET_ID_LOGIN: loginUser(data); break;
-    case Packet::PACKET_ID_DOWNLOAD_USER_PROFILE: sendUserProfile(data); break;
+    case Packet::ID_REGISTER: registerUser(data); break;
+    case Packet::ID_LOGIN: loginUser(data); break;
+    case Packet::ID_DOWNLOAD_USER_PROFILE: userProfileRequest(data); break;
 
     default: break;
     }
@@ -28,7 +28,7 @@ void ServerPacketProcessor::registerUser(const QVariantList & userData)
 {
     Query query(dbConnection);
     QVariantList responseData;
-    responseData << Packet::PACKET_ID_REGISTER;
+    responseData << Packet::ID_REGISTER;
 
     if(query.isUserRegistered(userData[0].toString()))
     {
@@ -56,7 +56,7 @@ void ServerPacketProcessor::loginUser(const QVariantList & userData)
 {
     Query query(dbConnection);
     QVariantList responseData;
-    responseData << Packet::PACKET_ID_LOGIN;
+    responseData << Packet::ID_LOGIN;
 
     if(query.isUserRegistered(userData[0].toString()))
     {
@@ -80,17 +80,22 @@ void ServerPacketProcessor::loginUser(const QVariantList & userData)
     emit response(responseData);
 }
 
-void ServerPacketProcessor::sendUserProfile(const QVariantList & userData)
+void ServerPacketProcessor::userProfileRequest(const QVariantList & userData)
 {
     Query query(dbConnection);
     QVariantList responseData;
-    responseData << Packet::PACKET_ID_DOWNLOAD_USER_PROFILE;
 
-    QSqlQuery q = query.getUserProfile(userData[0].toString());
-    q.next();
-    responseData << q.value("description");
+    if(query.getUserProfile(userData[0].toString()))
+    {
+        responseData << Packet::ID_DOWNLOAD_USER_PROFILE << query.value("description");
 
-    qDebug() << "Description for user: " << userData[0].toString();
-    qDebug() << q.value("description");
+        qDebug() << "Description for user: " << userData[0].toString();
+        qDebug() << query.value("description");
+    }
+    else
+    {
+        qDebug() << "Profile loading error";
+        responseData << Packet::ID_ERROR << QString("Couldn't load your profile.");
+    }
     emit response(responseData);
 }

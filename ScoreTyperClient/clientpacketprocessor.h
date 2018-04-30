@@ -10,9 +10,10 @@ class ClientPacketProcessor : public QObject
     Q_OBJECT
 
 private:
+    void manageReplyError(const QVariantList & errorData);
     void manageRegistrationReply(const QVariantList & replyData);
     void manageLoggingReply(const QVariantList & replyData);
-    void manageProfileDownloadReply(const QVariantList & replyData);
+    void manageProfileRequestReply(const QVariantList & replyData);
 
 public:
     explicit ClientPacketProcessor(QObject * parent = nullptr);
@@ -22,6 +23,7 @@ public slots:
     void processPacket(const Packet & packet);
 
 signals:
+    void requestError(const QString & errorMessage);
     void registrationReply(bool replyState, const QString & message);
     void loggingReply(bool replyState, const QString & message);
     void profileDownloadRedply(const QString & description);
