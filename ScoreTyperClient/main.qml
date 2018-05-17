@@ -3,6 +3,10 @@ import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
 import "pages"
 
+//
+import QtQuick.Dialogs 1.3
+//
+
 ApplicationWindow {
     id: mainWindow
     visible: true
@@ -12,20 +16,53 @@ ApplicationWindow {
     height: Screen.desktopAvailableHeight / 1.5
     minimumWidth: 1150
     minimumHeight: 650
+    onClosing: closeApp()
+
+    /*property color colorA: "#ACABAB"
+    property color colorB: "#d1474e"
+    property color colorC: "#ffd700"
+    property color colorD: "#00C322"*/
+    property color backgroundColor: "#212027"
+    property color accentColor: "#E8CDD0"
+    property color colorA: "#8D2F23"
+    property color colorB: "#641409"
+    property color colorC: "#d1474e"
 
     StackView {
        id: pagesView
        anchors.fill: parent
        initialItem: ConnectingPage {}
    }
+// temporary solution
+    Item {
+        anchors.centerIn: parent
+        width: popup.width
+        height: popup.height
 
-    property color colorA: "#ccc288"
-    property color colorB: "#d1474e"
-    property color colorC: "#ffd700"
-    property color colorD: "#00C322"
+        Popup {
+            id: popup
+            width: 200
+            height: 200
+            modal: true
+            focus: true
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
-    onClosing: closeApp()
+            Text {
+                id: popupText
+                anchors.centerIn: parent
+                font.pointSize: 12
+            }
+        }
+    }
 
+    Connections {
+        target: packetProcessor
+        onRequestError: {
+            popupText.text = errorMessage
+            popup.open()
+        }
+    }
+//
     function pushPage(page) {
         pagesView.push(page)
     }
