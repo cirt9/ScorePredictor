@@ -92,8 +92,36 @@ Page {
                     Text {
                         id: loggingReplyText
                         anchors.centerIn: parent
-                        color: mainWindow.colorC
+                        color: "#d1474e"
                         font.pointSize: 10
+                        opacity: 0
+                    }
+
+                    Timer {
+                        id: replyTextTimer
+                        interval: 10000
+
+                        onTriggered: animationHideLoggingReply.start()
+                    }
+
+                    NumberAnimation {
+                       id: animationShowLoggingReply
+                       target: loggingReplyText
+                       properties: "opacity"
+                       from: loggingReplyText.opacity
+                       to: 1.0
+                       duration: 150
+                       easing {type: Easing.Linear;}
+                    }
+
+                    NumberAnimation {
+                       id: animationHideLoggingReply
+                       target: loggingReplyText
+                       properties: "opacity"
+                       from: loggingReplyText.opacity
+                       to: 0.0
+                       duration: 500
+                       easing {type: Easing.Linear;}
                     }
                 }
 
@@ -107,7 +135,22 @@ Page {
                     font.pointSize: 16
                     font.bold: true
 
-                    onClicked: backend.login(nicknameInput.text, passwordInput.text)
+                    onClicked: {
+                        if(nicknameInput.text.length === 0 && passwordInput.text.length === 0)
+                            loggingReplyText.text = qsTr("Enter a nickname and a password")
+                        else if(nicknameInput.text.length === 0)
+                            loggingReplyText.text = qsTr("Enter a nickname")
+                        else if(passwordInput.text.length === 0)
+                            loggingReplyText.text = qsTr("Enter a password")
+                        else
+                            backend.login(nicknameInput.text, passwordInput.text)
+
+                        if(loggingReplyText.text.length > 0)
+                        {
+                            animationShowLoggingReply.start()
+                            replyTextTimer.restart()
+                        }
+                    }
                 }
             }
 
@@ -133,8 +176,8 @@ Page {
 
                 Item {
                     id: navigationIconsContainer
-                    width: 110
-                    height: 50
+                    width: parent.width * 0.15
+                    height: parent.height
                     anchors.verticalCenter: navigationArea.verticalCenter
                     anchors.right: navigationArea.right
                     anchors.rightMargin: 10
@@ -148,6 +191,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_Settings.png"
+                            backgroundColor: mainWindow.colorA
 
                             onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
                         }
@@ -157,6 +201,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_About.png"
+                            backgroundColor: mainWindow.colorA
 
                             onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
                         }
@@ -166,6 +211,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
+                            backgroundColor: mainWindow.colorA
 
                             onClicked: mainWindow.close()
                         }
@@ -180,157 +226,18 @@ Page {
         onLoggingReply: {
             if(replyState)
             {
+                nicknameInput.text = ""
+                passwordInput.text = ""
                 currentUser.username = message;
                 mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
             }
             else
-                loggingReplyText.text = message;
-        }
-    }
-
-    /*
-    Text {
-        id: title
-        text: "Score Typer"
-        color: mainWindow.colorA
-        font { family: titleFont.name; pixelSize: 90; bold: true}
-
-        y: parent.height / 30
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-
-    Rectangle {
-        id: inputContainer
-        color: "white"
-        opacity: 0.1
-        radius: 10
-
-        width: 500
-        height: 325
-        anchors.centerIn: parent
-    }
-
-    Column {
-        anchors.centerIn: inputContainer
-        spacing: 5
-
-        TextField {
-            id: nicknameInput
-            placeholderText: qsTr("Nickname")
-            selectByMouse: true
-            maximumLength: 20
-
-            font.pointSize: 15
-            width: 350
-        }
-
-        TextField {
-            id: passwordInput
-            placeholderText: qsTr("Password")
-            echoMode: TextInput.Password
-            selectByMouse: true
-
-            width: 350
-            maximumLength: 30
-            font.pointSize: 15
-        }
-
-        Item {
-            width: 350
-            height: 15
-
-            Text {
-                id: loggingReplyText
-                anchors.centerIn: parent
-
-                color: mainWindow.colorB
-                font.pointSize: 10
-            }
-        }
-
-        Item {
-            height: 50
-            width: 350
-
-            Button {
-                id: loginButton
-                text: qsTr("LOGIN")
-
-                width: 150
-                font.pointSize: 16
-                font.bold: true
-                anchors.centerIn: parent
-
-                onClicked: backend.login(nicknameInput.text, passwordInput.text)
-            }
-
-            TextButton {
-                id: registerButton
-                text: qsTr("REGISTER")
-                textColor: mainWindow.colorA
-                textColorHovered: mainWindow.colorC
-                fontSize: 10
-                bold: true
-
-                anchors.top: loginButton.bottom
-                anchors.horizontalCenter: loginButton.horizontalCenter
-
-                onClicked: mainWindow.pushPage("qrc:/pages/RegistrationPage.qml")
-            }
-        }
-    }
-
-    Item {
-        id: navigationIconsContainer
-        width: 110
-        height: 50
-        anchors.top: inputContainer.bottom
-        anchors.right: inputContainer.right
-
-        Row {
-            anchors.centerIn: parent
-            spacing: 10
-
-            IconButton {
-                id: settingsButton
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_Settings.png"
-
-                onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
-            }
-
-            IconButton {
-                id: aboutButton
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_About.png"
-
-                onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
-            }
-
-            IconButton {
-                id: quitButton
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
-
-                onClicked: mainWindow.close()
-            }
-        }
-    }
-
-    Connections {
-        target: packetProcessor
-        onLoggingReply: {
-            if(replyState)
             {
-                currentUser.username = message;
-                mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
-            }
-            else
+                passwordInput.text = ""
                 loggingReplyText.text = message;
+                animationShowLoggingReply.start()
+                replyTextTimer.restart()
+            }
         }
     }
-    */
 }

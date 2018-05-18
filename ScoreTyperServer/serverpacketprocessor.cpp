@@ -69,13 +69,13 @@ void ServerPacketProcessor::loginUser(const QVariantList & userData)
         else
         {
             qDebug() << "Invalid password";
-            responseData << false << QString("Invalid password.");
+            responseData << false << QString("Invalid password");
         }
     }
     else
     {
         qDebug() << "User does not exists";
-        responseData << false << QString("Invalid nickname.");
+        responseData << false << QString("Invalid nickname");
     }
     emit response(responseData);
 }

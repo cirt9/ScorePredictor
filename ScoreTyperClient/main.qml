@@ -18,10 +18,6 @@ ApplicationWindow {
     minimumHeight: 650
     onClosing: closeApp()
 
-    /*property color colorA: "#ACABAB"
-    property color colorB: "#d1474e"
-    property color colorC: "#ffd700"
-    property color colorD: "#00C322"*/
     property color backgroundColor: "#212027"
     property color accentColor: "#E8CDD0"
     property color colorA: "#8D2F23"
