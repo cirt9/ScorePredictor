@@ -69,6 +69,10 @@ Page {
             mainWindow.popToInitialPage()
             enableButtons()
         }
+        onDisconnected: {
+            mainWindow.popToInitialPage()
+            enableButtons()
+        }
     }
 
     function enableButtons() {

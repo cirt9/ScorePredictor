@@ -62,7 +62,7 @@ Page {
                             id: nicknameInput
                             placeholderText: qsTr("Nickname")
                             selectByMouse: true
-                            maximumLength: 20
+                            maximumLength: 30
                             font.pointSize: 20
                             width: inputArea.width
                         }
@@ -171,12 +171,12 @@ Page {
                     bold: true
                     anchors.centerIn: parent
 
-                    onClicked: mainWindow.pushPage("qrc:/pages/RegistrationPage.qml")
+                    onClicked: registrationPopup.open()
                 }
 
                 Item {
                     id: navigationIconsContainer
-                    width: parent.width * 0.15
+                    width: parent.width * 0.20
                     height: parent.height
                     anchors.verticalCenter: navigationArea.verticalCenter
                     anchors.right: navigationArea.right
@@ -207,6 +207,16 @@ Page {
                         }
 
                         IconButton {
+                            id: disconnectButton
+                            width: 30
+                            height: 30
+                            iconSource: "qrc://assets/icons/icons/icons8_Disconnected.png"
+                            backgroundColor: mainWindow.colorA
+
+                            onClicked: backend.disconnectFromServer()
+                        }
+
+                        IconButton {
                             id: quitButton
                             width: 30
                             height: 30
@@ -217,6 +227,26 @@ Page {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    Item {
+        anchors.centerIn: parent
+        width: registrationPopup.width
+        height: registrationPopup.height
+
+        Popup {
+            id: registrationPopup
+            width: loggingPage.width / 2
+            height: loggingPage.height - 50
+            modal: true
+            focus: true
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+            RegistrationPage {
+                id: test
+                anchors.fill: parent
             }
         }
     }

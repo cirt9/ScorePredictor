@@ -19,7 +19,9 @@ public:
 
 signals:
     void connectToServer(const QHostAddress & address, quint16 port);
+    void disconnectFromServer();
     void connected();
+    void disconnected();
     void serverClosed();
     void serverNotFound();
     void connectionRefused();

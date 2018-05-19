@@ -3,10 +3,6 @@ import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
 import "pages"
 
-//
-import QtQuick.Dialogs 1.3
-//
-
 ApplicationWindow {
     id: mainWindow
     visible: true
@@ -41,7 +37,7 @@ ApplicationWindow {
             height: 200
             modal: true
             focus: true
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             Text {
                 id: popupText

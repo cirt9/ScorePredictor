@@ -33,6 +33,11 @@ void BackEnd::connectToServer()
     emit clientWrapper->connectToServer(QHostAddress("127.0.0.1"), 5000);
 }
 
+void BackEnd::disconnectFromServer()
+{
+    emit clientWrapper->disconnectFromServer();
+}
+
 void BackEnd::login(const QString & nickname, const QString & password)
 {
     QVariantList data;
