@@ -57,24 +57,33 @@ Page {
                     anchors.topMargin: height * 0.1
 
                     Column {
+                        spacing: 2
 
-                        TextField {
+                        TextLineField {
                             id: nicknameInput
                             placeholderText: qsTr("Nickname")
+                            fontSize: 20
                             selectByMouse: true
                             maximumLength: 30
-                            font.pointSize: 20
                             width: inputArea.width
+                            textColor: "white"
+                            selectedTextColor: "white"
+                            selectionColor: mainWindow.accentColor
+                            underlineColorOnFocus: mainWindow.accentColor
                         }
 
-                        TextField {
+                        TextLineField {
                             id: passwordInput
                             placeholderText: qsTr("Password")
+                            fontSize: 20
                             echoMode: TextInput.Password
                             selectByMouse: true
                             maximumLength: 30
-                            font.pointSize: 20
                             width: inputArea.width
+                            textColor: "white"
+                            selectedTextColor: "white"
+                            selectionColor: mainWindow.accentColor
+                            underlineColorOnFocus: mainWindow.accentColor
                         }
                     }
                 }

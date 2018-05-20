@@ -8,6 +8,7 @@
         <file>TextButton.qml</file>
         <file>CheckableTabButton.qml</file>
         <file>ClickableTabButton.qml</file>
+        <file>TextLineField.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
