@@ -31,8 +31,8 @@ Page {
                 fontSize: 20
                 selectByMouse: true
                 maximumLength: 30
-                textColor: "white"
-                selectedTextColor: "white"
+                textColor: fontColor
+                selectedTextColor: fontColor
                 selectionColor: mainWindow.accentColor
                 underlineColorOnFocus: mainWindow.accentColor
 
@@ -48,8 +48,8 @@ Page {
                 selectByMouse: true
                 maximumLength: 30
                 echoMode: TextInput.Password
-                textColor: "white"
-                selectedTextColor: "white"
+                textColor: fontColor
+                selectedTextColor: fontColor
                 selectionColor: mainWindow.accentColor
                 underlineColorOnFocus: mainWindow.accentColor
 
@@ -65,8 +65,8 @@ Page {
                 selectByMouse: true
                 maximumLength: 30
                 echoMode: TextInput.Password
-                textColor: "white"
-                selectedTextColor: "white"
+                textColor: fontColor
+                selectedTextColor: fontColor
                 selectionColor: mainWindow.accentColor
                 underlineColorOnFocus: mainWindow.accentColor
 

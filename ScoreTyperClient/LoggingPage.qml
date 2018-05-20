@@ -66,8 +66,8 @@ Page {
                             selectByMouse: true
                             maximumLength: 30
                             width: inputArea.width
-                            textColor: "white"
-                            selectedTextColor: "white"
+                            textColor: fontColor
+                            selectedTextColor: fontColor
                             selectionColor: mainWindow.accentColor
                             underlineColorOnFocus: mainWindow.accentColor
                         }
@@ -80,8 +80,8 @@ Page {
                             selectByMouse: true
                             maximumLength: 30
                             width: inputArea.width
-                            textColor: "white"
-                            selectedTextColor: "white"
+                            textColor: fontColor
+                            selectedTextColor: fontColor
                             selectionColor: mainWindow.accentColor
                             underlineColorOnFocus: mainWindow.accentColor
                         }
@@ -256,6 +256,17 @@ Page {
             RegistrationPage {
                 id: test
                 anchors.fill: parent
+            }
+
+            IconButton {
+                width: 30
+                height: 30
+                iconSource: "qrc://assets/icons/icons/icons8_Delete.png"
+                backgroundColor: mainWindow.colorA
+                anchors.right: parent.right
+                anchors.top: parent.top
+
+                onClicked: registrationPopup.close()
             }
         }
     }

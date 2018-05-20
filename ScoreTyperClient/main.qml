@@ -16,6 +16,7 @@ ApplicationWindow {
 
     property color backgroundColor: "#212027"
     property color accentColor: "#E8CDD0"
+    property color fontColor: "white"
     property color colorA: "#8D2F23"
     property color colorB: "#641409"
     property color colorC: "#d1474e"

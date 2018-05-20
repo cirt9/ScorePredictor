@@ -32,6 +32,11 @@ Item  {
         anchors.fill: parent
         hoverEnabled: true
 
+        onFocusChanged: {
+            if(!focus && !hovered)
+                animateOpacityOnExited.start()
+        }
+
         onClicked: root.clicked()
         onPressed: animateRadiusOnPressed.start()
         onReleased: animateRadiusOnReleased.start()

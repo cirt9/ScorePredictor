@@ -7,6 +7,7 @@
         <file>icons/icons8_Settings.png</file>
         <file>icons/icons8_Shutdown.png</file>
         <file>icons/icons8_Disconnected.png</file>
+        <file>icons/icons8_Delete.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
