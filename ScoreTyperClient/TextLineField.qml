@@ -13,12 +13,19 @@ Rectangle {
     property color placeholderTextColor: textColor
     property color underlineColor: "white"
     property color underlineColorOnFocus: "black"
+    property color underlineColorBadData: "red"
     property alias selectedTextColor: inputText.selectedTextColor
     property alias selectionColor: inputText.selectionColor
     property alias placeholderText: placeholder.text
     property alias selectByMouse: inputText.selectByMouse
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
+
+    signal focused()
+
+    function markBadData() {
+        underline.color = underlineColorBadData
+    }
 
     Text {
         id: placeholder
@@ -44,14 +51,15 @@ Rectangle {
             if(focus)
             {
                 if(inputText.text.length === 0)
-                    minimizePlaceholderAnimation.start()
+                    animateMinimizingPlaceholder.start()
                 underline.color = underlineColorOnFocus
                 underline.height = 2
                 underline.opacity = 1.0
+                root.focused()
             }
             else if(inputText.text.length === 0)
             {
-                enlargePlaceholderAnimation.start()
+                animateEnlargingPlaceholder.start()
                 underline.height = 1
                 underline.color = underlineColor
                 underline.opacity = 0.3
@@ -66,7 +74,7 @@ Rectangle {
         onTextChanged: {
             if(inputText.text.length === 0 && !focus)
             {
-                enlargePlaceholderAnimation.start()
+                animateEnlargingPlaceholder.start()
                 underline.height = 1
                 underline.color = underlineColor
                 underline.opacity = 0.3
@@ -104,7 +112,7 @@ Rectangle {
     }
 
     ParallelAnimation {
-        id: minimizePlaceholderAnimation
+        id: animateMinimizingPlaceholder
 
         NumberAnimation {
            target: placeholder
@@ -125,7 +133,7 @@ Rectangle {
     }
 
     ParallelAnimation {
-        id: enlargePlaceholderAnimation
+        id: animateEnlargingPlaceholder
 
         NumberAnimation {
            target: placeholder

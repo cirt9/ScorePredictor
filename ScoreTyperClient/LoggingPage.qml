@@ -70,6 +70,7 @@ Page {
                             selectedTextColor: fontColor
                             selectionColor: mainWindow.accentColor
                             underlineColorOnFocus: mainWindow.accentColor
+                            underlineColorBadData: mainWindow.deniedColor
                         }
 
                         TextLineField {
@@ -84,6 +85,7 @@ Page {
                             selectedTextColor: fontColor
                             selectionColor: mainWindow.accentColor
                             underlineColorOnFocus: mainWindow.accentColor
+                            underlineColorBadData: mainWindow.deniedColor
                         }
                     }
                 }
@@ -101,7 +103,7 @@ Page {
                     Text {
                         id: loggingReplyText
                         anchors.centerIn: parent
-                        color: "#d1474e"
+                        color: mainWindow.deniedColor
                         font.pointSize: 10
                         opacity: 0
                     }
@@ -110,11 +112,11 @@ Page {
                         id: replyTextTimer
                         interval: 10000
 
-                        onTriggered: animationHideLoggingReply.start()
+                        onTriggered: animateHidingLoggingReply.start()
                     }
 
                     NumberAnimation {
-                       id: animationShowLoggingReply
+                       id: animateShowingLoggingReply
                        target: loggingReplyText
                        properties: "opacity"
                        from: loggingReplyText.opacity
@@ -124,7 +126,7 @@ Page {
                     }
 
                     NumberAnimation {
-                       id: animationHideLoggingReply
+                       id: animateHidingLoggingReply
                        target: loggingReplyText
                        properties: "opacity"
                        from: loggingReplyText.opacity
@@ -146,17 +148,27 @@ Page {
 
                     onClicked: {
                         if(nicknameInput.text.length === 0 && passwordInput.text.length === 0)
+                        {
                             loggingReplyText.text = qsTr("Enter a nickname and a password")
+                            nicknameInput.markBadData()
+                            passwordInput.markBadData()
+                        }
                         else if(nicknameInput.text.length === 0)
+                        {
                             loggingReplyText.text = qsTr("Enter a nickname")
+                            nicknameInput.markBadData()
+                        }
                         else if(passwordInput.text.length === 0)
+                        {
                             loggingReplyText.text = qsTr("Enter a password")
+                            passwordInput.markBadData()
+                        }
                         else
                             backend.login(nicknameInput.text, passwordInput.text)
 
                         if(loggingReplyText.text.length > 0)
                         {
-                            animationShowLoggingReply.start()
+                            animateShowingLoggingReply.start()
                             replyTextTimer.restart()
                         }
                     }
@@ -274,7 +286,7 @@ Page {
     Connections {
         target: packetProcessor
         onLoggingReply: {
-            if(replyState)
+            if(nicknameState && passwordState)
             {
                 nicknameInput.text = ""
                 passwordInput.text = ""
@@ -285,8 +297,13 @@ Page {
             {
                 passwordInput.text = ""
                 loggingReplyText.text = message;
-                animationShowLoggingReply.start()
+                animateShowingLoggingReply.start()
                 replyTextTimer.restart()
+
+                if(!nicknameState)
+                    nicknameInput.markBadData()
+                if(!passwordState)
+                    passwordInput.markBadData()
             }
         }
     }

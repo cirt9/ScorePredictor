@@ -33,7 +33,7 @@ void ServerPacketProcessor::registerUser(const QVariantList & userData)
     if(query.isUserRegistered(userData[0].toString()))
     {
         qDebug() << "User is registered";
-        responseData << false << QString("This nickname is already occupied.");
+        responseData << false << QString("This nickname is already occupied");
     }
     else
     {
@@ -41,12 +41,12 @@ void ServerPacketProcessor::registerUser(const QVariantList & userData)
         if(query.registerUser(userData[0].toString(), userData[1].toString()))
         {
             qDebug() << "User registered";
-            responseData << true << QString("Your account has been successfully created.");
+            responseData << true << QString("Your account has been successfully created");
         }
         else
         {
             qDebug() << "User not registered";
-            responseData << false << QString("A problem occured. Account could not be created.");
+            responseData << false << QString("A problem occured. Account could not be created");
         }
     }
     emit response(responseData);
@@ -61,6 +61,8 @@ void ServerPacketProcessor::loginUser(const QVariantList & userData)
     if(query.isUserRegistered(userData[0].toString()))
     {
         qDebug() << "User exists";
+        responseData << true;
+
         if(query.isPasswordCorrect(userData[0].toString(), userData[1].toString()))
         {
             qDebug() << "Password is correct";
@@ -75,7 +77,7 @@ void ServerPacketProcessor::loginUser(const QVariantList & userData)
     else
     {
         qDebug() << "User does not exists";
-        responseData << false << QString("Invalid nickname");
+        responseData << false << false << QString("Invalid nickname");
     }
     emit response(responseData);
 }
@@ -95,7 +97,7 @@ void ServerPacketProcessor::userProfileRequest(const QVariantList & userData)
     else
     {
         qDebug() << "Profile loading error";
-        responseData << Packet::ID_ERROR << QString("Couldn't load your profile.");
+        responseData << Packet::ID_ERROR << QString("Couldn't load your profile");
     }
     emit response(responseData);
 }

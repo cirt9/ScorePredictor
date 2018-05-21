@@ -34,7 +34,7 @@ void ClientPacketProcessor::manageRegistrationReply(const QVariantList & replyDa
 
 void ClientPacketProcessor::manageLoggingReply(const QVariantList & replyData)
 {
-    emit loggingReply(replyData[0].toBool(), replyData[1].toString());
+    emit loggingReply(replyData[0].toBool(), replyData[1].toBool(), replyData[2].toString());
 }
 
 void ClientPacketProcessor::manageProfileRequestReply(const QVariantList & replyData)

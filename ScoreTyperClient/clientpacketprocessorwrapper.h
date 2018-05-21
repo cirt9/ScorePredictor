@@ -19,7 +19,7 @@ public:
 signals:
     void requestError(const QString & errorMessage);
     void registrationReply(bool replyState, const QString & message);
-    void loggingReply(bool replyState, const QString & message);
+    void loggingReply(bool nicknameState, bool passwordState, const QString & message);
     void profileDownloadReply(const QString & description);
 };
 

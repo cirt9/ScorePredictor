@@ -20,6 +20,8 @@ ApplicationWindow {
     property color colorA: "#8D2F23"
     property color colorB: "#641409"
     property color colorC: "#d1474e"
+    property color acceptedColor: "green"
+    property color deniedColor: "#d1474e"
 
     StackView {
        id: pagesView
