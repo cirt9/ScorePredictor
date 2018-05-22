@@ -6,6 +6,8 @@ import "../components"
 Page {
     id: registrationPage
 
+    property bool waitingForServerResponse
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 10
@@ -112,36 +114,36 @@ Page {
         }
 
         Text {
-            id: registeringCompletedText
+            id: registeringResponseText
             color: mainWindow.acceptedColor
-            font.pointSize: 10
+            font.pointSize: 8
             font.bold: true
             anchors.horizontalCenter: parent.horizontalCenter
             opacity: 0
         }
 
         Timer {
-            id: registeringCompletedTimer
-            interval: 10000
+            id: registeringResponseTextTimer
+            interval: 5000
 
-            onTriggered: animateHidingRegisteringCompletedText.start()
+            onTriggered: animateHidingRegisteringResponseText.start()
         }
 
         NumberAnimation {
-           id: animateShowingRegisteringCompletedText
-           target: registeringCompletedText
+           id: animateShowingRegisteringResponseText
+           target: registeringResponseText
            properties: "opacity"
-           from: registeringCompletedText.opacity
+           from: registeringResponseText.opacity
            to: 1.0
            duration: 150
            easing {type: Easing.Linear;}
         }
 
         NumberAnimation {
-           id: animateHidingRegisteringCompletedText
-           target: registeringCompletedText
+           id: animateHidingRegisteringResponseText
+           target: registeringResponseText
            properties: "opacity"
-           from: registeringCompletedText.opacity
+           from: registeringResponseText.opacity
            to: 0.0
            duration: 500
            easing {type: Easing.Linear;}
@@ -186,7 +188,13 @@ Page {
                     formFilledCorrectly = false
                 }
                 if(formFilledCorrectly)
+                {
+                    busyTimer.restart()
+                    mainWindow.startBusyIndicator()
+                    loggingPage.blockRegistrationPopup()
+                    waitingForServerResponse = true
                     backend.registerAccount(nicknameInput.text, passwordInput.text)
+                }
             }
         }
     }
@@ -194,18 +202,41 @@ Page {
     Connections {
         target: packetProcessor
         onRegistrationReply: {
-            if(replyState)
+            if(waitingForServerResponse)
             {
-                registeringCompletedText.text = message
-                animateShowingRegisteringCompletedText.start()
-                registeringCompletedTimer.restart()
-            }
-            else
-            {
-                nicknameInput.markBadData()
-                nicknameInputReplyText.text = message
+                busyTimer.stop()
+                loggingPage.unblockRegistrationPopup()
+                mainWindow.stopBusyIndicator()
+
+                if(replyState)
+                {
+                    registeringResponseText.color = mainWindow.acceptedColor
+                    registeringResponseText.text = message
+                    animateShowingRegisteringResponseText.start()
+                    registeringResponseTextTimer.restart()
+                }
+                else
+                {
+                    nicknameInput.markBadData()
+                    nicknameInputReplyText.text = message
+                }
+                waitingForServerResponse = false
             }
         }
     }
-}
 
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            waitingForServerResponse = false
+            loggingPage.unblockRegistrationPopup()
+            mainWindow.stopBusyIndicator()
+            registeringResponseText.color = mainWindow.fontColor
+            registeringResponseText.text = qsTr("The server is not responding, try again later")
+            animateShowingRegisteringResponseText.start()
+            registeringResponseTextTimer.restart()
+        }
+    }
+}

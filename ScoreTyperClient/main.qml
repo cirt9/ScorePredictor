@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
+import "components"
 import "pages"
 
 ApplicationWindow {
@@ -22,19 +23,20 @@ ApplicationWindow {
     property color colorC: "#d1474e"
     property color acceptedColor: "green"
     property color deniedColor: "#d1474e"
+    property int serverResponseWaitingTimeMsec: 60000
 
     StackView {
        id: pagesView
        anchors.fill: parent
        initialItem: ConnectingPage {}
    }
-// temporary solution
+
     Item {
         anchors.centerIn: parent
         width: popup.width
         height: popup.height
 
-        Popup {
+        PopupBox {
             id: popup
             width: 200
             height: 200
@@ -48,16 +50,24 @@ ApplicationWindow {
                 font.pointSize: 12
             }
         }
-    }
 
-    Connections {
-        target: packetProcessor
-        onRequestError: {
-            popupText.text = errorMessage
-            popup.open()
+        Connections {
+            target: packetProcessor
+            onRequestError: {
+                popupText.text = errorMessage
+                popup.open()
+            }
         }
     }
-//
+
+    BusyIndicator {
+        id: busyIndicator
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        running: false
+        z: 1
+    }
+
     function pushPage(page) {
         pagesView.push(page)
     }
@@ -74,5 +84,13 @@ ApplicationWindow {
     function closeApp() {
         backend.close()
         Qt.quit()
+    }
+
+    function startBusyIndicator() {
+        busyIndicator.running = true
+    }
+
+    function stopBusyIndicator() {
+        busyIndicator.running = false
     }
 }

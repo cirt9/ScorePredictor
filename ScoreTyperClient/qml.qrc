@@ -9,6 +9,7 @@
         <file>CheckableTabButton.qml</file>
         <file>ClickableTabButton.qml</file>
         <file>TextLineField.qml</file>
+        <file>PopupBox.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>

@@ -6,6 +6,8 @@ import "../components"
 Page {
     id: loggingPage
 
+    property bool waitingForServerResponse
+
     FontLoader { id: titleFont; source: "qrc://assets/fonts/fonts/PROMESH-Regular.ttf" }
 
     ColumnLayout {
@@ -164,7 +166,13 @@ Page {
                             passwordInput.markBadData()
                         }
                         else
+                        {
+                            busyTimer.restart()
+                            blockLoggingPage()
+                            mainWindow.startBusyIndicator()
+                            waitingForServerResponse = true
                             backend.login(nicknameInput.text, passwordInput.text)
+                        }
 
                         if(loggingReplyText.text.length > 0)
                         {
@@ -257,28 +265,14 @@ Page {
         width: registrationPopup.width
         height: registrationPopup.height
 
-        Popup {
+        PopupBox {
             id: registrationPopup
             width: loggingPage.width / 2
             height: loggingPage.height - 50
-            modal: true
-            focus: true
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             RegistrationPage {
                 id: test
                 anchors.fill: parent
-            }
-
-            IconButton {
-                width: 30
-                height: 30
-                iconSource: "qrc://assets/icons/icons/icons8_Delete.png"
-                backgroundColor: mainWindow.colorA
-                anchors.right: parent.right
-                anchors.top: parent.top
-
-                onClicked: registrationPopup.close()
             }
         }
     }
@@ -286,25 +280,65 @@ Page {
     Connections {
         target: packetProcessor
         onLoggingReply: {
-            if(nicknameState && passwordState)
+            if(waitingForServerResponse)
             {
-                nicknameInput.text = ""
-                passwordInput.text = ""
-                currentUser.username = message;
-                mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
-            }
-            else
-            {
-                passwordInput.text = ""
-                loggingReplyText.text = message;
-                animateShowingLoggingReply.start()
-                replyTextTimer.restart()
+                busyTimer.stop()
+                unblockLoggingPage()
+                mainWindow.stopBusyIndicator()
 
-                if(!nicknameState)
-                    nicknameInput.markBadData()
-                if(!passwordState)
-                    passwordInput.markBadData()
+                if(nicknameState && passwordState)
+                {
+                    nicknameInput.text = ""
+                    passwordInput.text = ""
+                    currentUser.username = message;
+                    mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
+                }
+                else
+                {
+                    passwordInput.text = ""
+                    loggingReplyText.text = message;
+                    animateShowingLoggingReply.start()
+                    replyTextTimer.restart()
+
+                    if(!nicknameState)
+                        nicknameInput.markBadData()
+                    if(!passwordState)
+                        passwordInput.markBadData()
+                }
+                waitingForServerResponse = false
             }
         }
+    }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            waitingForServerResponse = false
+            unblockLoggingPage()
+            mainWindow.stopBusyIndicator()
+            loggingReplyText.text = qsTr("The server is not responding, try again later")
+            animateShowingLoggingReply.start()
+            replyTextTimer.restart()
+        }
+    }
+
+    function blockLoggingPage() {
+        loggingPage.enabled = false
+    }
+
+    function unblockLoggingPage() {
+        loggingPage.enabled = true
+    }
+
+    function blockRegistrationPopup() {
+        registrationPopup.enabled = false
+        registrationPopup.closePolicy = Popup.NoAutoClose
+    }
+
+    function unblockRegistrationPopup() {
+        registrationPopup.enabled = true
+        registrationPopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
     }
 }
