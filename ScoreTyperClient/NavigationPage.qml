@@ -53,6 +53,22 @@ Page {
                 onClicked: changePage(2)
             }
         }
+
+        Row {
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.rightMargin: 30
+
+            IconButton {
+                id: logoutButton
+                width: 30
+                height: 30
+                iconSource: "qrc://assets/icons/icons/icons8_Exit.png"
+                backgroundColor: mainWindow.colorA
+
+                onClicked: mainWindow.popPage()
+            }
+        }
     }
 
     SwipeView {
@@ -87,58 +103,4 @@ Page {
         navigationBar.children[navigationBar.currentIndex].checked = true
         navigationView.currentIndex = navigationBar.currentIndex
     }
-
-    /*
-    SwipeView {
-        id: navigationView
-
-        currentIndex: tabBar.currentIndex
-        anchors.fill: parent
-
-        UserProfilePage {
-            id: userProfilePage
-
-            Component.onCompleted: backend.downloadUserProfile(currentUser.username)
-        }
-
-        TournamentsPage {
-            id: tournamentsPage
-        }
-
-        TournamentCreatorPage {
-            id: tournamentCreatorPage
-        }
-
-        FriendsPage {
-            id: friendsPage
-        }
-
-    }
-
-    header: TabBar {
-        id: tabBar
-        currentIndex: navigationView.currentIndex
-        spacing: 0
-
-        CheckableTabButton {
-            text: qsTr("Profile")
-        }
-
-        CheckableTabButton {
-            text: qsTr("Tournaments")
-        }
-
-        CheckableTabButton {
-            text: qsTr("Creator")
-        }
-
-        CheckableTabButton {
-            text: qsTr("Friends")
-        }
-
-        ClickableTabButton {
-            text: qsTr("Logout")
-            onClicked: mainWindow.popPage()
-        }
-    }*/
 }
