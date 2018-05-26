@@ -33,12 +33,12 @@ ApplicationWindow {
 
     Item {
         anchors.centerIn: parent
-        width: popup.width
-        height: popup.height
+        width: errorPopup.width
+        height: errorPopup.height
 
         PopupBox {
-            id: popup
-            width: 200
+            id: errorPopup
+            width: 600
             height: 200
             modal: true
             focus: true
@@ -48,6 +48,7 @@ ApplicationWindow {
                 id: popupText
                 anchors.centerIn: parent
                 font.pointSize: 12
+                color: fontColor
             }
         }
 
@@ -55,7 +56,7 @@ ApplicationWindow {
             target: packetProcessor
             onRequestError: {
                 popupText.text = errorMessage
-                popup.open()
+                errorPopup.open()
             }
         }
     }
@@ -92,5 +93,10 @@ ApplicationWindow {
 
     function stopBusyIndicator() {
         busyIndicator.running = false
+    }
+
+    function showErrorPopup(message) {
+        popupText.text = message
+        errorPopup.open()
     }
 }

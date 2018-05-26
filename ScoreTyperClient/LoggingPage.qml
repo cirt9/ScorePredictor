@@ -6,8 +6,6 @@ import "../components"
 Page {
     id: loggingPage
 
-    property bool waitingForServerResponse
-
     FontLoader { id: titleFont; source: "qrc://assets/fonts/fonts/PROMESH-Regular.ttf" }
 
     ColumnLayout {
@@ -170,7 +168,6 @@ Page {
                             busyTimer.restart()
                             blockLoggingPage()
                             mainWindow.startBusyIndicator()
-                            waitingForServerResponse = true
                             backend.login(nicknameInput.text, passwordInput.text)
                         }
 
@@ -280,32 +277,28 @@ Page {
     Connections {
         target: packetProcessor
         onLoggingReply: {
-            if(waitingForServerResponse)
+            busyTimer.stop()
+            unblockLoggingPage()
+            mainWindow.stopBusyIndicator()
+
+            if(nicknameState && passwordState)
             {
-                busyTimer.stop()
-                unblockLoggingPage()
-                mainWindow.stopBusyIndicator()
+                nicknameInput.text = ""
+                passwordInput.text = ""
+                currentUser.username = message;
+                mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
+            }
+            else
+            {
+                passwordInput.text = ""
+                loggingReplyText.text = message;
+                animateShowingLoggingReply.start()
+                replyTextTimer.restart()
 
-                if(nicknameState && passwordState)
-                {
-                    nicknameInput.text = ""
-                    passwordInput.text = ""
-                    currentUser.username = message;
-                    mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
-                }
-                else
-                {
-                    passwordInput.text = ""
-                    loggingReplyText.text = message;
-                    animateShowingLoggingReply.start()
-                    replyTextTimer.restart()
-
-                    if(!nicknameState)
-                        nicknameInput.markBadData()
-                    if(!passwordState)
-                        passwordInput.markBadData()
-                }
-                waitingForServerResponse = false
+                if(!nicknameState)
+                    nicknameInput.markBadData()
+                if(!passwordState)
+                    passwordInput.markBadData()
             }
         }
     }
@@ -315,12 +308,10 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            waitingForServerResponse = false
             unblockLoggingPage()
             mainWindow.stopBusyIndicator()
-            loggingReplyText.text = qsTr("The server is not responding, try again later")
-            animateShowingLoggingReply.start()
-            replyTextTimer.restart()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("The server is not responding, try again later"))
         }
     }
 

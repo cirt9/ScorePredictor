@@ -5,6 +5,90 @@ import "../components"
 Page {
     id: navigationPage
 
+    Rectangle {
+        id: headerBar
+        color: "transparent"
+        height: 40
+        width: parent.width
+        anchors.left: parent.left
+        anchors.top: parent.top
+
+        Row {
+            id: navigationBar
+            spacing: 10
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 30
+            property int previousIndex: 0
+            property int currentIndex: 0
+
+            NavigationButton {
+                text: qsTr("Profile")
+                textColor: mainWindow.fontColor
+                underlineColor: mainWindow.accentColor
+                uncheckedFontSize: 12
+                checkedFontSize: 14
+                checked: true
+
+                onClicked: changePage(0)
+            }
+
+            NavigationButton {
+                text: qsTr("Tournaments")
+                textColor: mainWindow.fontColor
+                underlineColor: mainWindow.accentColor
+                uncheckedFontSize: 12
+                checkedFontSize: 14
+
+                onClicked: changePage(1)
+            }
+
+            NavigationButton {
+                text: qsTr("Tournament Creator")
+                textColor: mainWindow.fontColor
+                underlineColor: mainWindow.accentColor
+                uncheckedFontSize: 12
+                checkedFontSize: 14
+
+                onClicked: changePage(2)
+            }
+        }
+    }
+
+    SwipeView {
+        id: navigationView
+        width: parent.width
+        height: parent.height - headerBar.height
+        anchors.left: parent.left
+        anchors.top: headerBar.bottom
+
+        onCurrentIndexChanged: changePage(currentIndex)
+
+        UserProfilePage {
+            id: userProfilePage
+
+            Component.onCompleted: backend.downloadUserProfile(currentUser.username)
+        }
+
+        TournamentsPage {
+            id: tournamentsPage
+        }
+
+        TournamentCreatorPage {
+            id: tournamentCreatorPage
+        }
+    }
+
+    function changePage(index)
+    {
+        navigationBar.previousIndex = navigationBar.currentIndex
+        navigationBar.currentIndex = index
+        navigationBar.children[navigationBar.previousIndex].checked = false
+        navigationBar.children[navigationBar.currentIndex].checked = true
+        navigationView.currentIndex = navigationBar.currentIndex
+    }
+
+    /*
     SwipeView {
         id: navigationView
 
@@ -28,6 +112,7 @@ Page {
         FriendsPage {
             id: friendsPage
         }
+
     }
 
     header: TabBar {
@@ -55,5 +140,5 @@ Page {
             text: qsTr("Logout")
             onClicked: mainWindow.popPage()
         }
-    }
+    }*/
 }

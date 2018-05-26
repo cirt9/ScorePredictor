@@ -8,7 +8,6 @@ Page {
     ColumnLayout {
         id: mainLayout
         anchors.fill: parent
-        anchors.margins: 10
 
         GroupBox {
             id: topRowBox

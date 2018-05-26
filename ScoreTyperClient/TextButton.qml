@@ -20,7 +20,7 @@ Item {
         text: root.text
         font.family: root.font
         font.pointSize: root.fontSize
-        font.bold: root.bold ? true : false
+        font.bold: root.bold
         elide: Text.ElideMiddle
     }
 
@@ -32,14 +32,13 @@ Item {
 
         font.family: root.font
         font.pointSize: fontSize
-        font.bold: root.bold ? true : false
+        font.bold: root.bold
         elide: Text.ElideMiddle
 
         anchors.centerIn: parent
     }
 
     MouseArea {
-        id: clickingArea
         anchors.fill: parent
         hoverEnabled: true
 

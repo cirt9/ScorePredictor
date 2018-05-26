@@ -6,8 +6,6 @@ import "../components"
 Page {
     id: registrationPage
 
-    property bool waitingForServerResponse
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 10
@@ -192,7 +190,6 @@ Page {
                     busyTimer.restart()
                     mainWindow.startBusyIndicator()
                     loggingPage.blockRegistrationPopup()
-                    waitingForServerResponse = true
                     backend.registerAccount(nicknameInput.text, passwordInput.text)
                 }
             }
@@ -202,25 +199,20 @@ Page {
     Connections {
         target: packetProcessor
         onRegistrationReply: {
-            if(waitingForServerResponse)
-            {
-                busyTimer.stop()
-                loggingPage.unblockRegistrationPopup()
-                mainWindow.stopBusyIndicator()
+            busyTimer.stop()
+            loggingPage.unblockRegistrationPopup()
+            mainWindow.stopBusyIndicator()
 
-                if(replyState)
-                {
-                    registeringResponseText.color = mainWindow.acceptedColor
-                    registeringResponseText.text = message
-                    animateShowingRegisteringResponseText.start()
-                    registeringResponseTextTimer.restart()
-                }
-                else
-                {
-                    nicknameInput.markBadData()
-                    nicknameInputReplyText.text = message
-                }
-                waitingForServerResponse = false
+            if(replyState)
+            {
+                registeringResponseText.text = message
+                animateShowingRegisteringResponseText.start()
+                registeringResponseTextTimer.restart()
+            }
+            else
+            {
+                nicknameInput.markBadData()
+                nicknameInputReplyText.text = message
             }
         }
     }
@@ -230,13 +222,10 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            waitingForServerResponse = false
             loggingPage.unblockRegistrationPopup()
             mainWindow.stopBusyIndicator()
-            registeringResponseText.color = mainWindow.fontColor
-            registeringResponseText.text = qsTr("The server is not responding, try again later")
-            animateShowingRegisteringResponseText.start()
-            registeringResponseTextTimer.restart()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("The server is not responding, try again later"))
         }
     }
 }

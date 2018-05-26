@@ -29,7 +29,6 @@ Item  {
     }
 
     MouseArea {
-        id: clickingArea
         anchors.fill: parent
         hoverEnabled: true
 
