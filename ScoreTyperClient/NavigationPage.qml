@@ -5,9 +5,8 @@ import "../components"
 Page {
     id: navigationPage
 
-    Rectangle {
+    Item {
         id: headerBar
-        color: "transparent"
         height: 40
         width: parent.width
         anchors.left: parent.left

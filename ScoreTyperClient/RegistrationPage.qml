@@ -225,7 +225,7 @@ Page {
             loggingPage.unblockRegistrationPopup()
             mainWindow.stopBusyIndicator()
             backend.disconnectFromServer()
-            mainWindow.showErrorPopup(qsTr("The server is not responding, try again later"))
+            mainWindow.showErrorPopup(qsTr("Connection lost, try again later"))
         }
     }
 }
