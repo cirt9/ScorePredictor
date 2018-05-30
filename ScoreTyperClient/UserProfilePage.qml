@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../components"
 
 Page {
     id: userProfilePage
@@ -17,89 +18,102 @@ Page {
             radius: 5
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 140
-            Layout.preferredHeight: pageLayout.height * 0.2
+            Layout.preferredHeight: 160
 
             RowLayout {
                 anchors.fill: parent
 
-                Rectangle {
-                    id: userAvatar
-                    color: "white"
-
-                    Layout.preferredWidth: 100
-                    Layout.preferredHeight: 100
-                    Layout.margins: 20
-
-                    Text {
-                        text: ".jpg"
-                        color: "black"
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Rectangle {
-                    color: "transparent"
-                    border.width: 1
-                    border.color: mainWindow.accentColor
-                    radius: 3
-
+                Column {
+                    id: avatarArea
+                    spacing: 3
+                    Layout.preferredWidth: 120
                     Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.margins: 5
+                    Layout.margins: 17
 
-                    ColumnLayout {
-                        anchors.fill: parent
+                    Rectangle {
+                        id: userAvatar
+                        color: "white"
+                        width: 120
+                        height: 120
 
                         Text {
-                            text: "Nickname"
-                            color: mainWindow.fontColor
-                            font.pixelSize: 28
-                            font.bold: true
-
-                            Rectangle {
-                                width: parent.width * 1.5
-                                height: 2
-                                color: mainWindow.accentColor
-                                radius: 2
-                                anchors.left: parent.left
-                                anchors.top: parent.bottom
-                            }
+                            text: ".jpg"
+                            color: "black"
+                            anchors.centerIn: parent
                         }
+                    }
+
+                    TextButton {
+                        id: profileEditButton
+                        text: qsTr("EDIT PROFILE")
+                        textColor: mainWindow.fontColor
+                        textColorHovered: mainWindow.accentColor
+                        fontSize: 10
+                        bold: true
+                        anchors.horizontalCenter: userAvatar.horizontalCenter
                     }
                 }
 
-                /*ColumnLayout {
+                GroupBox {
+                    id: userInfoArea
+                    anchors.left: avatarArea.right
+                    anchors.leftMargin: 30
+                    padding: 0
+
                     Layout.fillHeight: true
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: currentTournamentsArea.width - userInfoArea.anchors.leftMargin -
+                                           avatarArea.width - avatarArea.Layout.margins
+                    Layout.topMargin: 20
+                    Layout.bottomMargin: 20
 
-                    Text {
-                        text: "Nickname"
-                        color: mainWindow.fontColor
-                        font.pixelSize: 28
-                        font.bold: true
+                    background: Rectangle {
+                        width: parent.width
+                        height: parent.height
+                        color: "transparent"
+                        border.color: mainWindow.backgroundColor
+                        border.width: 2
+                        radius: 3
+                    }
 
-                        Rectangle {
-                            width: parent.width * 1.5
-                            height: 2
-                            color: mainWindow.accentColor
-                            radius: 2
-                            anchors.left: parent.left
-                            anchors.top: parent.bottom
+                    label: Rectangle {
+                        anchors.left: parent.left
+                        anchors.bottom: parent.top
+                        anchors.bottomMargin: -height/2
+                        anchors.leftMargin: 10
+                        color: mainWindow.colorA
+                        width: textMetrics.width * 1.25
+                        height: nicknameText.font.pixelSize * 1.25
+                        radius: 5
+
+                        Text {
+                            id: nicknameText
+                            text: "Nickname"
+                            color: mainWindow.backgroundColor
+                            font.pixelSize: 22
+                            font.bold: true
+                            anchors.centerIn: parent
+                        }
+
+                        TextMetrics {
+                            id: textMetrics
+                            text: nicknameText.text
+                            font.family: nicknameText.font
+                            font.pointSize: nicknameText.font.pointSize
+                            font.bold: nicknameText.font.bold
+                            elide: Text.ElideMiddle
                         }
                     }
-                }*/
 
-                Rectangle {
-                    id: descriptionArea
-                    color: "transparent"
-                    border.width: 1
-                    border.color: mainWindow.accentColor
-                    radius: 3
-
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.margins: 5
+                    Text {
+                        id: profileDescription
+                        text: "Description..."
+                        font.pointSize: 12
+                        color: mainWindow.fontColor
+                        wrapMode: Text.Wrap
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        anchors.topMargin: 15
+                    }
                 }
             }
         }
@@ -146,136 +160,11 @@ Page {
         }
     }
 
-    /*
     Connections {
         target: packetProcessor
-        onProfileDownloadReply: profileDescription.text = description
-    }*/
-
-    /*ColumnLayout {
-        id: mainLayout
-        anchors.fill: parent
-
-        GroupBox {
-            id: topRowBox
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
-
-            RowLayout {
-                id: topRowLayout
-                anchors.fill: parent
-                spacing: 15
-
-                ColumnLayout {
-                    id: avatarLayout
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: 100
-
-                    Rectangle {
-                        id: userAvatar
-                        Layout.preferredWidth: 100
-                        Layout.preferredHeight: 100
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: ".jpg"
-                        }
-                    }
-
-                    Button {
-                        id: profileEditButton
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 25
-                        Layout.preferredWidth: 100
-                        text: "Edit"
-                    }
-                }
-
-                TextArea {
-                    id: profileDescription
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 500
-
-                    placeholderText: qsTr("Description...")
-                    readOnly: true
-                    selectByMouse: true
-                    wrapMode: TextEdit.Wrap
-                }
-
-                Rectangle {
-                    id: prizes
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 500
-
-                    Text {
-                        text: "prizes"
-                        anchors.centerIn: parent
-                    }
-                }
-            }
-        }
-
-        GroupBox {
-            id: bottomRowBox
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            RowLayout {
-                id: bottomRowLayout
-                anchors.fill: parent
-                spacing: 15
-
-                ColumnLayout {
-                    id: leftColumnLayout
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: avatarLayout.width + profileDescription.width + topRowLayout.spacing
-
-                    Rectangle {
-                        id: currentTournamentsContainer
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 400
-
-                        Text {
-                            text: "Current tournaments"
-                            anchors.centerIn: parent
-                        }
-                    }
-
-                    Rectangle {
-                        id: recentTournamentsContainer
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 400
-
-                        Text {
-                            text: "Recent tournaments"
-                            anchors.centerIn: parent
-                        }
-                    }
-                }
-
-                Rectangle {
-                    id: statsContainer
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: prizes.width
-
-                    Text {
-                        text: "Stats"
-                        anchors.centerIn: parent
-                    }
-                }
-            }
+        onProfileDownloadReply: {
+            nicknameText.text = currentUser.username
+            profileDescription.text = description
         }
     }
-
-    Connections {
-        target: packetProcessor
-        onProfileDownloadReply: profileDescription.text = description
-    }
-    */
 }
