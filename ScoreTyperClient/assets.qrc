@@ -9,6 +9,8 @@
         <file>icons/icons8_Disconnected.png</file>
         <file>icons/icons8_Delete.png</file>
         <file>icons/icons8_Exit.png</file>
+        <file>icons/icons8_Collapse_Arrow.png</file>
+        <file>icons/icons8_Expand_Arrow.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

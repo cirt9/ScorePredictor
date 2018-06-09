@@ -66,8 +66,8 @@ Page {
                             selectByMouse: true
                             maximumLength: 30
                             width: inputArea.width
-                            textColor: fontColor
-                            selectedTextColor: fontColor
+                            textColor: mainWindow.fontColor
+                            selectedTextColor: mainWindow.fontColor
                             selectionColor: mainWindow.accentColor
                             underlineColorOnFocus: mainWindow.accentColor
                             underlineColorBadData: mainWindow.deniedColor
@@ -81,8 +81,8 @@ Page {
                             selectByMouse: true
                             maximumLength: 30
                             width: inputArea.width
-                            textColor: fontColor
-                            selectedTextColor: fontColor
+                            textColor: mainWindow.fontColor
+                            selectedTextColor: mainWindow.fontColor
                             selectionColor: mainWindow.accentColor
                             underlineColorOnFocus: mainWindow.accentColor
                             underlineColorBadData: mainWindow.deniedColor
