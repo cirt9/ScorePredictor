@@ -129,4 +129,18 @@ Page {
             }
         }
     }
+
+    DatePickerWidget {
+        color: mainWindow.colorB
+        radius: 10
+        fontSize: 14
+        fontColor: mainWindow.fontColor
+        expandCalendarIcon: "qrc://assets/icons/icons/icons8_Expand_Arrow.png"
+        hoveredButtonColor: mainWindow.backgroundColor
+        selectByMouse: true
+        selectedTextColor: mainWindow.fontColor
+        selectionColor: mainWindow.accentColor
+
+        anchors.centerIn: parent
+    }
 }

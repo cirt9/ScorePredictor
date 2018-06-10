@@ -63,7 +63,7 @@ Page {
                 width: 30
                 height: 30
                 iconSource: "qrc://assets/icons/icons/icons8_Exit.png"
-                backgroundColor: mainWindow.colorA
+                color: mainWindow.colorA
 
                 onClicked: mainWindow.popPage()
             }

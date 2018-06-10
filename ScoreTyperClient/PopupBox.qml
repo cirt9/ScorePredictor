@@ -12,7 +12,7 @@ Popup {
         width: 30
         height: 30
         iconSource: "qrc://assets/icons/icons/icons8_Delete.png"
-        backgroundColor: mainWindow.colorA
+        color: mainWindow.colorA
         anchors.right: parent.right
         anchors.top: parent.top
         z: root.z + 1

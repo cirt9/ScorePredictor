@@ -217,7 +217,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_Settings.png"
-                            backgroundColor: mainWindow.colorA
+                            color: mainWindow.colorA
 
                             onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
                         }
@@ -227,7 +227,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_About.png"
-                            backgroundColor: mainWindow.colorA
+                            color: mainWindow.colorA
 
                             onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
                         }
@@ -237,7 +237,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_Disconnected.png"
-                            backgroundColor: mainWindow.colorA
+                            color: mainWindow.colorA
 
                             onClicked: backend.disconnectFromServer()
                         }
@@ -247,7 +247,7 @@ Page {
                             width: 30
                             height: 30
                             iconSource: "qrc://assets/icons/icons/icons8_Shutdown.png"
-                            backgroundColor: mainWindow.colorA
+                            color: mainWindow.colorA
 
                             onClicked: mainWindow.close()
                         }

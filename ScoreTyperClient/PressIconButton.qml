@@ -45,7 +45,7 @@ Item {
 
     states: [
         State {
-            name: "notHovered"
+            name: "released"
             when: !mouseArea.containsMouse && !mouseArea.pressed
             PropertyChanges { target: background; opacity: 0 }
             PropertyChanges {
@@ -66,9 +66,9 @@ Item {
             PropertyChanges { target: background; opacity: 0.5 }
             PropertyChanges {
                 target: backgroundSurface
-                width: root.radius === 0 ? root.width * 1.4 : root.width
-                height: root.radius === 0 ? root.height * 1.4 : root.height
-                radius: root.radius === 0 ? backgroundSurface.radius : root.radius
+                width: root.radius === 0 ? (root.width > root.height ? root.width * 1.4 : root.height * 1.4) : root.width
+                height: root.radius === 0 ? (root.height > root.width ? root.height * 1.4 : root.width * 1.4) : root.height
+                radius: root.radius
             }
         }
     ]

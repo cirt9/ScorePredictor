@@ -2,14 +2,14 @@ import QtQuick 2.9
 
 Rectangle {
     id: root
-    width: container.width + addButton.width + substractButton.width * 1.5 + 2 * border.width
-    height: container.height + 2 * border.width
+    width: container.width + addButton.width + substractButton.width * 1.5 +  border.width * 2
+    height: container.height + border.width * 2
 
     readonly property string time: hoursInput.text + colon.text + minutesInput.text
     readonly property string fullTime: hoursInput.text + colon.text + minutesInput.text + ":" + "00"
     property int fontSize: 12
     property color fontColor: "white"
-    property color selectedTextColor: "white"
+    property color selectedTextColor: "black"
     property color selectionColor: "white"
     property bool selectByMouse: true
     property url addIcon
@@ -22,7 +22,7 @@ Rectangle {
         height: textMetrics.height * 1.5
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: root.border.width
+        anchors.leftMargin: root.border.width + 3
 
         property var focusedInput: hoursInput
 
@@ -113,7 +113,7 @@ Rectangle {
 
     PressIconButton {
         id: addButton
-        color: mainWindow.backgroundColor
+        color: hoveredButtonColor
         height: parent.height
         width: height
         radius: parent.radius
@@ -147,7 +147,7 @@ Rectangle {
 
     PressIconButton {
         id: substractButton
-        color: mainWindow.backgroundColor
+        color: hoveredButtonColor
         height: parent.height
         width: height
         radius: parent.radius
@@ -155,9 +155,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.rightMargin: radius === 0 ? root.border.width : root.border.width + 3
-        anchors.topMargin: radius === 0 ? root.border.width : root.border.width + 3
-        anchors.bottomMargin: radius === 0 ? root.border.width : root.border.width + 3
+        anchors.margins: radius === 0 ? root.border.width : root.border.width + 3
 
         onPressedChanged: {
             if(buttonPressed)
