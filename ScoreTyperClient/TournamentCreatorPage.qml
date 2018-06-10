@@ -61,6 +61,20 @@ Page {
                 anchors.topMargin: 50
             }
 
+            TimePickerWidget {
+                color: mainWindow.colorB
+                fontSize: 14
+                radius: 10
+                addIcon: "qrc://assets/icons/icons/icons8_Collapse_Arrow.png"
+                substractIcon: "qrc://assets/icons/icons/icons8_Expand_Arrow.png"
+                selectedTextColor: mainWindow.fontColor
+                selectionColor: mainWindow.accentColor
+                hoveredButtonColor: mainWindow.backgroundColor
+                anchors.right: tournamentPasswordInput.right
+                anchors.top: tournamentPasswordInput.bottom
+                anchors.topMargin: 10
+            }
+
             Rectangle {
                 id: spinBoxArea
                 color: mainWindow.colorB
@@ -112,18 +126,6 @@ Page {
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                 }
-            }
-
-            TimePickerWidget {
-                color: mainWindow.colorB
-                fontSize: 14
-                radius: 10
-                addIcon: "qrc://assets/icons/icons/icons8_Collapse_Arrow.png"
-                substractIcon: "qrc://assets/icons/icons/icons8_Expand_Arrow.png"
-                selectedTextColor: mainWindow.fontColor
-                selectionColor: mainWindow.accentColor
-                hoveredButtonColor: mainWindow.backgroundColor
-                anchors.centerIn: parent
             }
         }
     }

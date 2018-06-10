@@ -22,7 +22,7 @@ Item {
         color: background.color
         width: 0
         height: 0
-        radius: 0
+        radius: root.width
         opacity: 1
         anchors.centerIn: parent
     }
@@ -52,7 +52,7 @@ Item {
                 target: backgroundSurface
                 width: 0
                 height: 0
-                radius: 0
+                radius: root.width
             }
         },
         State {
@@ -63,12 +63,12 @@ Item {
         State {
             name: "pressed"
             when: mouseArea.pressed
-            PropertyChanges { target: background; opacity: root.radius === 0 ? 0.5 : 1 }
+            PropertyChanges { target: background; opacity: 0.5 }
             PropertyChanges {
                 target: backgroundSurface
                 width: root.radius === 0 ? root.width * 1.4 : root.width
                 height: root.radius === 0 ? root.height * 1.4 : root.height
-                radius: root.width
+                radius: root.radius === 0 ? backgroundSurface.radius : root.radius
             }
         }
     ]
@@ -84,12 +84,6 @@ Item {
         },
         Transition {
             from: "hovered"; to: "pressed"; reversible: true
-            NumberAnimation {
-                target: background
-                properties: "opacity"
-                duration: root.radius === 0 ? 0 : 350
-                easing.type: Easing.Linear
-            }
             NumberAnimation {
                 target: backgroundSurface
                 properties: "width, height, radius"

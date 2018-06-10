@@ -110,7 +110,6 @@ Rectangle {
             text: colon.text
         }
     }
-    //
 
     PressIconButton {
         id: addButton
