@@ -7,6 +7,7 @@ Rectangle {
     width: textMetrics.width + expandCalendarButton.width * 2 + border.width * 2
     height: textMetrics.height * 1.5 + border.width * 2
 
+    readonly property string date: dateText.text
     property alias fontSize: dateText.font.pointSize
     property alias fontColor: dateText.color
     property alias hoveredButtonColor: expandCalendarButton.color
@@ -65,5 +66,80 @@ Rectangle {
         anchors.top: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 5
+
+        style: CalendarStyle {
+                gridVisible: true
+                gridColor: mainWindow.colorB
+
+                background: Rectangle {
+                    color: "#6A352E"
+                    implicitWidth: 250
+                    implicitHeight: 250
+                }
+
+                navigationBar: Rectangle {
+                    color: "#6A352E"
+                    height: 35
+
+                    Label {
+                        text: styleData.title
+                        color: mainWindow.fontColor
+                        font.pointSize: 14
+                        anchors.centerIn: parent
+                    }
+
+                    IconButton {
+                        id: leftButton
+                        iconSource: "qrc://assets/icons/icons/icons8_Chevron_Left.png"
+                        color: mainWindow.colorB
+                        height: parent.height
+                        width: height
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.margins: 3
+                    }
+
+                    IconButton {
+                        id: rightButton
+                        iconSource: "qrc://assets/icons/icons/icons8_Chevron_Right.png"
+                        color: mainWindow.colorB
+                        height: parent.height
+                        width: height
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.margins: 3
+                    }
+
+                    Rectangle {
+                        width: parent.width
+                        height: 1
+                        color: mainWindow.colorB
+                        anchors.bottom: parent.bottom
+                    }
+                }
+
+                dayOfWeekDelegate: Rectangle {
+                    color: "#6A352E"
+                    height: 30
+
+                    Label {
+                        text: locale.dayName(styleData.dayOfWeek, Locale.ShortFormat)
+                        color: mainWindow.fontColor
+                        anchors.centerIn: parent
+                    }
+                }
+
+                dayDelegate: Rectangle {
+                    color: styleData.selected ? mainWindow.colorB : (styleData.visibleMonth && styleData.valid ? "#6A352E" : "#6A352E")
+
+                    Label {
+                        text: styleData.date.getDate()
+                        color: styleData.visibleMonth && styleData.valid ? mainWindow.fontColor : "#766363"
+                        anchors.centerIn: parent
+                    }
+                }
+            }
     }
 }
