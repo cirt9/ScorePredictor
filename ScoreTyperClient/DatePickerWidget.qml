@@ -5,9 +5,10 @@ import QtQuick.Controls.Styles 1.4
 Rectangle {
     id: root
     width: textMetrics.width + expandCalendarButton.width * 2 + border.width * 2
-    height: textMetrics.height * 1.5 + border.width * 2
+    height: textMetrics.height * 1.3 + border.width * 2
 
-    readonly property string date: dateText.text
+    readonly property string simplifiedDate: dateText.text
+    readonly property date date: calendar.selectedDate
     property alias fontSize: dateText.font.pointSize
     property alias fontColor: dateText.color
     property alias hoveredButtonColor: expandCalendarButton.color
@@ -16,10 +17,17 @@ Rectangle {
     property alias selectByMouse: dateText.selectByMouse
     property bool selectByKeyboard : selectByMouse
     property url expandCalendarIcon
+    property url previousIcon
+    property url nextIcon
+    property color calendarMainColor: "black"
+    property color calendarSideColor: "white"
+    property color calendarInactiveColor: "grey"
+    property alias minimumDate: calendar.minimumDate
+    property alias maximumDate: calendar.maximumDate
 
     MouseArea {
         anchors.fill: parent
-        onClicked: calendar.visible = false
+        onClicked: hideCalendar()
     }
 
     TextEdit {
@@ -39,25 +47,21 @@ Rectangle {
         text: dateText.text
     }
 
-    IconButton {
+    CheckableIconButton {
         id: expandCalendarButton
         iconSource: expandCalendarIcon
         color: hoveredButtonColor
         height: parent.height
         width: height
         radius: parent.radius - 3
-        radiusOnPressed: parent.radius
+        radiusOnChecked: parent.radius
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.margins: radius === 0 ? root.border.width : root.border.width + 3
 
-        onClicked: {
-            if(calendar.visible)
-                calendar.visible = false
-            else
-                calendar.visible = true
-        }
+        onButtonChecked: showCalendar()
+        onButtonUnchecked: hideCalendar()
     }
 
     Calendar {
@@ -69,77 +73,92 @@ Rectangle {
 
         style: CalendarStyle {
                 gridVisible: true
-                gridColor: mainWindow.colorB
+                gridColor: calendarMainColor
 
                 background: Rectangle {
-                    color: "#6A352E"
+                    color: calendarMainColor
                     implicitWidth: 250
                     implicitHeight: 250
                 }
 
                 navigationBar: Rectangle {
-                    color: "#6A352E"
+                    color: calendarSideColor
                     height: 35
 
                     Label {
                         text: styleData.title
-                        color: mainWindow.fontColor
+                        color: fontColor
                         font.pointSize: 14
                         anchors.centerIn: parent
                     }
 
                     IconButton {
                         id: leftButton
-                        iconSource: "qrc://assets/icons/icons/icons8_Chevron_Left.png"
-                        color: mainWindow.colorB
+                        iconSource: previousIcon
+                        color: calendarMainColor
                         height: parent.height
                         width: height
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.margins: 3
+
+                        onClicked: calendar.showPreviousMonth()
                     }
 
                     IconButton {
                         id: rightButton
-                        iconSource: "qrc://assets/icons/icons/icons8_Chevron_Right.png"
-                        color: mainWindow.colorB
+                        iconSource: nextIcon
+                        color: calendarMainColor
                         height: parent.height
                         width: height
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.margins: 3
+
+                        onClicked: calendar.showNextMonth()
                     }
 
                     Rectangle {
                         width: parent.width
                         height: 1
-                        color: mainWindow.colorB
+                        color: calendarMainColor
                         anchors.bottom: parent.bottom
                     }
                 }
 
                 dayOfWeekDelegate: Rectangle {
-                    color: "#6A352E"
+                    color: calendarSideColor
                     height: 30
 
                     Label {
                         text: locale.dayName(styleData.dayOfWeek, Locale.ShortFormat)
-                        color: mainWindow.fontColor
+                        color: fontColor
                         anchors.centerIn: parent
                     }
                 }
 
                 dayDelegate: Rectangle {
-                    color: styleData.selected ? mainWindow.colorB : (styleData.visibleMonth && styleData.valid ? "#6A352E" : "#6A352E")
+                    color: styleData.selected ? calendarMainColor : calendarSideColor
 
                     Label {
                         text: styleData.date.getDate()
-                        color: styleData.visibleMonth && styleData.valid ? mainWindow.fontColor : "#766363"
+                        color: styleData.selected ? fontColor : (styleData.valid ? (styleData.visibleMonth ?
+                                                    fontColor : calendarInactiveColor) : calendarSideColor)
                         anchors.centerIn: parent
                     }
                 }
             }
+    }
+
+    function showCalendar() {
+        expandCalendarButton.checked = true
+        calendar.visible = true
+    }
+
+    function hideCalendar() {
+        expandCalendarButton.checked = false
+        calendar.visible = false
     }
 }

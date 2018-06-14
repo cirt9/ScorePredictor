@@ -19,7 +19,7 @@ Rectangle {
     Item {
         id: container
         width: textMetrics.width * 3 + colonMetrics.width
-        height: textMetrics.height * 1.5
+        height: textMetrics.height * 1.3
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: root.border.width + 3

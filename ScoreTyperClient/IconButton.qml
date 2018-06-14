@@ -8,7 +8,6 @@ Item  {
     property int radius: 3
     property int radiusOnPressed: 8
     property color color: "black"
-    property alias backgroundOpacity: background.opacity
     signal clicked()
 
     Rectangle {

@@ -7,8 +7,8 @@ Item {
     property url iconSource
     property alias color: background.color
     property alias radius: background.radius
+    property int iconMargin: 3
     readonly property alias buttonPressed: mouseArea.pressed
-
     signal pressedChanged()
 
     Rectangle {
@@ -32,7 +32,7 @@ Item {
         fillMode: Image.PreserveAspectFit
 
         anchors.fill: parent
-        anchors.margins: 5
+        anchors.margins: iconMargin
     }
 
     MouseArea {
@@ -45,7 +45,7 @@ Item {
 
     states: [
         State {
-            name: "released"
+            name: "notHovered"
             when: !mouseArea.containsMouse && !mouseArea.pressed
             PropertyChanges { target: background; opacity: 0 }
             PropertyChanges {
