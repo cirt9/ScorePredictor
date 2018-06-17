@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
+import DataStorage 1.0
 import "../components"
 
 Page {
@@ -76,7 +77,7 @@ Page {
                 anchors.topMargin: 10
 
                 Rectangle {
-                    height: typersLimit.height * 1.10
+                    height: typersLimit.height * 1.15
                     color: mainWindow.colorB
                     radius: 5
                     anchors.left: parent.left
@@ -98,7 +99,7 @@ Page {
 
                 Text {
                     id: typersLimitText
-                    text: qsTr("Typers")
+                    text: qsTr("Typers Limit")
                     font.pointSize: 14
                     color: mainWindow.fontColor
                     anchors.bottom: parent.bottom
@@ -117,7 +118,7 @@ Page {
                 anchors.topMargin: 10
 
                 Rectangle {
-                    height: numberOfRounds.height * 1.10
+                    height: numberOfRounds.height * 1.15
                     color: mainWindow.colorB
                     radius: 5
                     anchors.left: parent.left
@@ -231,13 +232,25 @@ Page {
 
             Button {
                 id: createButton
-                text: qsTr("Create")
+                text: qsTr("Create Tournament")
                 font.pointSize: 28
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottomMargin: 10
 
-                onClicked: console.log("Request: Create new tournament")
+                onClicked: {
+                    var dateString = entriesEndDatePicker.simplifiedDate + " " + entriesEndTimePicker.fullTime
+                    var date = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
+                    var tournament = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Tournament {}',
+                                                       tournamentCreatorPage);
+                    tournament.name = tournamentNameInput.text
+                    tournament.hostName = currentUser.username
+                    tournament.password = tournamentPasswordInput.text
+                    tournament.entriesEndTime = date
+                    tournament.typersLimit = typersLimit.value
+                    tournament.numberOfRounds = numberOfRounds.value
+                    backend.createTournament(tournament)
+                    tournament.destroy()
+                }
             }
         }
     }

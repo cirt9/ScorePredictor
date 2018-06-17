@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQMLContext>
-
 #include <backend.h>
 
 int main(int argc, char *argv[])
@@ -16,6 +15,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<QHostAddress>("QHostAddress");
     qRegisterMetaType<Packet>("Packet");
+    qmlRegisterType<Tournament>("DataStorage", 1, 0, "Tournament");
 
     QScopedPointer<BackEnd> backend(new BackEnd);
     engine.rootContext()->setContextProperty("backend", backend.data());

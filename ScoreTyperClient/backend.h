@@ -7,6 +7,7 @@
 #include <tcpclientwrapper.h>
 #include <clientpacketprocessorwrapper.h>
 #include <user.h>
+#include <tournament.h>
 
 class BackEnd : public QObject
 {
@@ -28,6 +29,7 @@ public:
     Q_INVOKABLE void login(const QString & nickname, const QString & password);
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
     Q_INVOKABLE void downloadUserProfile(const QString & nickname);
+    Q_INVOKABLE void createTournament(Tournament * tournament);
 
     TcpClientWrapper * getClientWrapper() const;
     ClientPacketProcessorWrapper * getPacketProcessorWrapper() const;

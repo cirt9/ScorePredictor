@@ -19,6 +19,7 @@ void ServerPacketProcessor::processPacket(const Packet & packet)
     case Packet::ID_REGISTER: registerUser(data); break;
     case Packet::ID_LOGIN: loginUser(data); break;
     case Packet::ID_DOWNLOAD_USER_PROFILE: userProfileRequest(data); break;
+    case Packet::ID_CREATE_TOURNAMENT: tournamentCreationRequest(data); break;
 
     default: break;
     }
@@ -100,4 +101,10 @@ void ServerPacketProcessor::userProfileRequest(const QVariantList & userData)
         responseData << Packet::ID_ERROR << QString("Couldn't load your profile");
     }
     emit response(responseData);
+}
+
+void ServerPacketProcessor::tournamentCreationRequest(const QVariantList & tournamentData)
+{
+    qDebug() << "Request received";
+    qDebug() << tournamentData;
 }

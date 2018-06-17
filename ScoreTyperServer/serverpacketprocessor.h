@@ -16,6 +16,7 @@ private:
     void registerUser(const QVariantList & userData);
     void loginUser(const QVariantList & userData);
     void userProfileRequest(const QVariantList & userData);
+    void tournamentCreationRequest(const QVariantList & tournamentData);
 
 public:
     explicit ServerPacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);
