@@ -61,13 +61,9 @@ void BackEnd::downloadUserProfile(const QString & nickname)
 
 void BackEnd::createTournament(Tournament * tournament)
 {
-    qDebug() << tournament->getName() << tournament->getHostName() << tournament->getPassword()
-             << tournament->getEntriesEndTime() << tournament->getTypersLimit() << tournament->getNumberOfRounds();
-
     QVariantList data;
-    data << Packet::ID_CREATE_TOURNAMENT << QVariant::fromValue(tournament);
-    qDebug() << data;
-    //emit clientWrapper->sendData(data);
+    data << Packet::ID_CREATE_TOURNAMENT << *tournament;
+    emit clientWrapper->sendData(data);
 }
 
 TcpClientWrapper * BackEnd::getClientWrapper() const

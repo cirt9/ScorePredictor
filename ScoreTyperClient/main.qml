@@ -28,7 +28,7 @@ ApplicationWindow {
     StackView {
        id: pagesView
        anchors.fill: parent
-       initialItem: TournamentCreatorPage {}//ConnectingPage {}
+       initialItem: /*TournamentCreatorPage {}*/ConnectingPage {}
    }
 
     Item {

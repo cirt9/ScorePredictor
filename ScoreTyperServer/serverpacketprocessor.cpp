@@ -105,6 +105,8 @@ void ServerPacketProcessor::userProfileRequest(const QVariantList & userData)
 
 void ServerPacketProcessor::tournamentCreationRequest(const QVariantList & tournamentData)
 {
-    qDebug() << "Request received";
-    qDebug() << tournamentData;
+    Tournament tournament(tournamentData);
+
+    qDebug() << tournament.getName() << tournament.getHostName() << tournament.getPassword()
+             << tournament.getEntriesEndTime() <<  tournament.getNumberOfRounds() << tournament.getTypersLimit();
 }

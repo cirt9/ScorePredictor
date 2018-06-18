@@ -5,6 +5,7 @@
 #include <dbconnection.h>
 #include <query.h>
 #include <QSharedPointer>
+#include <../ScoreTyperClient/tournament.h>
 
 class ServerPacketProcessor: public QObject
 {

@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QDateTime>
+#include <QVariantList>
+#include <QDataStream>
 
 class Tournament : public QObject
 {
@@ -24,6 +26,7 @@ private:
 
 public:
     Tournament(QObject * parent = nullptr);
+    Tournament(const QVariantList & tournamentData, QObject * parent = nullptr);
     ~Tournament() {}
 
     QString getName() const;
@@ -38,7 +41,8 @@ public:
     void setEntriesEndTime(const QDateTime & value);
     void setTypersLimit(unsigned int value);
     void setNumberOfRounds(unsigned int value);
+
+    friend QVariantList & operator<<(QVariantList & list, const Tournament & tournament);
 };
-Q_DECLARE_METATYPE(Tournament *);
 
 #endif // TOURNAMENT_H

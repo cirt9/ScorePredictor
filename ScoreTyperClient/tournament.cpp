@@ -5,6 +5,20 @@ Tournament::Tournament(QObject * parent) : QObject(parent)
 
 }
 
+Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : QObject(parent)
+{
+    if(tournamentData.size() == 6)
+    {
+        name = tournamentData[0].toString();
+        hostName = tournamentData[1].toString();
+        password = tournamentData[2].toString();
+        entriesEndTime = tournamentData[3].toDateTime();
+        typersLimit = tournamentData[4].toUInt();
+        numberOfRounds = tournamentData[5].toUInt();
+    }
+    return;
+}
+
 QString Tournament::getName() const
 {
     return name;
@@ -63,4 +77,16 @@ void Tournament::setTypersLimit(unsigned int value)
 void Tournament::setNumberOfRounds(unsigned int value)
 {
     numberOfRounds = value;
+}
+
+QVariantList & operator<<(QVariantList & list, const Tournament & tournament)
+{
+    list << tournament.name;
+    list << tournament.hostName;
+    list << tournament.password;
+    list << tournament.entriesEndTime;
+    list << tournament.typersLimit;
+    list << tournament.numberOfRounds;
+
+    return list;
 }
