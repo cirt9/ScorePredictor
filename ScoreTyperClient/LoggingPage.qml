@@ -152,29 +152,30 @@ Page {
                             loggingReplyText.text = qsTr("Enter a nickname and a password")
                             nicknameInput.markBadData()
                             passwordInput.markBadData()
+                            animateShowingLoggingReply.start()
+                            replyTextTimer.restart()
                         }
                         else if(nicknameInput.text.length === 0)
                         {
                             loggingReplyText.text = qsTr("Enter a nickname")
                             nicknameInput.markBadData()
+                            animateShowingLoggingReply.start()
+                            replyTextTimer.restart()
                         }
                         else if(passwordInput.text.length === 0)
                         {
                             loggingReplyText.text = qsTr("Enter a password")
                             passwordInput.markBadData()
+                            animateShowingLoggingReply.start()
+                            replyTextTimer.restart()
                         }
                         else
                         {
+                            loggingReplyText.opacity = 0
                             busyTimer.restart()
                             blockLoggingPage()
                             mainWindow.startBusyIndicator()
                             backend.login(nicknameInput.text, passwordInput.text)
-                        }
-
-                        if(loggingReplyText.text.length > 0)
-                        {
-                            animateShowingLoggingReply.start()
-                            replyTextTimer.restart()
                         }
                     }
                 }

@@ -15,6 +15,7 @@ Item {
     property alias selectByMouse: inputText.selectByMouse
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
+    property bool trimText: true
 
     Text {
         id: placeholder
@@ -54,6 +55,10 @@ Item {
                 if(inputText.text.length === 0)
                     placeholder.opacity = 0.3
             }
+        }
+        onEditingFinished: {
+            if(trimText)
+                inputText.text = inputText.text.trim()
         }
 
         MouseArea {

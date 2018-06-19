@@ -16,7 +16,6 @@ Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : 
         typersLimit = tournamentData[4].toUInt();
         numberOfRounds = tournamentData[5].toUInt();
     }
-    return;
 }
 
 QString Tournament::getName() const

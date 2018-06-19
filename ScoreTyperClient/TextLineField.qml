@@ -20,12 +20,8 @@ Rectangle {
     property alias selectByMouse: inputText.selectByMouse
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
-
+    property bool whitespacesAllowed: false
     signal focused()
-
-    function markBadData() {
-        underline.color = underlineColorBadData
-    }
 
     Text {
         id: placeholder
@@ -79,6 +75,8 @@ Rectangle {
                 underline.color = underlineColor
                 underline.opacity = 0.3
             }
+            if(!whitespacesAllowed)
+                inputText.text = inputText.text.split(' ').join('')
         }
 
         MouseArea {
@@ -151,5 +149,9 @@ Rectangle {
             }
             duration: 100
         }
+    }
+
+    function markBadData() {
+        underline.color = underlineColorBadData
     }
 }

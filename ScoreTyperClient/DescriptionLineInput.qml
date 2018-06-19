@@ -21,6 +21,7 @@ Rectangle {
     property alias selectByMouse: inputText.selectByMouse
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
+    property bool whitespacesAllowed: false
 
     Text {
         id: descriptionText
@@ -58,6 +59,11 @@ Rectangle {
             anchors.leftMargin: inputArea.radius
             anchors.rightMargin: inputArea.radius
             clip: true
+
+            onTextChanged: {
+                if(!whitespacesAllowed)
+                    inputText.text = inputText.text.split(' ').join('')
+            }
 
             MouseArea {
                 anchors.fill: parent
