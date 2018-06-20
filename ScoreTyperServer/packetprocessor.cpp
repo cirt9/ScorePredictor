@@ -114,7 +114,6 @@ namespace Server
                  << tournament.getHostName()
                  << tournament.getPassword()
                  << tournament.getEntriesEndTime()
-                 << tournament.getNumberOfRounds()
                  << tournament.getTypersLimit();
 
         Query query(dbConnection);

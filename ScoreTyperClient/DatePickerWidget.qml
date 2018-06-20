@@ -85,7 +85,7 @@ Rectangle {
                     color: calendarSideColor
                     height: 35
 
-                    Label {
+                    Text {
                         text: styleData.title
                         color: fontColor
                         font.pointSize: 14
@@ -132,7 +132,7 @@ Rectangle {
                     color: calendarSideColor
                     height: 30
 
-                    Label {
+                    Text {
                         text: locale.dayName(styleData.dayOfWeek, Locale.ShortFormat)
                         color: fontColor
                         anchors.centerIn: parent
@@ -142,7 +142,7 @@ Rectangle {
                 dayDelegate: Rectangle {
                     color: styleData.selected ? calendarMainColor : calendarSideColor
 
-                    Label {
+                    Text {
                         text: styleData.date.getDate()
                         color: styleData.selected ? fontColor : (styleData.valid ? (styleData.visibleMonth ?
                                                     fontColor : calendarInactiveColor) : calendarSideColor)

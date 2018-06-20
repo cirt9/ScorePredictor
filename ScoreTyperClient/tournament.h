@@ -14,7 +14,6 @@ class Tournament : public QObject
     Q_PROPERTY(QString password READ getPassword WRITE setPassword)
     Q_PROPERTY(QDateTime entriesEndTime READ getEntriesEndTime WRITE setEntriesEndTime)
     Q_PROPERTY(unsigned int typersLimit READ getTypersLimit WRITE setTypersLimit)
-    Q_PROPERTY(unsigned int numberOfRounds READ getNumberOfRounds WRITE setNumberOfRounds)
 
 private:
     QString name;
@@ -22,7 +21,6 @@ private:
     QString password;
     QDateTime entriesEndTime;
     unsigned int typersLimit;
-    unsigned int numberOfRounds;
 
 public:
     Tournament(QObject * parent = nullptr);
@@ -34,13 +32,11 @@ public:
     QString getPassword() const;
     QDateTime getEntriesEndTime() const;
     unsigned int getTypersLimit() const;
-    unsigned int getNumberOfRounds() const;
     void setName(const QString & value);
     void setHostName(const QString & value);
     void setPassword(const QString & value);
     void setEntriesEndTime(const QDateTime & value);
     void setTypersLimit(unsigned int value);
-    void setNumberOfRounds(unsigned int value);
 
     friend QVariantList & operator<<(QVariantList & list, const Tournament & tournament);
 };

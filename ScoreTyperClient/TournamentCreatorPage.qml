@@ -50,17 +50,17 @@ Page {
                 anchors.horizontalCenter: tournamentNameInput.horizontalCenter
             }
 
-            DescriptionLineInput {
+            LabeledLineInput {
                 id: tournamentPasswordInput
-                description: qsTr("Password:")
-                descriptionTextColor: mainWindow.fontColor
-                descriptionAreaColor: mainWindow.backgroundColor
+                labelText: qsTr("Password:")
+                labelTextColor: mainWindow.fontColor
+                labelAreaColor: mainWindow.backgroundColor
                 inputAreaColor: mainWindow.colorB
                 selectByMouse: true
                 maximumLength: 30
                 selectedTextColor: mainWindow.fontColor
                 selectionColor: mainWindow.accentColor
-                descriptionWidth: 100
+                labelWidth: 105
                 inputWidth: parent.width * 0.15
                 anchors.left: titleUnderline.left
                 anchors.top: titleUnderline.bottom
@@ -68,84 +68,44 @@ Page {
             }
 
             Rectangle {
+                id: typersLimitArea
                 color: mainWindow.backgroundColor
-                width: typersLimit.width
-                height: typersLimit.height + typersLimitText.height * 1.75
+                width: entriesEndTimeArea.width
+                height: typersLimit.height
                 radius: 10
                 anchors.left: tournamentPasswordInput.left
-                anchors.top: entriesEndTimeArea.bottom
+                anchors.top: tournamentPasswordInput.bottom
                 anchors.topMargin: 10
 
+                Text {
+                    id: typersLimitText
+                    text: qsTr("Typers Limit:")
+                    font.pointSize: 14
+                    color: mainWindow.fontColor
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 10
+                }
+
                 Rectangle {
-                    height: typersLimit.height * 1.15
                     color: mainWindow.colorB
                     radius: 5
-                    anchors.left: parent.left
+                    anchors.left: typersLimitText.right
                     anchors.right: parent.right
                     anchors.top: parent.top
-                    anchors.margins: 4
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 5
+                    anchors.leftMargin: 7
 
                     SpinBox {
                         id: typersLimit
-                        width: entriesEndTimeArea.width / 2 - 5
+                        width: parent.width * 0.95
                         editable: true
                         from: 1
                         value: 16
                         to: 1000
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.centerIn: parent
                     }
-                }
-
-                Text {
-                    id: typersLimitText
-                    text: qsTr("Typers Limit")
-                    font.pointSize: 14
-                    color: mainWindow.fontColor
-                    anchors.bottom: parent.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottomMargin: 5
-                }
-            }
-
-            Rectangle {
-                color: mainWindow.backgroundColor
-                width: numberOfRounds.width
-                height: numberOfRounds.height + numberOfRoundsText.height * 1.75
-                radius: 10
-                anchors.right: tournamentPasswordInput.right
-                anchors.top: entriesEndTimeArea.bottom
-                anchors.topMargin: 10
-
-                Rectangle {
-                    height: numberOfRounds.height * 1.15
-                    color: mainWindow.colorB
-                    radius: 5
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.margins: 4
-
-                    SpinBox {
-                        id: numberOfRounds
-                        width: entriesEndTimeArea.width / 2 - 5
-                        editable: true
-                        from: 1
-                        value: 1
-                        to: 50
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
-
-                Text {
-                    id: numberOfRoundsText
-                    text: qsTr("Rounds")
-                    font.pointSize: 14
-                    color: mainWindow.fontColor
-                    anchors.bottom: parent.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottomMargin: 5
                 }
             }
 
@@ -155,8 +115,8 @@ Page {
                 width: tournamentPasswordInput.width
                 color: mainWindow.backgroundColor
                 radius: 10
-                anchors.left: tournamentPasswordInput.left
-                anchors.top: tournamentPasswordInput.bottom
+                anchors.left: typersLimitArea.left
+                anchors.top: typersLimitArea.bottom
                 anchors.topMargin: 10
 
                 Text {
@@ -167,6 +127,7 @@ Page {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.margins: 5
+                    anchors.leftMargin: 10
 
                     TextMetrics {
                         id: entriesEndTimeTextMetrics
@@ -247,7 +208,6 @@ Page {
                     tournament.password = tournamentPasswordInput.text
                     tournament.entriesEndTime = date
                     tournament.typersLimit = typersLimit.value
-                    tournament.numberOfRounds = numberOfRounds.value
                     backend.createTournament(tournament)
                     tournament.destroy()
                 }
