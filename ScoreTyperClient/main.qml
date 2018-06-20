@@ -28,7 +28,7 @@ ApplicationWindow {
     StackView {
        id: pagesView
        anchors.fill: parent
-       initialItem: TournamentCreatorPage {}//ConnectingPage {}
+       initialItem: ConnectingPage {}
    }
 
     Item {
@@ -55,8 +55,8 @@ ApplicationWindow {
         Connections {
             target: packetProcessor
             onRequestError: {
-                popupText.text = errorMessage
-                errorPopup.open()
+                backend.disconnectFromServer()
+                showErrorPopup(errorMessage)
             }
         }
     }

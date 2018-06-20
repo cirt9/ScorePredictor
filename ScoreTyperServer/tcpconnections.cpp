@@ -91,8 +91,8 @@ void TcpConnections::processPacket(const Packet & packet)
     qDebug() << packet.getUnserializedData();
 
     QPointer<TcpConnection> connection = qobject_cast<TcpConnection *>(sender());
-    ServerPacketProcessor * packetProcessor = new ServerPacketProcessor(dbConnection, this);
-    connect(packetProcessor, &ServerPacketProcessor::response, connection, &TcpConnection::send);
+    Server::PacketProcessor * packetProcessor = new Server::PacketProcessor(dbConnection, this);
+    connect(packetProcessor, &Server::PacketProcessor::response, connection, &TcpConnection::send);
 
     packetProcessor->processPacket(packet);
     packetProcessor->deleteLater();

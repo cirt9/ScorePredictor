@@ -7,9 +7,9 @@ BackEnd::BackEnd(QObject * parent) : QObject(parent)
     clientWrapper = new TcpClientWrapper(this);
     connect(workerThread, &QThread::finished, clientWrapper->getClient(), &TcpClient::disconnectFromServer);
 
-    packetProcessorWrapper = new ClientPacketProcessorWrapper(this);
+    packetProcessorWrapper = new Client::PacketProcessorWrapper(this);
     connect(clientWrapper->getClient(), &TcpClient::packetArrived, packetProcessorWrapper->getPacketProcessor(),
-            &ClientPacketProcessor::processPacket, Qt::QueuedConnection);
+            &Client::PacketProcessor::processPacket, Qt::QueuedConnection);
 
     workerThread->start();
     clientWrapper->getClient()->moveToThread(workerThread);
@@ -71,7 +71,7 @@ TcpClientWrapper * BackEnd::getClientWrapper() const
     return clientWrapper;
 }
 
-ClientPacketProcessorWrapper * BackEnd::getPacketProcessorWrapper() const
+Client::PacketProcessorWrapper * BackEnd::getPacketProcessorWrapper() const
 {
     return packetProcessorWrapper;
 }

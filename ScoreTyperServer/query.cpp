@@ -85,3 +85,8 @@ bool Query::getUserProfile(const QString & nickname)
     else
         return false;
 }
+
+bool Query::tournamentExists(const QString & tournamentName, const QString & hostName)
+{
+    return false;
+}

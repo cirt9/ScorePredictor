@@ -5,7 +5,7 @@
 #include <QHostAddress>
 #include <QThread>
 #include <tcpclientwrapper.h>
-#include <clientpacketprocessorwrapper.h>
+#include <packetprocessorwrapper.h>
 #include <user.h>
 #include <tournament.h>
 
@@ -16,7 +16,7 @@ class BackEnd : public QObject
 private:
     QThread * workerThread;
     TcpClientWrapper * clientWrapper;
-    ClientPacketProcessorWrapper * packetProcessorWrapper;
+    Client::PacketProcessorWrapper * packetProcessorWrapper;
     User * currentUser;
 
 public:
@@ -32,7 +32,7 @@ public:
     Q_INVOKABLE void createTournament(Tournament * tournament);
 
     TcpClientWrapper * getClientWrapper() const;
-    ClientPacketProcessorWrapper * getPacketProcessorWrapper() const;
+    Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;
     User * getCurrentUser() const;
 };
 

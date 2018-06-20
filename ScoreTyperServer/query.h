@@ -28,6 +28,7 @@ public:
     bool registerUser(const QString & nickname, const QString & password);
     bool isPasswordCorrect(const QString & nickname, const QString & password);
     bool getUserProfile(const QString & nickname);
+    bool tournamentExists(const QString & tournamentName, const QString & hostName);
 };
 
 #endif // QUERY_H

@@ -8,7 +8,7 @@
 #include <QMutexLocker>
 #include <QPointer>
 #include <packet.h>
-#include <serverpacketprocessor.h>
+#include <packetprocessor.h>
 #include <QSharedPointer>
 
 #include <QDebug>

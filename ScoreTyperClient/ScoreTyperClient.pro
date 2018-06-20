@@ -17,10 +17,10 @@ SOURCES += main.cpp \
     tcpclient.cpp \
     tcpclientwrapper.cpp \
     ../ScoreTyperServer/packet.cpp \
-    clientpacketprocessor.cpp \
-    clientpacketprocessorwrapper.cpp \
     user.cpp \
-    tournament.cpp
+    tournament.cpp \
+    packetprocessor.cpp \
+    packetprocessorwrapper.cpp
 
 RESOURCES += qml.qrc \
     assets.qrc
@@ -41,7 +41,7 @@ HEADERS += \
     tcpclient.h \
     tcpclientwrapper.h \
     ../ScoreTyperServer/packet.h \
-    clientpacketprocessor.h \
-    clientpacketprocessorwrapper.h \
     user.h \
-    tournament.h
+    tournament.h \
+    packetprocessor.h \
+    packetprocessorwrapper.h
