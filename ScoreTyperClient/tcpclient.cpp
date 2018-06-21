@@ -85,6 +85,9 @@ void TcpClient::read()
 
 void TcpClient::send(const QVariantList & data)
 {
+    if(socket->state() != QTcpSocket::ConnectedState)
+        return;
+
     qDebug() << "Sending data:" << data;
 
     Packet packet(data);

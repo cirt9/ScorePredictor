@@ -38,6 +38,17 @@ bool Query::isValid() const
     return query.isValid();
 }
 
+bool Query::findUserId(const QString & nickname)
+{
+    QString queryString = "SELECT id FROM user WHERE nickname='" + nickname + "';";
+    query = dbConnection->exec(queryString);
+
+    if(query.first())
+        return true;
+    else
+        return false;
+}
+
 bool Query::isUserRegistered(const QString & nickname)
 {
     QString queryString = "SELECT 1 FROM user WHERE nickname = '" + nickname + "';";
@@ -86,7 +97,29 @@ bool Query::getUserProfile(const QString & nickname)
         return false;
 }
 
-bool Query::tournamentExists(const QString & tournamentName, const QString & hostName)
+bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId)
 {
-    return false;
+    QString queryString = "SELECT 1 FROM tournament WHERE name='" + tournamentName + "'"
+                          " AND host_user_id='" + QString::number(hostId) + "';";
+    query = dbConnection->exec(queryString);
+
+    if(query.first())
+        return true;
+    else
+        return false;
+}
+
+bool Query::createTournament(const Tournament & tournament, unsigned int hostId)
+{
+    QString queryString = "INSERT INTO tournament (name, host_user_id, password, entries_end_time, "
+                          "typers_limit) VALUES ('" + tournament.getName() + "', " +
+                          QString::number(hostId) + ", '" + tournament.getPassword() + "', '" +
+                          tournament.getEntriesEndTime().toString("dd-MM-yyyy hh:mm:ss") + "', " +
+                          QString::number(tournament.getTypersLimit()) + ");";
+    query = dbConnection->exec(queryString);
+
+    if(query.numRowsAffected() > 0)
+        return true;
+    else
+        return false;
 }

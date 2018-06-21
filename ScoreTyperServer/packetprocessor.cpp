@@ -109,25 +109,34 @@ namespace Server
     void PacketProcessor::tournamentCreationRequest(const QVariantList & tournamentData)
     {
         Tournament tournament(tournamentData);
-
-        qDebug() << tournament.getName()
-                 << tournament.getHostName()
-                 << tournament.getPassword()
-                 << tournament.getEntriesEndTime()
-                 << tournament.getTypersLimit();
-
         Query query(dbConnection);
         QVariantList responseData;
 
-        if(query.isUserRegistered(tournament.getHostName()))
+        if(query.findUserId(tournament.getHostName()))
         {
-            if(!query.tournamentExists(tournament.getHostName(), tournament.getName()))
+            unsigned int hostId = query.value("id").toUInt();
+            qDebug() << "Host ID: " << hostId;
+
+            if(!query.tournamentExists(tournament.getName(), hostId))
             {
-                qDebug() << "createTournament";
+                if(query.createTournament(tournament, hostId))
+                {
+                    qDebug() << "New tournament created";
+                    responseData << Packet::ID_CREATE_TOURNAMENT << true
+                                 << QString("Tournament created successfully");
+                }
+                else
+                {
+                    qDebug() << "Tournament couldn't be created";
+                    responseData << Packet::ID_CREATE_TOURNAMENT << false
+                                 << QString("Tournament couldn't be created, try again later");
+                }
             }
             else
             {
-                qDebug() << "You have already created tournament with the same name";
+                qDebug() << "User already created tournament with the same name";
+                responseData << Packet::ID_CREATE_TOURNAMENT << false <<
+                                QString("You can't create two tournaments with the same name!");
             }
         }
         else

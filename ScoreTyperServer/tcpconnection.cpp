@@ -83,6 +83,9 @@ void TcpConnection::send(const QVariantList & data)
 {
     qDebug() << "Sending data:" << data;
 
+    if(socket->state() != QTcpSocket::ConnectedState)
+        return;
+
     Packet packet(data);
 
     if(!packet.isCorrupted())
