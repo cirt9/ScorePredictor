@@ -30,7 +30,7 @@ namespace Server
 
     void PacketProcessor::registerUser(const QVariantList & userData)
     {
-        Query query(dbConnection);
+        Query query(dbConnection->getConnection());
         QVariantList responseData;
         responseData << Packet::ID_REGISTER;
 
@@ -58,7 +58,7 @@ namespace Server
 
     void PacketProcessor::loginUser(const QVariantList & userData)
     {
-        Query query(dbConnection);
+        Query query(dbConnection->getConnection());
         QVariantList responseData;
         responseData << Packet::ID_LOGIN;
 
@@ -88,7 +88,7 @@ namespace Server
 
     void PacketProcessor::userProfileRequest(const QVariantList & userData)
     {
-        Query query(dbConnection);
+        Query query(dbConnection->getConnection());
         QVariantList responseData;
 
         if(query.getUserProfile(userData[0].toString()))
@@ -109,7 +109,7 @@ namespace Server
     void PacketProcessor::tournamentCreationRequest(const QVariantList & tournamentData)
     {
         Tournament tournament(tournamentData);
-        Query query(dbConnection);
+        Query query(dbConnection->getConnection());
         QVariantList responseData;
 
         if(query.findUserId(tournament.getHostName()))

@@ -68,11 +68,6 @@ bool DbConnection::isConnected()
     return false;
 }
 
-QSqlQuery DbConnection::exec(const QString & query) const
-{
-    return connection.exec(query);
-}
-
 void DbConnection::setConnectOptions(const QString & options)
 {
     connection.setConnectOptions(options);
@@ -93,4 +88,9 @@ void DbConnection::clearConnection()
 int DbConnection::numberOfOpenedConnections()
 {
     return connectionsList.count();
+}
+
+QSqlDatabase DbConnection::getConnection() const
+{
+    return connection;
 }

@@ -8,22 +8,11 @@
 
 #include <QDebug>
 
-class Query
+class Query : public QSqlQuery
 {
-private:
-    QSharedPointer<DbConnection> dbConnection;
-    QSqlQuery query;
-
 public:
-    Query(QSharedPointer<DbConnection> connection);
+    Query(const QSqlDatabase & dbConnection);
     ~Query() {}
-
-    bool next();
-    QVariant value(int index) const;
-    QVariant value(const QString & name) const;
-    QString	lastQuery() const;
-    QString lastError() const;
-    bool isValid() const;
 
     bool findUserId(const QString & nickname);
     bool isUserRegistered(const QString & nickname);

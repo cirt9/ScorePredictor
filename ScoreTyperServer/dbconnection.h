@@ -30,12 +30,11 @@ public:
     bool connect(const QString & connesctionName, const QString & databaseName = DATABASE_NAME,
                  const QString & driver = DRIVER_NAME);
     void close();
-
     void setConnectOptions(const QString & options = QString());
-    QSqlQuery exec(const QString & query = QString()) const;
 
     static int numberOfOpenedConnections();
     bool isConnected();
+    QSqlDatabase getConnection() const;
 };
 
 #endif // DBCONNECTION_H
