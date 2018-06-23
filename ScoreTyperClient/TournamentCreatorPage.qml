@@ -26,7 +26,7 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            ClassicLineInput {
+            DefaultLineInput {
                 id: tournamentNameInput
                 width: parent.width * 0.7
                 placeholderText: qsTr("Tournament Name")
@@ -41,7 +41,7 @@ Page {
             }
 
             Rectangle {
-                id: titleUnderline
+                id: headerLine
                 color: mainWindow.backgroundColor
                 height: 3
                 width: parent.width * 0.9
@@ -62,8 +62,8 @@ Page {
                 selectionColor: mainWindow.accentColor
                 labelWidth: 105
                 inputWidth: parent.width * 0.15
-                anchors.left: titleUnderline.left
-                anchors.top: titleUnderline.bottom
+                anchors.left: headerLine.left
+                anchors.top: headerLine.bottom
                 anchors.topMargin: 50
             }
 
@@ -179,39 +179,173 @@ Page {
                         minimumDate: new Date()
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
+                        calendarAlignRight: true
                     }
                 }
             }
 
             Rectangle {
-                color: "black"
-                width: createButton.width
-                height: createButton.height - 12
-                radius: 2
-                anchors.centerIn: createButton
+                id: footerLine
+                color: mainWindow.backgroundColor
+                height: 3
+                width: parent.width * 0.9
+                radius: 5
+                anchors.bottom: createTournamentButton.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottomMargin: 15
             }
 
-            Button {
-                id: createButton
+            Rectangle {
+                id: replyArea
+                color: mainWindow.backgroundColor
+                width: createTournamentButton.width
+                height: 0
+                radius: 10
+                anchors.verticalCenter: footerLine.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                property bool hidden: true
+
+                Text {
+                    id: replyText
+                    color: mainWindow.deniedColor
+                    font.pointSize: 10
+                    opacity: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                NumberAnimation {
+                    id: animateReplyAreaShowing
+                    target: replyArea
+                    property: "height"
+                    from: replyArea.height
+                    to: 20
+                    duration: 150
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    id: animateReplyTextShowing
+                    target: replyText
+                    property: "opacity"
+                    from: replyText.opacity
+                    to: 1
+                    duration: 100
+                    easing.type: Easing.InOutQuad
+                }
+
+                NumberAnimation {
+                    id: animateReplyAreaHiding
+                    target: replyText
+                    property: "opacity"
+                    from: replyText.opacity
+                    to: 0
+                    duration: 100
+                    easing.type: Easing.OutInQuad
+                }
+                NumberAnimation {
+                    id: animateReplyTextHiding
+                    target: replyArea
+                    property: "height"
+                    from: replyArea.height
+                    to: 0
+                    duration: 150
+                    easing.type: Easing.OutInQuad
+                }
+
+                Timer {
+                    id: replyTimer
+                    interval: 10000
+
+                    onTriggered: hideReplyArea()
+                }
+            }
+
+            DefaultButton {
+                id: createTournamentButton
                 text: qsTr("Create Tournament")
-                font.pointSize: 28
+                color: mainWindow.backgroundColor
+                fontColor: mainWindow.fontColor
+                fontSize: 25
+                radius: 5
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottomMargin: 10
 
                 onClicked: {
-                    var dateString = entriesEndDatePicker.simplifiedDate + " " + entriesEndTimePicker.fullTime
-                    var date = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
-                    var tournament = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Tournament {}',
-                                                       tournamentCreatorPage);
-                    tournament.name = tournamentNameInput.text
-                    tournament.hostName = currentUser.username
-                    tournament.password = tournamentPasswordInput.text
-                    tournament.entriesEndTime = date
-                    tournament.typersLimit = typersLimit.value
-                    backend.createTournament(tournament)
-                    tournament.destroy()
+                    if(!replyArea.hidden)
+                        hideReplyArea()
+
+                    if(tournamentNameInput.text.length === 0)
+                    {
+                        replyText.text = qsTr("Tournament name is required")
+                        showReplyArea()
+                    }
+                    else
+                    {
+                        var dateString = entriesEndDatePicker.simplifiedDate + " " + entriesEndTimePicker.fullTime
+                        var date = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
+                        var tournament = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Tournament {}',
+                                                           tournamentCreatorPage);
+                        tournament.name = tournamentNameInput.text
+                        tournament.hostName = currentUser.username
+                        tournament.password = tournamentPasswordInput.text
+                        tournament.entriesEndTime = date
+                        tournament.typersLimit = typersLimit.value
+                        backend.createTournament(tournament)
+                        tournament.destroy()
+
+                        tournamentCreatorPage.enabled = false
+                        mainWindow.startBusyIndicator()
+                        busyTimer.restart()
+                    }
                 }
             }
         }
+    }
+
+    Connections {
+        target: packetProcessor
+
+        onTournamentCreationReply: {
+            busyTimer.stop()
+            tournamentCreatorPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            if(replyState)
+                console.log("Do something");
+            else
+            {
+                replyText.text = message
+                showReplyArea()
+            }
+        }
+    }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            tournamentCreatorPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost, try again later"))
+        }
+    }
+
+    function showReplyArea()
+    {
+        animateReplyAreaShowing.start()
+        animateReplyTextShowing.start()
+        replyArea.hidden = false
+        replyTimer.restart()
+    }
+
+    function hideReplyArea()
+    {
+        animateReplyAreaHiding.start()
+        animateReplyTextHiding.start()
+        replyArea.hidden = true
+        replyTimer.stop()
     }
 }

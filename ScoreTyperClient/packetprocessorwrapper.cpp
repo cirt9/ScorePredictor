@@ -14,6 +14,8 @@ namespace Client
                 this, &PacketProcessorWrapper::profileDownloadReply);
         connect(packetProcessor, &Client::PacketProcessor::requestError,
                 this, &PacketProcessorWrapper::requestError);
+        connect(packetProcessor, &Client::PacketProcessor::tournamentCreationReply,
+                this, &PacketProcessorWrapper::tournamentCreationReply);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

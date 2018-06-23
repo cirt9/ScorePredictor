@@ -24,6 +24,8 @@ Rectangle {
     property color calendarInactiveColor: "grey"
     property alias minimumDate: calendar.minimumDate
     property alias maximumDate: calendar.maximumDate
+    property bool calendarAlignRight: false
+    property bool calendarAlignLeft: false
 
     MouseArea {
         anchors.fill: parent
@@ -68,8 +70,16 @@ Rectangle {
         id: calendar
         visible: false
         anchors.top: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 5
+
+        Component.onCompleted: {
+            if(calendarAlignLeft)
+                anchors.left = parent.left
+            else if(calendarAlignRight)
+                anchors.right = parent.right
+            else
+                anchors.horizontalCenter = parent.horizontalCenter
+        }
 
         style: CalendarStyle {
                 gridVisible: true

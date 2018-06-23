@@ -81,7 +81,10 @@ Rectangle {
             anchors.left: colon.right
             anchors.verticalCenter: parent.verticalCenter
 
-            onEditingFinished: text = resetText(text)
+            onEditingFinished: {
+                text = resetText(text)
+                root.timeChanged()
+            }
             onTextChanged: text = validateText(text, "59")
             onFocusChanged: {
                 if(focus)
@@ -139,8 +142,8 @@ Rectangle {
         IntervalChangingTimer {
             id: addButtonTimer
             onTriggered: addTime()
-            startingIntervalValue: 500
-            targetIntervalValue: 80
+            startingIntervalValue: 300
+            targetIntervalValue: 50
             ticksToReachTargetValue: 7
         }
     }
@@ -171,8 +174,8 @@ Rectangle {
         IntervalChangingTimer {
             id: substractButtonTimer
             onTriggered: substractTime()
-            startingIntervalValue: 500
-            targetIntervalValue: 80
+            startingIntervalValue: 300
+            targetIntervalValue: 50
             ticksToReachTargetValue: 7
         }
     }

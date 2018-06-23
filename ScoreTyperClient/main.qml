@@ -63,10 +63,12 @@ ApplicationWindow {
 
     BusyIndicator {
         id: busyIndicator
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
         running: false
         z: 1
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 15
+        anchors.bottomMargin: 15
     }
 
     function pushPage(page) {

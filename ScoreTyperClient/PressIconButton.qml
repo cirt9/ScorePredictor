@@ -10,6 +10,7 @@ Item {
     property int iconMargin: 3
     readonly property alias buttonPressed: mouseArea.pressed
     signal pressedChanged()
+    signal clicked()
 
     Rectangle {
         id: background
@@ -41,6 +42,7 @@ Item {
         hoverEnabled: true
 
         onPressedChanged: root.pressedChanged()
+        onClicked: root.clicked()
     }
 
     states: [

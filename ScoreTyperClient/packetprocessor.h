@@ -16,6 +16,7 @@ namespace Client
         void manageRegistrationReply(const QVariantList & replyData);
         void manageLoggingReply(const QVariantList & replyData);
         void manageProfileRequestReply(const QVariantList & replyData);
+        void manageTournamentCreationReply(const QVariantList & replyData);
 
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
@@ -29,6 +30,7 @@ namespace Client
         void registrationReply(bool replyState, const QString & message);
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
         void profileDownloadRedply(const QString & description);
+        void tournamentCreationReply(bool replyState, const QString & message);
     };
 }
 

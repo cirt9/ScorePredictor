@@ -19,6 +19,7 @@ namespace Client
         case Packet::ID_REGISTER: manageRegistrationReply(data); break;
         case Packet::ID_LOGIN: manageLoggingReply(data); break;
         case Packet::ID_DOWNLOAD_USER_PROFILE: manageProfileRequestReply(data); break;
+        case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
 
         default: break;
         }
@@ -42,5 +43,10 @@ namespace Client
     void PacketProcessor::manageProfileRequestReply(const QVariantList & replyData)
     {
         emit profileDownloadRedply(replyData[0].toString());
+    }
+
+    void PacketProcessor::manageTournamentCreationReply(const QVariantList & replyData)
+    {
+        emit tournamentCreationReply(replyData[0].toBool(), replyData[1].toString());
     }
 }

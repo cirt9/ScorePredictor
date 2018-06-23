@@ -16,6 +16,7 @@ Item {
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
     property bool trimText: true
+    signal focusChanged()
 
     Text {
         id: placeholder
@@ -55,6 +56,7 @@ Item {
                 if(inputText.text.length === 0)
                     placeholder.opacity = 0.3
             }
+            root.focusChanged()
         }
         onEditingFinished: {
             if(trimText)

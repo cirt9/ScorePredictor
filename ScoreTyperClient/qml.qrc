@@ -9,13 +9,14 @@
         <file>TextLineField.qml</file>
         <file>PopupBox.qml</file>
         <file>NavigationButton.qml</file>
-        <file>ClassicLineInput.qml</file>
         <file>TimePickerWidget.qml</file>
         <file>IntervalChangingTimer.qml</file>
         <file>PressIconButton.qml</file>
         <file>DatePickerWidget.qml</file>
         <file>CheckableIconButton.qml</file>
         <file>LabeledLineInput.qml</file>
+        <file>DefaultButton.qml</file>
+        <file>DefaultLineInput.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
