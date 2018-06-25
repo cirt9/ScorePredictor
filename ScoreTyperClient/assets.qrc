@@ -13,6 +13,7 @@
         <file>icons/icons8_Expand_Arrow.png</file>
         <file>icons/icons8_Chevron_Left.png</file>
         <file>icons/icons8_Chevron_Right.png</file>
+        <file>icons/icons8_Search.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

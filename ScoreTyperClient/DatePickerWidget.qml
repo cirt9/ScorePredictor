@@ -26,6 +26,8 @@ Rectangle {
     property alias maximumDate: calendar.maximumDate
     property bool calendarAlignRight: false
     property bool calendarAlignLeft: false
+    property alias calendarWidth: calendar.implicitWidth
+    property alias calendarHeight: calendar.implicitHeight
 
     MouseArea {
         anchors.fill: parent

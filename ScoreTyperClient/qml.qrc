@@ -17,6 +17,7 @@
         <file>LabeledLineInput.qml</file>
         <file>DefaultButton.qml</file>
         <file>DefaultLineInput.qml</file>
+        <file>SearchInput.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
@@ -25,9 +26,9 @@
         <file>RegistrationPage.qml</file>
         <file>UserProfilePage.qml</file>
         <file>NavigationPage.qml</file>
-        <file>FriendsPage.qml</file>
-        <file>TournamentsPage.qml</file>
         <file>TournamentCreatorPage.qml</file>
         <file>ConnectingPage.qml</file>
+        <file>TournamentPage.qml</file>
+        <file>TournamentsSearchPage.qml</file>
     </qresource>
 </RCC>

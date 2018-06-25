@@ -85,9 +85,10 @@ Page {
             Component.onCompleted: backend.downloadUserProfile(currentUser.username)
         }
 
-        TournamentsPage {
-            id: tournamentsPage
-        }
+        StackView {
+           id: tournamentView
+           initialItem: TournamentsSearchPage {}
+       }
 
         TournamentCreatorPage {
             id: tournamentCreatorPage
@@ -101,5 +102,13 @@ Page {
         navigationBar.children[navigationBar.previousIndex].checked = false
         navigationBar.children[navigationBar.currentIndex].checked = true
         navigationView.currentIndex = navigationBar.currentIndex
+    }
+
+    function pushTournament(page) {
+        tournamentView.push(page)
+    }
+
+    function popTournament() {
+        tournamentView.pop()
     }
 }
