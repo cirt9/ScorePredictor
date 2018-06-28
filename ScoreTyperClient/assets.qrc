@@ -14,6 +14,8 @@
         <file>icons/icons8_Chevron_Left.png</file>
         <file>icons/icons8_Chevron_Right.png</file>
         <file>icons/icons8_Search.png</file>
+        <file>icons/icons8_Sort_Left.png</file>
+        <file>icons/icons8_Sort_Right.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

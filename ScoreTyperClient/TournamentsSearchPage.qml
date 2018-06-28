@@ -40,7 +40,7 @@ Page {
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 40
-            anchors.bottomMargin: 40
+            anchors.bottomMargin: 70
 
             Rectangle {
                 id: tournamentsViewBackground
@@ -52,7 +52,7 @@ Page {
 
             ListView {
                 id: tournamentsView
-                model: tournamentData
+                model: tournamentsData
                 spacing: 2
                 headerPositioning: ListView.PullBackHeader
                 highlightMoveDuration: 250
@@ -222,11 +222,21 @@ Page {
                     radius: 5
                     opacity: 0.8
                 }
+
+                Text {
+                    text: qsTr("Tournaments not found")
+                    color: mainWindow.backgroundColor
+                    opacity: 0.5
+                    font.bold: true
+                    font.pointSize: 40
+                    anchors.centerIn: parent
+                    visible: tournamentsData.count === 0 ? true : false
+                }
             }
         }
 
         ListModel {
-            id: tournamentData
+            id: tournamentsData
 
             ListElement {
                 tournamentName: "World Cup 2018"
@@ -266,6 +276,69 @@ Page {
                 entriesEndTime: "25.04.2019 02:30"
                 typers: "2/18"
                 password: "No"
+            }
+        }
+
+        DefaultButton {
+            id: joinButton
+            text: qsTr("Join")
+            width: 200
+            color: mainWindow.backgroundColor
+            fontColor: mainWindow.fontColor
+            fontSize: 25
+            radius: 5
+            enabled: tournamentsData.count === 0 ? false : true
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottomMargin: 10
+
+            onClicked: {
+                var chosenTournament = tournamentsData.get(tournamentsView.currentIndex)
+                console.log(chosenTournament.tournamentName)
+            }
+        }
+
+        Item {
+            id: leftButton
+            height: joinButton.height + 3
+            width: height
+            anchors.right: joinButton.left
+            anchors.verticalCenter: joinButton.verticalCenter
+
+            Image {
+                source: "qrc://assets/icons/icons/icons8_Sort_Left.png"
+                fillMode: Image.PreserveAspectFit
+                anchors.fill: parent
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onPressed: parent.anchors.margins = 3
+                    onReleased: parent.anchors.margins = 0
+                }
+            }
+        }
+
+        Item {
+            id: rightButton
+            height: joinButton.height + 3
+            width: height
+            anchors.left: joinButton.right
+            anchors.verticalCenter: joinButton.verticalCenter
+
+            Image {
+                source: "qrc://assets/icons/icons/icons8_Sort_Right.png"
+                fillMode: Image.PreserveAspectFit
+                anchors.fill: parent
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onPressed: parent.anchors.margins = 3
+                    onReleased: parent.anchors.margins = 0
+                }
             }
         }
     }
