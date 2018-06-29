@@ -213,7 +213,7 @@ Page {
                         anchors.centerIn: parent
                         spacing: 10
 
-                        IconButton {
+                        IconButtonHover {
                             id: settingsButton
                             width: 30
                             height: 30
@@ -223,7 +223,7 @@ Page {
                             onClicked: mainWindow.pushPage("qrc:/pages/SettingsPage.qml")
                         }
 
-                        IconButton {
+                        IconButtonHover {
                             id: aboutButton
                             width: 30
                             height: 30
@@ -233,7 +233,7 @@ Page {
                             onClicked: mainWindow.pushPage("qrc:/pages/AboutPage.qml")
                         }
 
-                        IconButton {
+                        IconButtonHover {
                             id: disconnectButton
                             width: 30
                             height: 30
@@ -243,7 +243,7 @@ Page {
                             onClicked: backend.disconnectFromServer()
                         }
 
-                        IconButton {
+                        IconButtonHover {
                             id: quitButton
                             width: 30
                             height: 30

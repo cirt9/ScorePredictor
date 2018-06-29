@@ -104,7 +104,7 @@ Rectangle {
                         anchors.centerIn: parent
                     }
 
-                    IconButton {
+                    IconButtonHover {
                         id: leftButton
                         iconSource: previousIcon
                         color: calendarMainColor
@@ -118,7 +118,7 @@ Rectangle {
                         onClicked: calendar.showPreviousMonth()
                     }
 
-                    IconButton {
+                    IconButtonHover {
                         id: rightButton
                         iconSource: nextIcon
                         color: calendarMainColor

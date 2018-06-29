@@ -4,7 +4,7 @@
         <file>main.qml</file>
     </qresource>
     <qresource prefix="/components">
-        <file>IconButton.qml</file>
+        <file>IconButtonHover.qml</file>
         <file>TextButton.qml</file>
         <file>TextLineField.qml</file>
         <file>PopupBox.qml</file>
@@ -17,7 +17,8 @@
         <file>LabeledLineInput.qml</file>
         <file>DefaultButton.qml</file>
         <file>DefaultLineInput.qml</file>
-        <file>SearchInput.qml</file>
+        <file>SearchWidget.qml</file>
+        <file>IconButton.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>

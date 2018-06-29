@@ -79,104 +79,39 @@ Rectangle {
         }
     }
 
-    Item {
+    IconButton {
         id: searchButtonContainer
         height: parent.height
         width: height
+        iconSource: searchIcon
+        margins: iconsMargins
+        marginsOnPressed: iconsMarginsOnPressed
         anchors.right: clearButtonContainer.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        Image {
-            id: searchButton
-            source: searchIcon
-            fillMode: Image.PreserveAspectFit
-            anchors.fill: parent
-            anchors.margins: iconsMargins
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onClicked: {
-                    root.searchClicked()
-                    textInput.focus = false
-                }
-                onPressed: animateSearchButtonSizeDown.start()
-                onReleased: animateSearchButtonSizeUp.start()
-            }
-
-            NumberAnimation {
-               id: animateSearchButtonSizeDown
-               target: searchButton
-               properties: "anchors.margins"
-               from: searchButton.anchors.margins
-               to: iconsMarginsOnPressed
-               duration: 100
-               easing {type: Easing.OutInQuad;}
-            }
-
-            NumberAnimation {
-               id: animateSearchButtonSizeUp
-               target: searchButton
-               properties: "anchors.margins"
-               from: searchButton.anchors.margins
-               to: iconsMargins
-               duration: 100
-               easing {type: Easing.OutInQuad;}
-            }
+        onClicked: {
+            root.searchClicked()
+            textInput.focus = false
         }
     }
 
-    Item {
+    IconButton {
         id: clearButtonContainer
         height: parent.height
         width: height
+        iconSource: clearIcon
+        margins: iconsMargins
+        marginsOnPressed: iconsMarginsOnPressed
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.rightMargin: buttonRightMargin
 
-        Image {
-            id: clearButton
-            source: clearIcon
-            fillMode: Image.PreserveAspectFit
-            anchors.fill: parent
-            anchors.margins: iconsMargins
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onClicked: {
-                    textInput.text = ""
-                    textInput.focus = true
-                    root.clearClicked()
-                }
-
-                onPressed: animateClearButtonSizeDown.start()
-                onReleased: animateclearButtonSizeUp.start()
-            }
-
-            NumberAnimation {
-               id: animateClearButtonSizeDown
-               target: clearButton
-               properties: "anchors.margins"
-               from: clearButton.anchors.margins
-               to: iconsMarginsOnPressed
-               duration: 100
-               easing {type: Easing.OutInQuad;}
-            }
-
-            NumberAnimation {
-               id: animateclearButtonSizeUp
-               target: clearButton
-               properties: "anchors.margins"
-               from: clearButton.anchors.margins
-               to: iconsMargins
-               duration: 100
-               easing {type: Easing.OutInQuad;}
-            }
+        onClicked: {
+            textInput.text = ""
+            textInput.focus = true
+            root.clearClicked()
         }
     }
 }

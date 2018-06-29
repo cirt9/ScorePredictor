@@ -7,7 +7,7 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    IconButton {
+    IconButtonHover {
         id: closeButton
         width: 30
         height: 30

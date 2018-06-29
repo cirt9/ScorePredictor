@@ -58,7 +58,7 @@ Page {
             anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin: 30
 
-            IconButton {
+            IconButtonHover {
                 id: logoutButton
                 width: 30
                 height: 30

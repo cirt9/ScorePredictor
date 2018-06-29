@@ -1,93 +1,53 @@
 import QtQuick 2.9
 
-Item  {
+Item {
     id: root
-
     property url iconSource
-    property int iconMargin: 3
-    property int radius: 3
-    property int radiusOnPressed: 8
-    property color color: "black"
+    property int margins: 0
+    property int marginsOnPressed: 3
     signal clicked()
 
-    Rectangle {
-        id: background
-        color: root.color
-        radius: root.radius
-        opacity: 0.0
-
-        anchors.fill: parent
-    }
-
     Image {
+        id: icon
         source: iconSource
         fillMode: Image.PreserveAspectFit
-
         anchors.fill: parent
-        anchors.margins: iconMargin
-    }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            hoverEnabled: true
 
-        onClicked: root.clicked()
+            onClicked: root.clicked()
+        }
     }
 
     states: [
         State {
-            name: "notHovered"
-            when: !mouseArea.containsMouse && !mouseArea.pressed
+            name: "released"
+            when: !mouseArea.pressed
             PropertyChanges {
-                target: background
-                opacity: 0
-                radius: root.radius
-            }
-        },
-        State {
-            name: "hovered"
-            when: mouseArea.containsMouse && !mouseArea.pressed
-            PropertyChanges {
-                target: background
-                opacity: 1
-                radius: root.radius
+                target: icon
+                anchors.margins: margins
             }
         },
         State {
             name: "pressed"
             when: mouseArea.pressed
             PropertyChanges {
-                target: background
-                radius: radiusOnPressed
-                opacity: 1
+                target: icon
+                anchors.margins: marginsOnPressed
             }
         }
     ]
 
     transitions: [
         Transition {
-            from: "notHovered"; to: "hovered"; reversible: true
+            from: "released"; to: "pressed"; reversible: true
             NumberAnimation {
-                properties: "opacity"
-                duration: 250
-                easing.type: Easing.InOutSine
-            }
-        },
-        Transition {
-            from: "hovered"; to: "pressed"; reversible: true
-            NumberAnimation {
-                properties: "radius"
-                duration: 250
-                easing.type: Easing.InOutSine
-            }
-        },
-        Transition {
-            from: "pressed"; to: "notHovered"; reversible: false
-            NumberAnimation {
-                properties: "radius, opacity"
-                duration: 250
-                easing.type: Easing.InOutSine
+                properties: "anchors.margins"
+                duration: 100
+                easing.type: Easing.InOutQuad
             }
         }
     ]

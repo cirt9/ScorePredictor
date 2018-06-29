@@ -14,8 +14,8 @@ Page {
         anchors.fill: parent
         anchors.margins: 15
 
-        SearchInput {
-            id: searchInput
+        SearchWidget {
+            id: searchWidget
             width: parent.width * 0.3
             height: 30
             placeholderText: "Search Tournament"
@@ -36,7 +36,7 @@ Page {
         Item {
             clip: true
             width: parent.width * 0.85
-            anchors.top: searchInput.bottom
+            anchors.top: searchWidget.bottom
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 40
@@ -48,6 +48,10 @@ Page {
                 radius: 5
                 opacity: 0.35
                 anchors.fill: parent
+            }
+
+            ListModel {
+                id: tournamentsData
             }
 
             ListView {
@@ -235,50 +239,6 @@ Page {
             }
         }
 
-        ListModel {
-            id: tournamentsData
-
-            ListElement {
-                tournamentName: "World Cup 2018"
-                hostName: "TyperMaster2022"
-                entriesEndTime: "27.06.2018 12:30"
-                typers: "2/18"
-                password: "Yes"
-            }
-
-            ListElement {
-                tournamentName: "Euro 2016"
-                hostName: "John"
-                entriesEndTime: "27.06.2019 18:30"
-                typers: "1/999"
-                password: "No"
-            }
-
-            ListElement {
-                tournamentName: "World Cup 2022"
-                hostName: "TyperMaster2022"
-                entriesEndTime: "10.07.2018 19:30"
-                typers: "997/999"
-                password: "No"
-            }
-
-            ListElement {
-                tournamentName: "Euro 2020"
-                hostName: "WWWWWWWWWWWWW"
-                entriesEndTime: "12.12.2019 09:30"
-                typers: "27/34"
-                password: "Yes"
-            }
-
-            ListElement {
-                tournamentName: "Champions League 2018/2019"
-                hostName: "TyperMaster2022"
-                entriesEndTime: "25.04.2019 02:30"
-                typers: "2/18"
-                password: "No"
-            }
-        }
-
         DefaultButton {
             id: joinButton
             text: qsTr("Join")
@@ -298,48 +258,22 @@ Page {
             }
         }
 
-        Item {
+        IconButton {
             id: leftButton
             height: joinButton.height + 3
             width: height
+            iconSource: "qrc://assets/icons/icons/icons8_Sort_Left.png"
             anchors.right: joinButton.left
             anchors.verticalCenter: joinButton.verticalCenter
-
-            Image {
-                source: "qrc://assets/icons/icons/icons8_Sort_Left.png"
-                fillMode: Image.PreserveAspectFit
-                anchors.fill: parent
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-
-                    onPressed: parent.anchors.margins = 3
-                    onReleased: parent.anchors.margins = 0
-                }
-            }
         }
 
-        Item {
+        IconButton {
             id: rightButton
             height: joinButton.height + 3
             width: height
+            iconSource: "qrc://assets/icons/icons/icons8_Sort_Right.png"
             anchors.left: joinButton.right
             anchors.verticalCenter: joinButton.verticalCenter
-
-            Image {
-                source: "qrc://assets/icons/icons/icons8_Sort_Right.png"
-                fillMode: Image.PreserveAspectFit
-                anchors.fill: parent
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-
-                    onPressed: parent.anchors.margins = 3
-                    onReleased: parent.anchors.margins = 0
-                }
-            }
         }
     }
 }
