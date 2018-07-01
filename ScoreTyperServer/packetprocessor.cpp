@@ -21,8 +21,9 @@ namespace Server
         {
         case Packet::ID_REGISTER: registerUser(data); break;
         case Packet::ID_LOGIN: loginUser(data); break;
-        case Packet::ID_DOWNLOAD_USER_PROFILE: userProfileRequest(data); break;
-        case Packet::ID_CREATE_TOURNAMENT: tournamentCreationRequest(data); break;
+        case Packet::ID_DOWNLOAD_USER_PROFILE: manageUserProfileRequest(data); break;
+        case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
+        case Packet::ID_PULL_TOURNAMENTS_LIST: manageTournamentsListRequest(data); break;
 
         default: break;
         }
@@ -86,7 +87,7 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::userProfileRequest(const QVariantList & userData)
+    void PacketProcessor::manageUserProfileRequest(const QVariantList & userData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
@@ -106,9 +107,9 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::tournamentCreationRequest(const QVariantList & tournamentData)
+    void PacketProcessor::manageTournamentCreationRequest(QVariantList & tournamentData)
     {
-        Tournament tournament(tournamentData);
+        Tournament tournament(tournamentData[0].value<QVariantList>());
         Query query(dbConnection->getConnection());
         QVariantList responseData;
 
@@ -119,7 +120,7 @@ namespace Server
 
             if(!query.tournamentExists(tournament.getName(), hostId))
             {
-                if(query.createTournament(tournament, hostId))
+                if(query.createTournament(tournament, hostId, tournamentData[1].toString()))
                 {
                     qDebug() << "New tournament created";
                     responseData << Packet::ID_CREATE_TOURNAMENT << true
@@ -144,6 +145,32 @@ namespace Server
             qDebug() << "User that wants to create tournament doesn't exist";
             responseData << Packet::ID_ERROR << QString("User does not exist");
         }
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageTournamentsListRequest(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+        responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
+
+        if(requestData.size() == 1)
+        {
+            qDebug() << "Pulling newest tournaments";
+            query.findNewestTournamentsList(requestData[0].toString(), QDateTime::currentDateTime());
+
+            while(query.next())
+            {
+                QVariantList tournamentData;
+                tournamentData << query.value("name") << query.value("host_name")
+                               << query.value("password_required") << query.value("entries_end_time")
+                               << query.value("typers") << query.value("typers_limit");
+                responseData << QVariant::fromValue(tournamentData);
+            }
+        }
+        else
+            qDebug() << "Pulling another page of tournaments";
+
         emit response(responseData);
     }
 }

@@ -59,11 +59,29 @@ void BackEnd::downloadUserProfile(const QString & nickname)
     emit clientWrapper->sendData(data);
 }
 
-void BackEnd::createTournament(Tournament * tournament)
+void BackEnd::createTournament(Tournament * tournament, const QString & password)
 {
     QVariantList data;
-    data << Packet::ID_CREATE_TOURNAMENT << *tournament;
+    QVariantList tournamentData;
+    tournamentData << *tournament;
+    data << Packet::ID_CREATE_TOURNAMENT << QVariant::fromValue(tournamentData) << password;
     emit clientWrapper->sendData(data);
+}
+
+void BackEnd::pullTournamentsList(const QString & requesterName)
+{
+    QVariantList data;
+    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName;
+    emit clientWrapper->sendData(data);
+    qDebug() << "Pull newest tournaments";
+}
+
+void BackEnd::pullTournamentsList(const QString & requesterName, const QDateTime & minEntriesEndTime)
+{
+    QVariantList data;
+    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << minEntriesEndTime;
+    emit clientWrapper->sendData(data);
+    qDebug() << minEntriesEndTime << "Pull another page of tournaments";
 }
 
 TcpClientWrapper * BackEnd::getClientWrapper() const

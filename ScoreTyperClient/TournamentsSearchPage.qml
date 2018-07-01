@@ -51,12 +51,12 @@ Page {
             }
 
             ListModel {
-                id: tournamentsData
+                id: tournamentModel
             }
 
             ListView {
                 id: tournamentsView
-                model: tournamentsData
+                model: tournamentModel
                 spacing: 2
                 headerPositioning: ListView.PullBackHeader
                 highlightMoveDuration: 250
@@ -234,7 +234,7 @@ Page {
                     font.bold: true
                     font.pointSize: 40
                     anchors.centerIn: parent
-                    visible: tournamentsData.count === 0 ? true : false
+                    visible: tournamentModel.count === 0 ? true : false
                 }
             }
         }
@@ -247,13 +247,13 @@ Page {
             fontColor: mainWindow.fontColor
             fontSize: 25
             radius: 5
-            enabled: tournamentsData.count === 0 ? false : true
+            enabled: tournamentModel.count === 0 ? false : true
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: 10
 
             onClicked: {
-                var chosenTournament = tournamentsData.get(tournamentsView.currentIndex)
+                var chosenTournament = tournamentModel.get(tournamentsView.currentIndex)
                 console.log(chosenTournament.tournamentName)
             }
         }
@@ -274,6 +274,18 @@ Page {
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Right.png"
             anchors.left: joinButton.right
             anchors.verticalCenter: joinButton.verticalCenter
+        }
+    }
+
+    Component.onCompleted: backend.pullTournamentsList(currentUser.username)
+
+    Connections {
+        target: packetProcessor
+
+        onTournamentsListElementArrived: {
+            tournamentModel.append({"tournamentName": tournamentData[0], "hostName": tournamentData[1],
+                                   "entriesEndTime": tournamentData[2], "typers": tournamentData[3],
+                                   "password": tournamentData[4]})
         }
     }
 }

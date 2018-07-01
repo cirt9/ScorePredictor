@@ -81,8 +81,6 @@ Page {
 
         UserProfilePage {
             id: userProfilePage
-
-            Component.onCompleted: backend.downloadUserProfile(currentUser.username)
         }
 
         StackView {

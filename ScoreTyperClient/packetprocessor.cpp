@@ -20,6 +20,7 @@ namespace Client
         case Packet::ID_LOGIN: manageLoggingReply(data); break;
         case Packet::ID_DOWNLOAD_USER_PROFILE: manageProfileRequestReply(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
+        case Packet::ID_PULL_TOURNAMENTS_LIST: manageTournamentsListReply(data); break;
 
         default: break;
         }
@@ -48,5 +49,25 @@ namespace Client
     void PacketProcessor::manageTournamentCreationReply(const QVariantList & replyData)
     {
         emit tournamentCreationReply(replyData[0].toBool(), replyData[1].toString());
+    }
+
+    void PacketProcessor::manageTournamentsListReply(const QVariantList & replyData)
+    {
+        for(int i=0; i<replyData.size(); i++)
+        {
+            Tournament tournament(replyData[i].value<QVariantList>());
+            QStringList tournamentData;
+
+            tournamentData << tournament.getName() << tournament.getHostName()
+                           << tournament.getEntriesEndTime().toString("dd.MM.yyyy hh:mm")
+                           << QString::number(tournament.getTypersNumber()) + "/"
+                              + QString::number(tournament.getTypersLimit());
+            if(tournament.getPasswordRequired())
+                tournamentData << QString("Yes");
+            else
+                tournamentData << QString("No");
+
+            tournamentsListElementArrived(tournamentData);
+        }
     }
 }

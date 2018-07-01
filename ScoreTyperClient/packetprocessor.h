@@ -2,6 +2,7 @@
 #define PACKETPROCESSOR_H
 
 #include <../ScoreTyperServer/packet.h>
+#include <tournament.h>
 
 #include <QDebug>
 
@@ -17,6 +18,7 @@ namespace Client
         void manageLoggingReply(const QVariantList & replyData);
         void manageProfileRequestReply(const QVariantList & replyData);
         void manageTournamentCreationReply(const QVariantList & replyData);
+        void manageTournamentsListReply(const QVariantList & replyData);
 
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
@@ -31,6 +33,7 @@ namespace Client
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
         void profileDownloadRedply(const QString & description);
         void tournamentCreationReply(bool replyState, const QString & message);
+        void tournamentsListElementArrived(const QStringList & tournamentData);
     };
 }
 

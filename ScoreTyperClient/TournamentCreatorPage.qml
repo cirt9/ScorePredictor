@@ -281,10 +281,11 @@ Page {
                                                        tournamentCreatorPage);
                     tournament.name = tournamentNameInput.text
                     tournament.hostName = currentUser.username
-                    tournament.password = tournamentPasswordInput.text
+                    tournament.passwordRequired = tournamentPasswordInput.text === "" ? false : true
                     tournament.entriesEndTime = date
+                    tournament.typersNumber = 0
                     tournament.typersLimit = typersLimit.value
-                    backend.createTournament(tournament)
+                    backend.createTournament(tournament, tournamentPasswordInput.text)
                     tournament.destroy()
 
                     tournamentCreatorPage.enabled = false

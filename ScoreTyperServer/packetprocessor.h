@@ -18,8 +18,9 @@ namespace Server
 
         void registerUser(const QVariantList & userData);
         void loginUser(const QVariantList & userData);
-        void userProfileRequest(const QVariantList & userData);
-        void tournamentCreationRequest(const QVariantList & tournamentData);
+        void manageUserProfileRequest(const QVariantList & userData);
+        void manageTournamentCreationRequest(QVariantList & tournamentData);
+        void manageTournamentsListRequest(const QVariantList & requestData);
 
     public:
         explicit PacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);

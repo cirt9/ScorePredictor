@@ -24,6 +24,7 @@ namespace Client
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
         void profileDownloadReply(const QString & description);
         void tournamentCreationReply(bool replyState, const QString & message);
+        void tournamentsListElementArrived(const QStringList & tournamentData);
     };
 }
 

@@ -82,13 +82,13 @@ bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId
         return false;
 }
 
-bool Query::createTournament(const Tournament & tournament, unsigned int hostId)
+bool Query::createTournament(const Tournament & tournament, unsigned int hostId, const QString & password)
 {
     prepare("INSERT INTO tournament (name, host_user_id, password, entries_end_time, typers_limit) "
                   "VALUES (:tournamentName, :hostId, :password, :entriesEndTime, :typersLimit)");
     bindValue(":tournamentName", tournament.getName());
     bindValue(":hostId", hostId);
-    bindValue(":password", tournament.getPassword());
+    bindValue(":password", password);
     bindValue(":entriesEndTime", tournament.getEntriesEndTime());
     bindValue(":typersLimit", tournament.getTypersLimit());
     exec();
@@ -97,4 +97,22 @@ bool Query::createTournament(const Tournament & tournament, unsigned int hostId)
         return true;
     else
         return false;
+}
+
+void Query::findNewestTournamentsList(const QString & hostName, const QDateTime & dateTime)
+{
+    prepare("SELECT name, nickname as host_name, "
+            "(SELECT CASE WHEN length(tournament.password) == 0 THEN 0 ELSE 1 END) as password_required, "
+            "entries_end_time, "
+            "(SELECT count(tournament_participant.id) FROM tournament_participant "
+            "INNER JOIN tournament AS t ON tournament_participant.tournament_id = tournament.id "
+            "WHERE t.id = tournament.id) as 'typers', "
+            "typers_limit FROM tournament "
+            "INNER JOIN user ON host_user_id = user.id "
+            "WHERE entries_end_time > :minDateTime AND nickname != :hostName "
+            "ORDER BY entries_end_time "
+            "LIMIT 20");
+    bindValue(":hostName", hostName);
+    bindValue(":minDateTime", dateTime);
+    exec();
 }

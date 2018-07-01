@@ -1,5 +1,15 @@
 #include "tournament.h"
 
+unsigned int Tournament::getTypersNumber() const
+{
+    return typersNumber;
+}
+
+void Tournament::setTypersNumber(unsigned int value)
+{
+    typersNumber = value;
+}
+
 Tournament::Tournament(QObject * parent) : QObject(parent)
 {
 
@@ -7,13 +17,14 @@ Tournament::Tournament(QObject * parent) : QObject(parent)
 
 Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : QObject(parent)
 {
-    if(tournamentData.size() == 5)
+    if(tournamentData.size() == 6)
     {
         name = tournamentData[0].toString();
         hostName = tournamentData[1].toString();
-        password = tournamentData[2].toString();
+        passwordRequired = tournamentData[2].toBool();
         entriesEndTime = tournamentData[3].toDateTime();
-        typersLimit = tournamentData[4].toUInt();
+        typersNumber = tournamentData[4].toUInt();
+        typersLimit = tournamentData[5].toUInt();
     }
 }
 
@@ -27,9 +38,9 @@ QString Tournament::getHostName() const
     return hostName;
 }
 
-QString Tournament::getPassword() const
+bool Tournament::getPasswordRequired() const
 {
-    return password;
+    return passwordRequired;
 }
 
 QDateTime Tournament::getEntriesEndTime() const
@@ -52,9 +63,9 @@ void Tournament::setHostName(const QString & value)
     hostName = value;
 }
 
-void Tournament::setPassword(const QString & value)
+void Tournament::setPasswordRequired(bool required)
 {
-    password = value;
+    passwordRequired = required;
 }
 
 void Tournament::setEntriesEndTime(const QDateTime & value)
@@ -71,8 +82,9 @@ QVariantList & operator<<(QVariantList & list, const Tournament & tournament)
 {
     list << tournament.name;
     list << tournament.hostName;
-    list << tournament.password;
+    list << tournament.passwordRequired;
     list << tournament.entriesEndTime;
+    list << tournament.typersNumber;
     list << tournament.typersLimit;
 
     return list;

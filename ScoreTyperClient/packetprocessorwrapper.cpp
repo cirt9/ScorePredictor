@@ -16,6 +16,8 @@ namespace Client
                 this, &PacketProcessorWrapper::requestError);
         connect(packetProcessor, &Client::PacketProcessor::tournamentCreationReply,
                 this, &PacketProcessorWrapper::tournamentCreationReply);
+        connect(packetProcessor, &Client::PacketProcessor::tournamentsListElementArrived,
+                this, &PacketProcessorWrapper::tournamentsListElementArrived);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()
