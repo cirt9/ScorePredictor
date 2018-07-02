@@ -30,7 +30,7 @@ Page {
             clearIcon: "qrc://assets/icons/icons/icons8_Delete.png"
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: 35
+            anchors.topMargin: 30
         }
 
         Item {
@@ -39,7 +39,7 @@ Page {
             anchors.top: searchWidget.bottom
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: 40
+            anchors.topMargin: 30
             anchors.bottomMargin: 70
 
             Rectangle {
@@ -51,21 +51,30 @@ Page {
             }
 
             ListModel {
-                id: tournamentModel
+                id: previousTournamentsList
+            }
+
+            ListModel {
+                id: visibleTournamentsList
+            }
+
+            ListModel {
+                id: nextTournamentsList
             }
 
             ListView {
                 id: tournamentsView
-                model: tournamentModel
+                model: visibleTournamentsList
                 spacing: 2
                 headerPositioning: ListView.PullBackHeader
                 highlightMoveDuration: 250
                 anchors.fill: parent
                 anchors.margins: 5
+                property int elementsForPage: 23
 
                 header: Item {
                     width: parent.width
-                    height: 50
+                    height: 45
 
                     Rectangle {
                         id: headerComponent
@@ -204,8 +213,8 @@ Page {
                         }
 
                         Text {
-                            id: passwordData
-                            text: password
+                            id: passwordRequiredData
+                            text: passwordRequired
                             color: mainWindow.fontColor
                             font.pointSize: 10
                             verticalAlignment: Text.AlignVCenter
@@ -234,7 +243,7 @@ Page {
                     font.bold: true
                     font.pointSize: 40
                     anchors.centerIn: parent
-                    visible: tournamentModel.count === 0 ? true : false
+                    visible: visibleTournamentsList.count === 0 ? true : false
                 }
             }
         }
@@ -247,13 +256,13 @@ Page {
             fontColor: mainWindow.fontColor
             fontSize: 25
             radius: 5
-            enabled: tournamentModel.count === 0 ? false : true
+            enabled: visibleTournamentsList.count === 0 ? false : true
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: 10
 
             onClicked: {
-                var chosenTournament = tournamentModel.get(tournamentsView.currentIndex)
+                var chosenTournament = visibleTournamentsList.get(tournamentsView.currentIndex)
                 console.log(chosenTournament.tournamentName)
             }
         }
@@ -263,8 +272,22 @@ Page {
             height: joinButton.height + 3
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Left.png"
+            enabled: previousTournamentsList.count === 0 ? false : true
             anchors.right: joinButton.left
             anchors.verticalCenter: joinButton.verticalCenter
+
+            onClicked: {
+                for(var i=0; i<visibleTournamentsList.count; i++)
+                    nextTournamentsList.insert(i, visibleTournamentsList.get(i))
+
+                visibleTournamentsList.clear()
+                var startTransferingFrom = previousTournamentsList.count - tournamentsView.elementsForPage
+
+                for(i=0; i<tournamentsView.elementsForPage; i++)
+                    visibleTournamentsList.append(previousTournamentsList.get(startTransferingFrom + i))
+
+                previousTournamentsList.remove(startTransferingFrom, tournamentsView.elementsForPage)
+            }
         }
 
         IconButton {
@@ -272,8 +295,23 @@ Page {
             height: joinButton.height + 3
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Right.png"
+            enabled: nextTournamentsList.count === 0 ? false : true
             anchors.left: joinButton.right
             anchors.verticalCenter: joinButton.verticalCenter
+
+            onClicked: {
+                for(var i=0; i<visibleTournamentsList.count; i++)
+                    previousTournamentsList.append(visibleTournamentsList.get(i))
+
+                visibleTournamentsList.clear()
+                var elementsToTransfer = tournamentsView.elementsForPage <= nextTournamentsList.count ?
+                                         tournamentsView.elementsForPage : nextTournamentsList.count
+
+                for(i=0; i<elementsToTransfer; i++)
+                    visibleTournamentsList.append(nextTournamentsList.get(i))
+
+                nextTournamentsList.remove(0, elementsToTransfer)
+            }
         }
     }
 
@@ -283,9 +321,18 @@ Page {
         target: packetProcessor
 
         onTournamentsListElementArrived: {
-            tournamentModel.append({"tournamentName": tournamentData[0], "hostName": tournamentData[1],
-                                   "entriesEndTime": tournamentData[2], "typers": tournamentData[3],
-                                   "password": tournamentData[4]})
+            if(visibleTournamentsList.count < tournamentsView.elementsForPage)
+            {
+                visibleTournamentsList.append({"tournamentName": tournamentData[0], "hostName": tournamentData[1],
+                                               "entriesEndTime": tournamentData[2], "typers": tournamentData[3],
+                                               "passwordRequired": tournamentData[4]})
+            }
+            else
+            {
+                nextTournamentsList.append({"tournamentName": tournamentData[0], "hostName": tournamentData[1],
+                                            "entriesEndTime": tournamentData[2], "typers": tournamentData[3],
+                                            "passwordRequired": tournamentData[4]})
+            }
         }
     }
 }

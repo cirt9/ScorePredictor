@@ -114,7 +114,7 @@ void Query::findNewestTournamentsList(unsigned int hostId, const QDateTime & dat
             "(SELECT tournament_id FROM tournament_participant WHERE user_id = :hostId) "
             "GROUP BY tournament_id) "
             "ORDER BY entries_end_time "
-            "LIMIT 20");
+            "LIMIT 100");
     bindValue(":hostId", hostId);
     bindValue(":minDateTime", dateTime);
     exec();
