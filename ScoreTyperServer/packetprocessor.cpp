@@ -141,10 +141,8 @@ namespace Server
             }
         }
         else
-        {
-            qDebug() << "User that wants to create tournament doesn't exist";
             responseData << Packet::ID_ERROR << QString("User does not exist");
-        }
+
         emit response(responseData);
     }
 
@@ -152,24 +150,29 @@ namespace Server
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
-        responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
 
-        if(requestData.size() == 1)
+        if(query.findUserId(requestData[0].toString()))
         {
-            qDebug() << "Pulling newest tournaments";
-            query.findNewestTournamentsList(requestData[0].toString(), QDateTime::currentDateTime());
-
-            while(query.next())
+            responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
+            if(requestData.size() == 1)
             {
-                QVariantList tournamentData;
-                tournamentData << query.value("name") << query.value("host_name")
-                               << query.value("password_required") << query.value("entries_end_time")
-                               << query.value("typers") << query.value("typers_limit");
-                responseData << QVariant::fromValue(tournamentData);
+                qDebug() << "Pulling newest tournaments";
+                query.findNewestTournamentsList(query.value("id").toUInt(), QDateTime::currentDateTime());
+
+                while(query.next())
+                {
+                    QVariantList tournamentData;
+                    tournamentData << query.value("name") << query.value("host_name")
+                                   << query.value("password_required") << query.value("entries_end_time")
+                                   << query.value("typers") << query.value("typers_limit");
+                    responseData << QVariant::fromValue(tournamentData);
+                }
             }
+            else
+                qDebug() << "Pulling another page of tournaments";
         }
         else
-            qDebug() << "Pulling another page of tournaments";
+            responseData << Packet::ID_ERROR << QString("User does not exist");
 
         emit response(responseData);
     }
