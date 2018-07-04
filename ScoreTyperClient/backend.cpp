@@ -68,18 +68,18 @@ void BackEnd::createTournament(Tournament * tournament, const QString & password
     emit clientWrapper->sendData(data);
 }
 
-void BackEnd::pullTournamentsList(const QString & requesterName)
+void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit)
 {
     QVariantList data;
-    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName;
+    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << itemsLimit;
     emit clientWrapper->sendData(data);
     qDebug() << "Pull newest tournaments";
 }
 
-void BackEnd::pullTournamentsList(const QString & requesterName, const QDateTime & minEntriesEndTime)
+void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit, const QDateTime & minEntriesEndTime)
 {
     QVariantList data;
-    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << minEntriesEndTime;
+    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << itemsLimit << minEntriesEndTime;
     emit clientWrapper->sendData(data);
     qDebug() << minEntriesEndTime << "Pull another page of tournaments";
 }

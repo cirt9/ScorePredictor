@@ -67,7 +67,7 @@ namespace Client
             else
                 tournamentData << QString("No");
 
-            tournamentsListElementArrived(tournamentData);
+            tournamentsListItemArrived(tournamentData);
         }
     }
 }

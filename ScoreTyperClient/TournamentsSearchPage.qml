@@ -50,18 +50,6 @@ Page {
                 anchors.fill: parent
             }
 
-            ListModel {
-                id: previousTournamentsList
-            }
-
-            ListModel {
-                id: visibleTournamentsList
-            }
-
-            ListModel {
-                id: nextTournamentsList
-            }
-
             ListView {
                 id: tournamentsView
                 model: visibleTournamentsList
@@ -70,7 +58,7 @@ Page {
                 highlightMoveDuration: 250
                 anchors.fill: parent
                 anchors.margins: 5
-                property int elementsForPage: 23
+                property int itemsForPage: 23
 
                 header: Item {
                     width: parent.width
@@ -248,6 +236,18 @@ Page {
             }
         }
 
+        ListModel {
+            id: previousTournamentsList
+        }
+
+        ListModel {
+            id: visibleTournamentsList
+        }
+
+        ListModel {
+            id: nextTournamentsList
+        }
+
         DefaultButton {
             id: joinButton
             text: qsTr("Join")
@@ -268,7 +268,7 @@ Page {
         }
 
         IconButton {
-            id: leftButton
+            id: previousButton
             height: joinButton.height + 3
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Left.png"
@@ -276,22 +276,11 @@ Page {
             anchors.right: joinButton.left
             anchors.verticalCenter: joinButton.verticalCenter
 
-            onClicked: {
-                for(var i=0; i<visibleTournamentsList.count; i++)
-                    nextTournamentsList.insert(i, visibleTournamentsList.get(i))
-
-                visibleTournamentsList.clear()
-                var startTransferingFrom = previousTournamentsList.count - tournamentsView.elementsForPage
-
-                for(i=0; i<tournamentsView.elementsForPage; i++)
-                    visibleTournamentsList.append(previousTournamentsList.get(startTransferingFrom + i))
-
-                previousTournamentsList.remove(startTransferingFrom, tournamentsView.elementsForPage)
-            }
+            onClicked: loadPreviousPage()
         }
 
         IconButton {
-            id: rightButton
+            id: nextButton
             height: joinButton.height + 3
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Right.png"
@@ -300,39 +289,90 @@ Page {
             anchors.verticalCenter: joinButton.verticalCenter
 
             onClicked: {
-                for(var i=0; i<visibleTournamentsList.count; i++)
-                    previousTournamentsList.append(visibleTournamentsList.get(i))
+                loadNextPage()
 
-                visibleTournamentsList.clear()
-                var elementsToTransfer = tournamentsView.elementsForPage <= nextTournamentsList.count ?
-                                         tournamentsView.elementsForPage : nextTournamentsList.count
-
-                for(i=0; i<elementsToTransfer; i++)
-                    visibleTournamentsList.append(nextTournamentsList.get(i))
-
-                nextTournamentsList.remove(0, elementsToTransfer)
+                if(nextTournamentsList.count < tournamentsView.itemsForPage)
+                    pullChunkOfTournamentsList(3)
             }
         }
     }
 
-    Component.onCompleted: backend.pullTournamentsList(currentUser.username)
-
     Connections {
         target: packetProcessor
 
-        onTournamentsListElementArrived: {
-            if(visibleTournamentsList.count < tournamentsView.elementsForPage)
-            {
-                visibleTournamentsList.append({"tournamentName": tournamentData[0], "hostName": tournamentData[1],
-                                               "entriesEndTime": tournamentData[2], "typers": tournamentData[3],
-                                               "passwordRequired": tournamentData[4]})
-            }
+        onTournamentsListItemArrived: {
+            var item = {}
+            item.tournamentName = tournamentData[0]
+            item.hostName = tournamentData[1]
+            item.entriesEndTime = tournamentData[2]
+            item.typers = tournamentData[3]
+            item.passwordRequired = tournamentData[4]
+
+            if(visibleTournamentsList.count < tournamentsView.itemsForPage)
+                visibleTournamentsList.append(item)
             else
-            {
-                nextTournamentsList.append({"tournamentName": tournamentData[0], "hostName": tournamentData[1],
-                                            "entriesEndTime": tournamentData[2], "typers": tournamentData[3],
-                                            "passwordRequired": tournamentData[4]})
-            }
+                nextTournamentsList.append(item)
         }
+    }
+    Component.onCompleted: backend.pullTournamentsList(currentUser.username, tournamentsView.itemsForPage * 3)
+
+    function loadPreviousPage()
+    {
+        transferItemsFromVisibleToNext()
+        transferItemsFromPreviousToVisible()
+    }
+
+    function transferItemsFromVisibleToNext()
+    {
+        for(var i=0; i<visibleTournamentsList.count; i++)
+            nextTournamentsList.insert(i, visibleTournamentsList.get(i))
+
+        visibleTournamentsList.clear()
+    }
+
+    function transferItemsFromPreviousToVisible()
+    {
+        var startTransferingFrom = previousTournamentsList.count - tournamentsView.itemsForPage
+
+        for(var i=0; i<tournamentsView.itemsForPage; i++)
+            visibleTournamentsList.append(previousTournamentsList.get(startTransferingFrom + i))
+
+        previousTournamentsList.remove(startTransferingFrom, tournamentsView.itemsForPage)
+    }
+
+    function loadNextPage()
+    {
+        transferItemsFromVisibleToPrevious()
+        transferItemsFromNextToVisible()
+    }
+
+    function transferItemsFromVisibleToPrevious()
+    {
+        for(var i=0; i<visibleTournamentsList.count; i++)
+            previousTournamentsList.append(visibleTournamentsList.get(i))
+
+        visibleTournamentsList.clear()
+    }
+
+    function transferItemsFromNextToVisible()
+    {
+        var itemsToTransfer = tournamentsView.itemsForPage <= nextTournamentsList.count ?
+                                 tournamentsView.itemsForPage : nextTournamentsList.count
+
+        for(var i=0; i<itemsToTransfer; i++)
+            visibleTournamentsList.append(nextTournamentsList.get(i))
+
+        nextTournamentsList.remove(0, itemsToTransfer)
+    }
+
+    function pullChunkOfTournamentsList(numberOfPages)
+    {
+        var itemsToPull = tournamentsView.itemsForPage * numberOfPages
+        var startFromDateString = nextTournamentsList.count === 0 ?
+                    visibleTournamentsList.get(visibleTournamentsList.count-1).entriesEndTime :
+                    nextTournamentsList.get(nextTournamentsList.count-1).entriesEndTime
+        var startFromDate = Date.fromLocaleString(Qt.locale(), startFromDateString, "dd.MM.yyyy hh:mm")
+
+        backend.pullTournamentsList(currentUser.username, itemsToPull, startFromDate)
     }
 }

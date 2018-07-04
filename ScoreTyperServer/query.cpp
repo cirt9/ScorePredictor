@@ -99,7 +99,7 @@ bool Query::createTournament(const Tournament & tournament, unsigned int hostId,
         return false;
 }
 
-void Query::findNewestTournamentsList(unsigned int hostId, const QDateTime & dateTime)
+void Query::findNewestTournamentsList(unsigned int hostId, const QDateTime & dateTime, int itemsLimit)
 {
     prepare("SELECT name, nickname as host_name, "
             "(SELECT CASE WHEN length(tournament.password) == 0 THEN 0 ELSE 1 END) as password_required, "
@@ -114,8 +114,9 @@ void Query::findNewestTournamentsList(unsigned int hostId, const QDateTime & dat
             "(SELECT tournament_id FROM tournament_participant WHERE user_id = :hostId) "
             "GROUP BY tournament_id) "
             "ORDER BY entries_end_time "
-            "LIMIT 100");
+            "LIMIT :itemsLimit");
     bindValue(":hostId", hostId);
     bindValue(":minDateTime", dateTime);
+    bindValue(":itemsLimit", itemsLimit);
     exec();
 }

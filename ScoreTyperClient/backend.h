@@ -30,8 +30,9 @@ public:
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
     Q_INVOKABLE void downloadUserProfile(const QString & nickname);
     Q_INVOKABLE void createTournament(Tournament * tournament, const QString & password);
-    Q_INVOKABLE void pullTournamentsList(const QString & requesterName);
-    Q_INVOKABLE void pullTournamentsList(const QString & requesterName, const QDateTime & minEntriesEndTime);
+    Q_INVOKABLE void pullTournamentsList(const QString & requesterName, int itemsLimit);
+    Q_INVOKABLE void pullTournamentsList(const QString & requesterName,
+                                         int itemsLimit, const QDateTime & minEntriesEndTime);
 
     TcpClientWrapper * getClientWrapper() const;
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;

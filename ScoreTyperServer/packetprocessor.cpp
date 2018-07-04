@@ -154,22 +154,29 @@ namespace Server
         if(query.findUserId(requestData[0].toString()))
         {
             responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
-            if(requestData.size() == 1)
-            {
-                qDebug() << "Pulling newest tournaments";
-                query.findNewestTournamentsList(query.value("id").toUInt(), QDateTime::currentDateTime());
+            QDateTime startFromTime;
 
-                while(query.next())
-                {
-                    QVariantList tournamentData;
-                    tournamentData << query.value("name") << query.value("host_name")
-                                   << query.value("password_required") << query.value("entries_end_time")
-                                   << query.value("typers") << query.value("typers_limit");
-                    responseData << QVariant::fromValue(tournamentData);
-                }
+            if(requestData.size() == 3)
+            {
+                qDebug() << "Pulling another tournaments pages";
+                startFromTime = requestData[2].toDateTime();
             }
             else
-                qDebug() << "Pulling another page of tournaments";
+            {
+                qDebug() << "Pulling initial tournaments pages";
+                startFromTime = QDateTime::currentDateTime();
+            }
+
+            query.findNewestTournamentsList(query.value("id").toUInt(), startFromTime, requestData[1].toInt());
+
+            while(query.next())
+            {
+                QVariantList tournamentData;
+                tournamentData << query.value("name") << query.value("host_name")
+                               << query.value("password_required") << query.value("entries_end_time")
+                               << query.value("typers") << query.value("typers_limit");
+                responseData << QVariant::fromValue(tournamentData);
+            }
         }
         else
             responseData << Packet::ID_ERROR << QString("User does not exist");
