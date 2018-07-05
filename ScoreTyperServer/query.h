@@ -21,7 +21,8 @@ public:
     bool getUserProfile(const QString & nickname);
     bool tournamentExists(const QString & tournamentName, unsigned int hostId);
     bool createTournament(const Tournament & tournament, unsigned int hostId, const QString & password);
-    void findNewestTournamentsList(unsigned int hostId, const QDateTime & dateTime, int itemsLimit);
+    void findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit);
+    void findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName);
 };
 
 #endif // QUERY_H

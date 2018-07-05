@@ -18,7 +18,7 @@ private:
     static const QVariant START_OF_PACKET;
     static const QVariant END_OF_PACKET;
     static const int PACKET_ID_MIN = 0;
-    static const int PACKET_ID_MAX = 5;
+    static const int PACKET_ID_MAX = 6;
 
     void serialize();
     void unserialize(QDataStream & in);
@@ -46,6 +46,7 @@ public:
     static const int ID_DOWNLOAD_USER_PROFILE = 3;
     static const int ID_CREATE_TOURNAMENT = 4;
     static const int ID_PULL_TOURNAMENTS_LIST = 5;
+    static const int ID_FIND_TOURNAMENTS = 6;
 };
 
 #endif // PACKET_H

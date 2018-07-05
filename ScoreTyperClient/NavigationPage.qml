@@ -29,7 +29,7 @@ Page {
                 checkedFontSize: 14
                 checked: true
 
-                onClicked: changePage(0)
+                onClicked: changePage(userProfilePage.index)
             }
 
             NavigationButton {
@@ -39,7 +39,7 @@ Page {
                 uncheckedFontSize: 12
                 checkedFontSize: 14
 
-                onClicked: changePage(1)
+                onClicked: changePage(tournamentView.index)
             }
 
             NavigationButton {
@@ -49,14 +49,28 @@ Page {
                 uncheckedFontSize: 12
                 checkedFontSize: 14
 
-                onClicked: changePage(2)
+                onClicked: changePage(tournamentCreatorPage.index)
             }
         }
 
         Row {
+            spacing: 10
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin: 30
+
+            IconButtonHover {
+                id: refreshButton
+                width: 30
+                height: 30
+                iconSource: "qrc://assets/icons/icons/icons8_Refresh.png"
+                color: mainWindow.colorA
+
+                onClicked: {
+                    if(navigationView.currentIndex === tournamentView.index)
+                        tournamentView.currentItem.refresh()
+                }
+            }
 
             IconButtonHover {
                 id: logoutButton
@@ -81,15 +95,18 @@ Page {
 
         UserProfilePage {
             id: userProfilePage
+            readonly property int index: 0
         }
 
         StackView {
            id: tournamentView
            initialItem: TournamentsSearchPage {}
+           readonly property int index: 1
        }
 
         TournamentCreatorPage {
             id: tournamentCreatorPage
+            readonly property int index: 2
         }
     }
 

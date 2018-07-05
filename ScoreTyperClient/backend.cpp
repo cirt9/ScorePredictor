@@ -73,7 +73,6 @@ void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit)
     QVariantList data;
     data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << itemsLimit;
     emit clientWrapper->sendData(data);
-    qDebug() << "Pull newest tournaments";
 }
 
 void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit, const QDateTime & minEntriesEndTime)
@@ -81,7 +80,21 @@ void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit,
     QVariantList data;
     data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << itemsLimit << minEntriesEndTime;
     emit clientWrapper->sendData(data);
-    qDebug() << minEntriesEndTime << "Pull another page of tournaments";
+}
+
+void BackEnd::findTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName)
+{
+    QVariantList data;
+    data << Packet::ID_FIND_TOURNAMENTS << requesterName << itemsLimit << tournamentName;
+    emit clientWrapper->sendData(data);
+}
+
+void BackEnd::findTournaments(const QString &requesterName, int itemsLimit, const QString & tournamentName,
+                              const QDateTime & minEntriesEndTime)
+{
+    QVariantList data;
+    data << Packet::ID_FIND_TOURNAMENTS << requesterName << itemsLimit << tournamentName << minEntriesEndTime;
+    emit clientWrapper->sendData(data);
 }
 
 TcpClientWrapper * BackEnd::getClientWrapper() const

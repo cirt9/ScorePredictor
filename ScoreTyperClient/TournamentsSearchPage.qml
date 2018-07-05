@@ -31,6 +31,19 @@ Page {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 30
+
+            onSearchClicked: {
+                clear()
+                backend.findTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
+                                        searchWidget.lastSearchedPhrase)
+            }
+            onClearClicked: {
+                if(lastSearchedPhrase.length > 0)
+                {
+                    clear()
+                    backend.pullTournamentsList(currentUser.username, tournamentsView.itemsForPage * 3)
+                }
+            }
         }
 
         Item {
@@ -373,6 +386,27 @@ Page {
                     nextTournamentsList.get(nextTournamentsList.count-1).entriesEndTime
         var startFromDate = Date.fromLocaleString(Qt.locale(), startFromDateString, "dd.MM.yyyy hh:mm")
 
-        backend.pullTournamentsList(currentUser.username, itemsToPull, startFromDate)
+        if(searchWidget.lastSearchedPhrase.length === 0)
+            backend.pullTournamentsList(currentUser.username, itemsToPull, startFromDate)
+        else
+            backend.findTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
+                                    searchWidget.lastSearchedPhrase, startFromDate)
+    }
+
+    function clear()
+    {
+        previousTournamentsList.clear()
+        visibleTournamentsList.clear()
+        nextTournamentsList.clear()
+    }
+
+    function refresh()
+    {
+        clear()
+
+        if(searchWidget.lastSearchedPhrase.length === 0)
+            backend.pullTournamentsList(currentUser.username, tournamentsView.itemsForPage * 3)
+        else
+            backend.findTournaments(currentUser.username, tournamentsView.itemsForPage * 3, searchWidget.lastSearchedPhrase)
     }
 }

@@ -3,6 +3,7 @@ import QtQuick 2.9
 Rectangle {
     id: root
     border.width: 0
+    property string lastSearchedPhrase
     property alias text: textInput.text
     property color textColor
     property int fontSize: 15
@@ -22,8 +23,10 @@ Rectangle {
     property int iconsMarginsOnPressed: 5
     property alias placeholderText: placeholder.text
     property color placeholderTextColor: textColor
+    property bool trimText: true
     signal searchClicked()
     signal clearClicked()
+    signal cleared()
 
     Item {
         id: inputArea
@@ -91,7 +94,14 @@ Rectangle {
         anchors.bottom: parent.bottom
 
         onClicked: {
-            root.searchClicked()
+            if(trimText)
+                textInput.text = textInput.text.trim()
+
+            if(textInput.text.length > 0)
+            {
+                lastSearchedPhrase = textInput.text
+                root.searchClicked()
+            }
             textInput.focus = false
         }
     }
@@ -112,6 +122,8 @@ Rectangle {
             textInput.text = ""
             textInput.focus = true
             root.clearClicked()
+            lastSearchedPhrase = ""
+            root.cleared()
         }
     }
 }

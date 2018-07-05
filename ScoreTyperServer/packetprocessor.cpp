@@ -24,6 +24,7 @@ namespace Server
         case Packet::ID_DOWNLOAD_USER_PROFILE: manageUserProfileRequest(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS_LIST: manageTournamentsListRequest(data); break;
+        case Packet::ID_FIND_TOURNAMENTS: manageFindingTournamentsRequest(data); break;
 
         default: break;
         }
@@ -167,7 +168,46 @@ namespace Server
                 startFromTime = QDateTime::currentDateTime();
             }
 
-            query.findNewestTournamentsList(query.value("id").toUInt(), startFromTime, requestData[1].toInt());
+            query.findTournaments(query.value("id").toUInt(), startFromTime, requestData[1].toInt());
+
+            while(query.next())
+            {
+                QVariantList tournamentData;
+                tournamentData << query.value("name") << query.value("host_name")
+                               << query.value("password_required") << query.value("entries_end_time")
+                               << query.value("typers") << query.value("typers_limit");
+                responseData << QVariant::fromValue(tournamentData);
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("User does not exist");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageFindingTournamentsRequest(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(requestData[0].toString()))
+        {
+            responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
+            QDateTime startFromTime;
+
+            if(requestData.size() == 4)
+            {
+                qDebug() << "Pulling another found tournaments pages";
+                startFromTime = requestData[3].toDateTime();
+            }
+            else
+            {
+                qDebug() << "Pulling found tournaments pages";
+                startFromTime = QDateTime::currentDateTime();
+            }
+
+            query.findTournaments(query.value("id").toUInt(), startFromTime, requestData[1].toInt(),
+                                  requestData[2].toString());
 
             while(query.next())
             {

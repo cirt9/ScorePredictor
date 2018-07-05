@@ -21,6 +21,7 @@ namespace Client
         case Packet::ID_DOWNLOAD_USER_PROFILE: manageProfileRequestReply(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
         case Packet::ID_PULL_TOURNAMENTS_LIST: manageTournamentsListReply(data); break;
+        case Packet::ID_FIND_TOURNAMENTS: manageTournamentsListReply(data); break;
 
         default: break;
         }
