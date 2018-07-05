@@ -99,30 +99,15 @@ bool Query::createTournament(const Tournament & tournament, unsigned int hostId,
         return false;
 }
 
-void Query::findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit)
-{
-    prepare("SELECT name, nickname as host_name, "
-            "(SELECT CASE WHEN length(tournament.password) == 0 THEN 0 ELSE 1 END) as password_required, "
-            "entries_end_time, "
-            "(SELECT count(tournament_participant.id) FROM tournament_participant "
-            "INNER JOIN tournament AS t ON tournament_participant.tournament_id = tournament.id "
-            "WHERE t.id = tournament.id) as 'typers', "
-            "typers_limit FROM tournament "
-            "INNER JOIN user ON host_user_id = user.id "
-            "WHERE entries_end_time > :minDateTime AND tournament.id IN "
-            "(SELECT tournament_id FROM tournament_participant WHERE tournament_id NOT IN "
-            "(SELECT tournament_id FROM tournament_participant WHERE user_id = :hostId) "
-            "GROUP BY tournament_id) "
-            "ORDER BY entries_end_time "
-            "LIMIT :itemsLimit");
-    bindValue(":hostId", hostId);
-    bindValue(":minDateTime", dateTime);
-    bindValue(":itemsLimit", itemsLimit);
-    exec();
-}
-
 void Query::findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName)
 {
+    QString tournamentNamePattern;
+
+    if(tournamentName.size() == 0)
+        tournamentNamePattern = "%";
+    else
+        tournamentNamePattern = QString("%" + tournamentName + "%").replace(' ', '%');
+
     prepare("SELECT name, nickname as host_name, "
             "(SELECT CASE WHEN length(tournament.password) == 0 THEN 0 ELSE 1 END) as password_required, "
             "entries_end_time, "
@@ -134,12 +119,12 @@ void Query::findTournaments(unsigned int hostId, const QDateTime & dateTime, int
             "WHERE entries_end_time > :minDateTime AND tournament.id IN "
             "(SELECT tournament_id FROM tournament_participant WHERE tournament_id NOT IN "
             "(SELECT tournament_id FROM tournament_participant WHERE user_id = :hostId) "
-            "GROUP BY tournament_id) AND tournament.name LIKE :tournamentName "
+            "GROUP BY tournament_id) AND tournament.name LIKE :tournamentNamePattern "
             "ORDER BY entries_end_time "
             "LIMIT :itemsLimit");
     bindValue(":hostId", hostId);
     bindValue(":minDateTime", dateTime);
     bindValue(":itemsLimit", itemsLimit);
-    bindValue(":tournamentName", QString("%" + tournamentName + "%").replace(' ', '%'));
+    bindValue(":tournamentNamePattern", tournamentNamePattern);
     exec();
 }

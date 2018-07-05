@@ -23,8 +23,7 @@ namespace Server
         case Packet::ID_LOGIN: loginUser(data); break;
         case Packet::ID_DOWNLOAD_USER_PROFILE: manageUserProfileRequest(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
-        case Packet::ID_PULL_TOURNAMENTS_LIST: manageTournamentsListRequest(data); break;
-        case Packet::ID_FIND_TOURNAMENTS: manageFindingTournamentsRequest(data); break;
+        case Packet::ID_PULL_TOURNAMENTS: managePullingTournamentsRequest(data); break;
 
         default: break;
         }
@@ -147,52 +146,14 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::manageTournamentsListRequest(const QVariantList & requestData)
+    void PacketProcessor::managePullingTournamentsRequest(const QVariantList & requestData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
 
         if(query.findUserId(requestData[0].toString()))
         {
-            responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
-            QDateTime startFromTime;
-
-            if(requestData.size() == 3)
-            {
-                qDebug() << "Pulling another tournaments pages";
-                startFromTime = requestData[2].toDateTime();
-            }
-            else
-            {
-                qDebug() << "Pulling initial tournaments pages";
-                startFromTime = QDateTime::currentDateTime();
-            }
-
-            query.findTournaments(query.value("id").toUInt(), startFromTime, requestData[1].toInt());
-
-            while(query.next())
-            {
-                QVariantList tournamentData;
-                tournamentData << query.value("name") << query.value("host_name")
-                               << query.value("password_required") << query.value("entries_end_time")
-                               << query.value("typers") << query.value("typers_limit");
-                responseData << QVariant::fromValue(tournamentData);
-            }
-        }
-        else
-            responseData << Packet::ID_ERROR << QString("User does not exist");
-
-        emit response(responseData);
-    }
-
-    void PacketProcessor::manageFindingTournamentsRequest(const QVariantList & requestData)
-    {
-        Query query(dbConnection->getConnection());
-        QVariantList responseData;
-
-        if(query.findUserId(requestData[0].toString()))
-        {
-            responseData << Packet::ID_PULL_TOURNAMENTS_LIST;
+            responseData << Packet::ID_PULL_TOURNAMENTS;
             QDateTime startFromTime;
 
             if(requestData.size() == 4)

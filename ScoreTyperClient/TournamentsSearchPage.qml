@@ -34,14 +34,14 @@ Page {
 
             onSearchClicked: {
                 clear()
-                backend.findTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
+                backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
                                         searchWidget.lastSearchedPhrase)
             }
             onClearClicked: {
                 if(lastSearchedPhrase.length > 0)
                 {
                     clear()
-                    backend.pullTournamentsList(currentUser.username, tournamentsView.itemsForPage * 3)
+                    backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3, "")
                 }
             }
         }
@@ -327,7 +327,7 @@ Page {
                 nextTournamentsList.append(item)
         }
     }
-    Component.onCompleted: backend.pullTournamentsList(currentUser.username, tournamentsView.itemsForPage * 3)
+    Component.onCompleted: backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3, "")
 
     function loadPreviousPage()
     {
@@ -386,11 +386,8 @@ Page {
                     nextTournamentsList.get(nextTournamentsList.count-1).entriesEndTime
         var startFromDate = Date.fromLocaleString(Qt.locale(), startFromDateString, "dd.MM.yyyy hh:mm")
 
-        if(searchWidget.lastSearchedPhrase.length === 0)
-            backend.pullTournamentsList(currentUser.username, itemsToPull, startFromDate)
-        else
-            backend.findTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
-                                    searchWidget.lastSearchedPhrase, startFromDate)
+        backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
+                                searchWidget.lastSearchedPhrase, startFromDate)
     }
 
     function clear()
@@ -403,10 +400,6 @@ Page {
     function refresh()
     {
         clear()
-
-        if(searchWidget.lastSearchedPhrase.length === 0)
-            backend.pullTournamentsList(currentUser.username, tournamentsView.itemsForPage * 3)
-        else
-            backend.findTournaments(currentUser.username, tournamentsView.itemsForPage * 3, searchWidget.lastSearchedPhrase)
+        backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3, searchWidget.lastSearchedPhrase)
     }
 }

@@ -68,32 +68,18 @@ void BackEnd::createTournament(Tournament * tournament, const QString & password
     emit clientWrapper->sendData(data);
 }
 
-void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit)
+void BackEnd::pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName)
 {
     QVariantList data;
-    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << itemsLimit;
+    data << Packet::ID_PULL_TOURNAMENTS << requesterName << itemsLimit << tournamentName;
     emit clientWrapper->sendData(data);
 }
 
-void BackEnd::pullTournamentsList(const QString & requesterName, int itemsLimit, const QDateTime & minEntriesEndTime)
-{
-    QVariantList data;
-    data << Packet::ID_PULL_TOURNAMENTS_LIST << requesterName << itemsLimit << minEntriesEndTime;
-    emit clientWrapper->sendData(data);
-}
-
-void BackEnd::findTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName)
-{
-    QVariantList data;
-    data << Packet::ID_FIND_TOURNAMENTS << requesterName << itemsLimit << tournamentName;
-    emit clientWrapper->sendData(data);
-}
-
-void BackEnd::findTournaments(const QString &requesterName, int itemsLimit, const QString & tournamentName,
+void BackEnd::pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName,
                               const QDateTime & minEntriesEndTime)
 {
     QVariantList data;
-    data << Packet::ID_FIND_TOURNAMENTS << requesterName << itemsLimit << tournamentName << minEntriesEndTime;
+    data << Packet::ID_PULL_TOURNAMENTS << requesterName << itemsLimit << tournamentName << minEntriesEndTime;
     emit clientWrapper->sendData(data);
 }
 

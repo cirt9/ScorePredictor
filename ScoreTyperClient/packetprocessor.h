@@ -18,7 +18,7 @@ namespace Client
         void manageLoggingReply(const QVariantList & replyData);
         void manageProfileRequestReply(const QVariantList & replyData);
         void manageTournamentCreationReply(const QVariantList & replyData);
-        void manageTournamentsListReply(const QVariantList & replyData);
+        void manageTournamentsPullReply(const QVariantList & replyData);
 
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
