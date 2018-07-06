@@ -336,7 +336,11 @@ Page {
     Connections {
         target: packetProcessor
 
-        onTournamentsListArrived: searchingState = false
+        onTournamentsListArrived: {
+            searchingState = false
+            timeoutTimer.stop()
+        }
+
         onTournamentsListItemArrived: {
             var item = {}
             item.tournamentName = tournamentData[0]
