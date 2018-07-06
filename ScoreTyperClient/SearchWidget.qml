@@ -24,6 +24,8 @@ Rectangle {
     property alias placeholderText: placeholder.text
     property color placeholderTextColor: textColor
     property bool trimText: true
+    property alias searchingEnabled: searchButtonContainer.enabled
+    property alias clearingEnabled: clearButtonContainer.enabled
     signal searchClicked()
     signal clearClicked()
     signal cleared()

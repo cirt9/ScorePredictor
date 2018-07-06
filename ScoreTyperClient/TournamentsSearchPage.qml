@@ -7,6 +7,10 @@ import "../components"
 Page {
     id: tournamentsSearchPage
 
+    property bool searchingState: false
+    property int itemsForPage: 23
+    property int pagesInAdvance: 3
+
     Rectangle {
         id: tournamentsSearchArea
         color: mainWindow.colorA
@@ -28,20 +32,21 @@ Page {
             selectByMouse: true
             searchIcon: "qrc://assets/icons/icons/icons8_Search.png"
             clearIcon: "qrc://assets/icons/icons/icons8_Delete.png"
+            searchingEnabled: searchingState ? false : true
+            clearingEnabled: searchingState ? false : true
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 30
 
             onSearchClicked: {
                 clear()
-                backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
-                                        searchWidget.lastSearchedPhrase)
+                pullTournamentsList(pagesInAdvance, searchWidget.lastSearchedPhrase)
             }
             onClearClicked: {
                 if(lastSearchedPhrase.length > 0)
                 {
                     clear()
-                    backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3, "")
+                    pullTournamentsList(pagesInAdvance)
                 }
             }
         }
@@ -71,7 +76,6 @@ Page {
                 highlightMoveDuration: 250
                 anchors.fill: parent
                 anchors.margins: 5
-                property int itemsForPage: 23
 
                 header: Item {
                     width: parent.width
@@ -243,8 +247,18 @@ Page {
                     opacity: 0.5
                     font.bold: true
                     font.pointSize: 40
+                    visible: !searchingState && visibleTournamentsList.count === 0 ? true : false
                     anchors.centerIn: parent
-                    visible: visibleTournamentsList.count === 0 ? true : false
+                }
+
+                SearchIndicator {
+                    text: qsTr("Searching")
+                    color: mainWindow.backgroundColor
+                    opacityOnRunning: 0.5
+                    fontBold: true
+                    fontSize: 40
+                    running: searchingState && visibleTournamentsList.count === 0 ? true : false
+                    anchors.centerIn: parent
                 }
             }
         }
@@ -285,6 +299,7 @@ Page {
             height: joinButton.height + 3
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Left.png"
+            marginsOnPressed: 5
             enabled: previousTournamentsList.count === 0 ? false : true
             anchors.right: joinButton.left
             anchors.verticalCenter: joinButton.verticalCenter
@@ -297,6 +312,7 @@ Page {
             height: joinButton.height + 3
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Sort_Right.png"
+            marginsOnPressed: 5
             enabled: nextTournamentsList.count === 0 ? false : true
             anchors.left: joinButton.right
             anchors.verticalCenter: joinButton.verticalCenter
@@ -304,15 +320,23 @@ Page {
             onClicked: {
                 loadNextPage()
 
-                if(nextTournamentsList.count < tournamentsView.itemsForPage)
-                    pullChunkOfTournamentsList(3)
+                if(nextTournamentsList.count < itemsForPage)
+                    pullChunkOfTournamentsList(pagesInAdvance, searchWidget.lastSearchedPhrase)
             }
         }
+    }
+
+    Timer {
+        id: timeoutTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: searchingState = false
     }
 
     Connections {
         target: packetProcessor
 
+        onTournamentsListArrived: searchingState = false
         onTournamentsListItemArrived: {
             var item = {}
             item.tournamentName = tournamentData[0]
@@ -321,13 +345,14 @@ Page {
             item.typers = tournamentData[3]
             item.passwordRequired = tournamentData[4]
 
-            if(visibleTournamentsList.count < tournamentsView.itemsForPage)
+            if(visibleTournamentsList.count < itemsForPage)
                 visibleTournamentsList.append(item)
             else
                 nextTournamentsList.append(item)
         }
     }
-    Component.onCompleted: backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3, "")
+
+    Component.onCompleted: pullTournamentsList(pagesInAdvance)
 
     function loadPreviousPage()
     {
@@ -345,12 +370,12 @@ Page {
 
     function transferItemsFromPreviousToVisible()
     {
-        var startTransferingFrom = previousTournamentsList.count - tournamentsView.itemsForPage
+        var startTransferingFrom = previousTournamentsList.count - itemsForPage
 
-        for(var i=0; i<tournamentsView.itemsForPage; i++)
+        for(var i=0; i<itemsForPage; i++)
             visibleTournamentsList.append(previousTournamentsList.get(startTransferingFrom + i))
 
-        previousTournamentsList.remove(startTransferingFrom, tournamentsView.itemsForPage)
+        previousTournamentsList.remove(startTransferingFrom, itemsForPage)
     }
 
     function loadNextPage()
@@ -369,8 +394,7 @@ Page {
 
     function transferItemsFromNextToVisible()
     {
-        var itemsToTransfer = tournamentsView.itemsForPage <= nextTournamentsList.count ?
-                                 tournamentsView.itemsForPage : nextTournamentsList.count
+        var itemsToTransfer = itemsForPage <= nextTournamentsList.count ? itemsForPage : nextTournamentsList.count
 
         for(var i=0; i<itemsToTransfer; i++)
             visibleTournamentsList.append(nextTournamentsList.get(i))
@@ -378,16 +402,37 @@ Page {
         nextTournamentsList.remove(0, itemsToTransfer)
     }
 
-    function pullChunkOfTournamentsList(numberOfPages)
+    function pullTournamentsList(numberOfPages, tournamentPhrase)
     {
-        var itemsToPull = tournamentsView.itemsForPage * numberOfPages
-        var startFromDateString = nextTournamentsList.count === 0 ?
-                    visibleTournamentsList.get(visibleTournamentsList.count-1).entriesEndTime :
-                    nextTournamentsList.get(nextTournamentsList.count-1).entriesEndTime
-        var startFromDate = Date.fromLocaleString(Qt.locale(), startFromDateString, "dd.MM.yyyy hh:mm")
+        if(tournamentPhrase === undefined)
+            tournamentPhrase = ""
 
-        backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3,
-                                searchWidget.lastSearchedPhrase, startFromDate)
+        if(!searchingState)
+        {
+            var itemsToPull = itemsForPage * numberOfPages
+            backend.pullTournaments(currentUser.username, itemsToPull, tournamentPhrase)
+            searchingState = true
+            timeoutTimer.restart()
+        }
+    }
+
+    function pullChunkOfTournamentsList(numberOfPages, tournamentPhrase)
+    {
+        if(tournamentPhrase === undefined)
+            tournamentPhrase = ""
+
+        if(!searchingState)
+        {
+            var itemsToPull = itemsForPage * numberOfPages
+            var startFromDateString = nextTournamentsList.count === 0 ?
+                        visibleTournamentsList.get(visibleTournamentsList.count-1).entriesEndTime :
+                        nextTournamentsList.get(nextTournamentsList.count-1).entriesEndTime
+            var startFromDate = Date.fromLocaleString(Qt.locale(), startFromDateString, "dd.MM.yyyy hh:mm")
+
+            backend.pullTournaments(currentUser.username, itemsToPull, tournamentPhrase, startFromDate)
+            searchingState = true
+            timeoutTimer.restart()
+        }
     }
 
     function clear()
@@ -399,7 +444,10 @@ Page {
 
     function refresh()
     {
-        clear()
-        backend.pullTournaments(currentUser.username, tournamentsView.itemsForPage * 3, searchWidget.lastSearchedPhrase)
+        if(!searchingState)
+        {
+            clear()
+            pullTournamentsList(pagesInAdvance, searchWidget.lastSearchedPhrase)
+        }
     }
 }

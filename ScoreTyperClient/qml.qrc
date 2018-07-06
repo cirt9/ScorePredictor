@@ -19,6 +19,7 @@
         <file>DefaultLineInput.qml</file>
         <file>SearchWidget.qml</file>
         <file>IconButton.qml</file>
+        <file>SearchIndicator.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>

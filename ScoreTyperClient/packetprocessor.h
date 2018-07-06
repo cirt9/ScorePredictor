@@ -33,6 +33,7 @@ namespace Client
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
         void profileDownloadRedply(const QString & description);
         void tournamentCreationReply(bool replyState, const QString & message);
+        void tournamentsListArrived();
         void tournamentsListItemArrived(const QStringList & tournamentData);
     };
 }

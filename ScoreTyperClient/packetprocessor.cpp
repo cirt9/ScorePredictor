@@ -53,6 +53,8 @@ namespace Client
 
     void PacketProcessor::manageTournamentsPullReply(const QVariantList & replyData)
     {
+        emit tournamentsListArrived();
+
         for(int i=0; i<replyData.size(); i++)
         {
             Tournament tournament(replyData[i].value<QVariantList>());
