@@ -151,7 +151,8 @@ Rectangle {
         }
     }
 
-    function markBadData() {
+    function markBadData()
+    {
         underline.color = underlineColorBadData
     }
 }

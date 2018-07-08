@@ -75,12 +75,14 @@ Page {
         }
     }
 
-    function enableButtons() {
+    function enableButtons()
+    {
         connectButton.enabled = true
         settingsButton.enabled = true
     }
 
-    function disableButtons() {
+    function disableButtons()
+    {
         connectButton.enabled = false
         settingsButton.enabled = false
     }

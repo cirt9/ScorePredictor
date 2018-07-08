@@ -179,6 +179,7 @@ Page {
                             color: mainWindow.fontColor
                             font.pointSize: 10
                             verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
 
                             Layout.preferredWidth: parent.width * 0.3
                             Layout.fillHeight: true
@@ -190,6 +191,7 @@ Page {
                             color: mainWindow.fontColor
                             font.pointSize: 10
                             verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
 
                             Layout.preferredWidth: parent.width * 0.3
                             Layout.fillHeight: true

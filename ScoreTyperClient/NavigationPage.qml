@@ -119,11 +119,14 @@ Page {
         navigationView.currentIndex = navigationBar.currentIndex
     }
 
-    function pushTournament(page) {
+    function pushTournament(page)
+    {
         tournamentView.push(page)
     }
 
-    function popTournament() {
-        tournamentView.pop()
+    function popTournament()
+    {
+        while(tournamentView.depth > 1)
+            tournamentView.pop()
     }
 }

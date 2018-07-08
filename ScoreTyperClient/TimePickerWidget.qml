@@ -180,7 +180,8 @@ Rectangle {
         }
     }
 
-    function resetText(text) {
+    function resetText(text)
+    {
         if(text.length === 0)
             text = "00"
         else if(text.length === 1)
@@ -189,7 +190,8 @@ Rectangle {
         return text
     }
 
-    function validateText(text, validator) {
+    function validateText(text, validator)
+    {
         if(text.charAt(0) > parseInt(validator.charAt(0)))
         {
             if(text.charAt(1) !== "")
@@ -203,7 +205,8 @@ Rectangle {
         return text
     }
 
-    function addTime() {
+    function addTime()
+    {
         var oldTime = parseInt(container.focusedInput.text)
         var newTime = oldTime + 1
 
@@ -228,7 +231,8 @@ Rectangle {
         container.focusedInput.text = formatTime(newTime)
     }
 
-    function substractTime() {
+    function substractTime()
+    {
         var oldTime = parseInt(container.focusedInput.text)
         var newTime = oldTime - 1
 
@@ -253,7 +257,8 @@ Rectangle {
         container.focusedInput.text = formatTime(newTime)
     }
 
-    function formatTime(oldTime) {
+    function formatTime(oldTime)
+    {
         if(oldTime > 9)
             return oldTime
         else

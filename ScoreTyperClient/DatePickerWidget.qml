@@ -164,12 +164,14 @@ Rectangle {
             }
     }
 
-    function showCalendar() {
+    function showCalendar()
+    {
         expandCalendarButton.checked = true
         calendar.visible = true
     }
 
-    function hideCalendar() {
+    function hideCalendar()
+    {
         expandCalendarButton.checked = false
         calendar.visible = false
     }

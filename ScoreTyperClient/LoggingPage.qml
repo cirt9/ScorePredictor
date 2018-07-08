@@ -317,20 +317,24 @@ Page {
         }
     }
 
-    function blockLoggingPage() {
+    function blockLoggingPage()
+    {
         loggingPage.enabled = false
     }
 
-    function unblockLoggingPage() {
+    function unblockLoggingPage()
+    {
         loggingPage.enabled = true
     }
 
-    function blockRegistrationPopup() {
+    function blockRegistrationPopup()
+    {
         registrationPopup.enabled = false
         registrationPopup.closePolicy = Popup.NoAutoClose
     }
 
-    function unblockRegistrationPopup() {
+    function unblockRegistrationPopup()
+    {
         registrationPopup.enabled = true
         registrationPopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
     }

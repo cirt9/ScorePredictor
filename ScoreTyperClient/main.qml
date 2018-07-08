@@ -28,7 +28,7 @@ ApplicationWindow {
     StackView {
        id: pagesView
        anchors.fill: parent
-       initialItem: ConnectingPage {}
+       initialItem: TournamentNavigationPage {}//ConnectingPage {}
    }
 
     Item {
@@ -71,33 +71,40 @@ ApplicationWindow {
         anchors.bottomMargin: 15
     }
 
-    function pushPage(page) {
+    function pushPage(page)
+    {
         pagesView.push(page)
     }
 
-    function popPage() {
+    function popPage()
+    {
         pagesView.pop()
     }
 
-    function popToInitialPage() {
+    function popToInitialPage()
+    {
         while(pagesView.depth > 1)
             pagesView.pop()
     }
 
-    function closeApp() {
+    function closeApp()
+    {
         backend.close()
         Qt.quit()
     }
 
-    function startBusyIndicator() {
+    function startBusyIndicator()
+    {
         busyIndicator.running = true
     }
 
-    function stopBusyIndicator() {
+    function stopBusyIndicator()
+    {
         busyIndicator.running = false
     }
 
-    function showErrorPopup(message) {
+    function showErrorPopup(message)
+    {
         popupText.text = message
         errorPopup.open()
     }
