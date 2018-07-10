@@ -79,7 +79,7 @@ Page {
                 iconSource: "qrc://assets/icons/icons/icons8_Exit.png"
                 color: mainWindow.colorA
 
-                onClicked: mainWindow.popPage()
+                onClicked: logout()
             }
         }
     }
@@ -108,6 +108,12 @@ Page {
             id: tournamentCreatorPage
             readonly property int index: 2
         }
+    }
+
+    function logout()
+    {
+        mainWindow.popPage()
+        currentUser.reset()
     }
 
     function changePage(index)

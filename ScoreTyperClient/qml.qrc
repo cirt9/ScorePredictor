@@ -33,5 +33,7 @@
         <file>ConnectingPage.qml</file>
         <file>TournamentNavigationPage.qml</file>
         <file>TournamentsSearchPage.qml</file>
+        <file>RoundPage.qml</file>
+        <file>TournamentLeaderbordsPage.qml</file>
     </qresource>
 </RCC>

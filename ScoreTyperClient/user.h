@@ -16,7 +16,7 @@ public:
     User(const QString & name, QObject * parent = nullptr);
     ~User() {}
 
-    void reset();
+    Q_INVOKABLE void reset();
     void setNickname(const QString & name);
     QString getNickname() const;
 

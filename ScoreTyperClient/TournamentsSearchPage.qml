@@ -282,7 +282,7 @@ Page {
             text: qsTr("Join")
             width: 200
             color: mainWindow.backgroundColor
-            fontColor: mainWindow.fontColor
+            textColor: mainWindow.fontColor
             fontSize: 25
             radius: 5
             enabled: visibleTournamentsList.count === 0 ? false : true

@@ -36,12 +36,8 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        onCheckedChanged: {
-            if(checked)
-                list.open()
-            else
-                list.close()
-        }
+        onButtonChecked: list.open()
+        onButtonUnchecked: list.close()
     }
 
     Menu {
@@ -54,10 +50,7 @@ Rectangle {
             MenuItem {onClicked: listItemText.text = text}
         }
 
-        onOpenedChanged: {
-            if(!opened)
-                expandListButton.checked = false
-        }
+        onClosed: expandListButton.checked = false
     }
 
     function addItem(text)

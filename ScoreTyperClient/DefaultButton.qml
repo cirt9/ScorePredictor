@@ -7,7 +7,7 @@ Item {
     clip: true
 
     property alias fontSize: label.font.pointSize
-    property alias fontColor: label.color
+    property alias textColor: label.color
     property alias fontBold: label.font.bold
     property color color: "black"
     property int borderWidth: 2

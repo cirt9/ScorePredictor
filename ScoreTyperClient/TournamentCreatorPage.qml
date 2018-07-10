@@ -257,7 +257,7 @@ Page {
             id: createTournamentButton
             text: qsTr("Create Tournament")
             color: mainWindow.backgroundColor
-            fontColor: mainWindow.fontColor
+            textColor: mainWindow.fontColor
             fontSize: 25
             radius: 5
             anchors.bottom: parent.bottom
