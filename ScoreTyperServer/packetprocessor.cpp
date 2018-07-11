@@ -21,7 +21,7 @@ namespace Server
         {
         case Packet::ID_REGISTER: registerUser(data); break;
         case Packet::ID_LOGIN: loginUser(data); break;
-        case Packet::ID_DOWNLOAD_USER_PROFILE: manageUserProfileRequest(data); break;
+        case Packet::ID_DOWNLOAD_USER_INFO: manageUserInfoRequest(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS: managePullingTournamentsRequest(data); break;
 
@@ -87,14 +87,14 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::manageUserProfileRequest(const QVariantList & userData)
+    void PacketProcessor::manageUserInfoRequest(const QVariantList & userData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
 
-        if(query.getUserProfile(userData[0].toString()))
+        if(query.getUserInfo(userData[0].toString()))
         {
-            responseData << Packet::ID_DOWNLOAD_USER_PROFILE << query.value("description");
+            responseData << Packet::ID_DOWNLOAD_USER_INFO << query.value("description");
 
             qDebug() << "Description for user: " << userData[0].toString();
             qDebug() << query.value("description");

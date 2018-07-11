@@ -81,6 +81,9 @@ void TcpClient::read()
     else
         emit packetArrived(packet);
     nextPacketSize = 0;
+
+    if(socket->bytesAvailable() >= sizeof(quint16))
+        read();
 }
 
 void TcpClient::send(const QVariantList & data)

@@ -55,7 +55,7 @@ bool Query::isPasswordCorrect(const QString & nickname, const QString & password
         return false;
 }
 
-bool Query::getUserProfile(const QString & nickname)
+bool Query::getUserInfo(const QString & nickname)
 {
     prepare("SELECT description FROM user "
             "INNER JOIN user_profile on user.id = user_profile.user_id "
@@ -84,13 +84,14 @@ bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId
 
 bool Query::createTournament(const Tournament & tournament, unsigned int hostId, const QString & password)
 {
-    prepare("INSERT INTO tournament (name, host_user_id, password, entries_end_time, typers_limit) "
-                  "VALUES (:tournamentName, :hostId, :password, :entriesEndTime, :typersLimit)");
+    prepare("INSERT INTO tournament (name, host_user_id, password, entries_end_time, typers_limit, opened) "
+                  "VALUES (:tournamentName, :hostId, :password, :entriesEndTime, :typersLimit, :opened)");
     bindValue(":tournamentName", tournament.getName());
     bindValue(":hostId", hostId);
     bindValue(":password", password);
     bindValue(":entriesEndTime", tournament.getEntriesEndTime());
     bindValue(":typersLimit", tournament.getTypersLimit());
+    bindValue(":opened", true);
     exec();
 
     if(numRowsAffected() > 0)

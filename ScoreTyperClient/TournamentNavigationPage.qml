@@ -107,8 +107,6 @@ Page {
     }
 
     Component.onCompleted: {
-        currentUser.username = "John"
-
         if(currentUser.username === "John")
             createHostTools()
     }

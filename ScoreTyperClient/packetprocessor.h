@@ -16,7 +16,7 @@ namespace Client
         void manageReplyError(const QVariantList & errorData);
         void manageRegistrationReply(const QVariantList & replyData);
         void manageLoggingReply(const QVariantList & replyData);
-        void manageProfileRequestReply(const QVariantList & replyData);
+        void manageUserInfoReply(const QVariantList & replyData);
         void manageTournamentCreationReply(const QVariantList & replyData);
         void manageTournamentsPullReply(const QVariantList & replyData);
 
@@ -31,7 +31,7 @@ namespace Client
         void requestError(const QString & errorMessage);
         void registrationReply(bool replyState, const QString & message);
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
-        void profileDownloadRedply(const QString & description);
+        void userInfoDownloadReply(const QString & description);
         void tournamentCreationReply(bool replyState, const QString & message);
         void tournamentsListArrived();
         void tournamentsListItemArrived(const QStringList & tournamentData);

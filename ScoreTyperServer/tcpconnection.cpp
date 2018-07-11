@@ -77,6 +77,9 @@ void TcpConnection::read()
     else
         emit packetArrived(packet);
     nextPacketSize = 0;
+
+    if(socket->bytesAvailable() >= sizeof(quint16))
+        read();
 }
 
 void TcpConnection::send(const QVariantList & data)

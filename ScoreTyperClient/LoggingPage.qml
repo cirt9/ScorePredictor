@@ -287,7 +287,6 @@ Page {
                 nicknameInput.text = ""
                 passwordInput.text = ""
                 currentUser.username = message;
-                backend.downloadUserProfile(currentUser.username) // to rethink
                 mainWindow.pushPage("qrc:/pages/NavigationPage.qml")
             }
             else

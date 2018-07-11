@@ -43,7 +43,7 @@ public:
     static const int ID_ERROR = 0;
     static const int ID_REGISTER = 1;
     static const int ID_LOGIN = 2;
-    static const int ID_DOWNLOAD_USER_PROFILE = 3;
+    static const int ID_DOWNLOAD_USER_INFO = 3;
     static const int ID_CREATE_TOURNAMENT = 4;
     static const int ID_PULL_TOURNAMENTS = 5;
 };

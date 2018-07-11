@@ -18,7 +18,7 @@ namespace Server
 
         void registerUser(const QVariantList & userData);
         void loginUser(const QVariantList & userData);
-        void manageUserProfileRequest(const QVariantList & userData);
+        void manageUserInfoRequest(const QVariantList & userData);
         void manageTournamentCreationRequest(QVariantList & tournamentData);
         void managePullingTournamentsRequest(const QVariantList & requestData);
 

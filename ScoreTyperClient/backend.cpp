@@ -52,10 +52,10 @@ void BackEnd::registerAccount(const QString & nickname, const QString & password
     emit clientWrapper->sendData(data);
 }
 
-void BackEnd::downloadUserProfile(const QString & nickname)
+void BackEnd::downloadUserInfo(const QString & nickname)
 {
     QVariantList data;
-    data << Packet::ID_DOWNLOAD_USER_PROFILE << nickname;
+    data << Packet::ID_DOWNLOAD_USER_INFO << nickname;
     emit clientWrapper->sendData(data);
 }
 

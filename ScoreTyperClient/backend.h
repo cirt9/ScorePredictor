@@ -28,7 +28,7 @@ public:
     Q_INVOKABLE void disconnectFromServer();
     Q_INVOKABLE void login(const QString & nickname, const QString & password);
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
-    Q_INVOKABLE void downloadUserProfile(const QString & nickname);
+    Q_INVOKABLE void downloadUserInfo(const QString & nickname);
     Q_INVOKABLE void createTournament(Tournament * tournament, const QString & password);
     Q_INVOKABLE void pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName);
     Q_INVOKABLE void pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName,

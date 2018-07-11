@@ -160,9 +160,12 @@ Page {
         }
     }
 
+    Component.onCompleted: backend.downloadUserInfo(currentUser.username)
+
     Connections {
         target: packetProcessor
-        onProfileDownloadReply: {
+
+        onUserInfoDownloadReply: {
             nicknameText.text = currentUser.username
             profileDescription.text = description
         }

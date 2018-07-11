@@ -306,7 +306,7 @@ Page {
 
             if(replyState)
             {
-                navigationPage.pushTournament("qrc:/pages/TournamentPage.qml")
+                navigationPage.pushTournament("qrc:/pages/TournamentNavigationPage.qml")
                 navigationPage.changePage(1)
             }
             else

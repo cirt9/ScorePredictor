@@ -18,7 +18,7 @@ public:
     bool isUserRegistered(const QString & nickname);
     bool registerUser(const QString & nickname, const QString & password);
     bool isPasswordCorrect(const QString & nickname, const QString & password);
-    bool getUserProfile(const QString & nickname);
+    bool getUserInfo(const QString & nickname);
     bool tournamentExists(const QString & tournamentName, unsigned int hostId);
     bool createTournament(const Tournament & tournament, unsigned int hostId, const QString & password);
     void findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName);
