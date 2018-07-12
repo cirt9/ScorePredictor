@@ -264,4 +264,10 @@ Rectangle {
         else
             return "0" + oldTime
     }
+
+    function reset()
+    {
+        hoursInput.text = "12"
+        minutesInput.text = "00"
+    }
 }

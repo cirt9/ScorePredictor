@@ -71,6 +71,8 @@ Page {
                         userProfilePage.refresh()
                     else if(navigationView.currentIndex === tournamentView.index)
                         tournamentView.currentItem.refresh()
+                    else if(navigationView.currentIndex === tournamentCreatorPage.index)
+                        tournamentCreatorPage.refresh()
                 }
             }
 

@@ -344,4 +344,14 @@ Page {
         replyArea.hidden = true
         replyTimer.stop()
     }
+
+    function refresh()
+    {
+        tournamentNameInput.text = ""
+        tournamentPasswordInput.text = ""
+        typersLimit.value = 16
+        entriesEndTimePicker.reset()
+        entriesEndDatePicker.reset()
+        hideReplyArea()
+    }
 }

@@ -175,4 +175,9 @@ Rectangle {
         expandCalendarButton.checked = false
         calendar.visible = false
     }
+
+    function reset()
+    {
+        calendar.selectedDate = new Date()
+    }
 }
