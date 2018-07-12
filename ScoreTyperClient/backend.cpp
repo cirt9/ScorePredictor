@@ -59,6 +59,20 @@ void BackEnd::downloadUserInfo(const QString & nickname)
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::pullFinishedTournaments(const QString & nickname)
+{
+    QVariantList data;
+    data << Packet::ID_PULL_FINISHED_TOURNAMENTS << nickname;
+    emit clientWrapper->sendData(data);
+}
+
+void BackEnd::pullOngoingTournaments(const QString & nickname)
+{
+    QVariantList data;
+    data << Packet::ID_PULL_ONGOING_TOURNAMENTS << nickname;
+    emit clientWrapper->sendData(data);
+}
+
 void BackEnd::createTournament(Tournament * tournament, const QString & password)
 {
     QVariantList data;

@@ -67,7 +67,9 @@ Page {
                 color: mainWindow.colorA
 
                 onClicked: {
-                    if(navigationView.currentIndex === tournamentView.index)
+                    if(navigationView.currentIndex === userProfilePage.index)
+                        userProfilePage.refresh()
+                    else if(navigationView.currentIndex === tournamentView.index)
                         tournamentView.currentItem.refresh()
                 }
             }

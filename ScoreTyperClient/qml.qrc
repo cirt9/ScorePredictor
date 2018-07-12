@@ -21,6 +21,7 @@
         <file>IconButton.qml</file>
         <file>SearchIndicator.qml</file>
         <file>PopupList.qml</file>
+        <file>TournamentsListScheme.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>

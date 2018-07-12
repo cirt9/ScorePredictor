@@ -61,7 +61,7 @@ Page {
                     padding: 0
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: currentTournamentsArea.width - userInfoArea.anchors.leftMargin -
+                    Layout.preferredWidth: finishedTournamentsArea.width - userInfoArea.anchors.leftMargin -
                                            avatarArea.width - avatarArea.Layout.margins
                     Layout.topMargin: 20
                     Layout.bottomMargin: 20
@@ -123,44 +123,81 @@ Page {
             Layout.fillHeight: true
             spacing: 10
 
-            ColumnLayout {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.preferredWidth: pageLayout.width / 2
-                spacing: 10
-
-                Rectangle {
-                    id: currentTournamentsArea
-                    color: mainWindow.colorA
-                    radius: 5
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-
-                Rectangle {
-                    id: tournamentsHistoryArea
-                    color: mainWindow.colorA
-                    radius: 5
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-            }
-
             Rectangle {
-                id: statsArea
+                id: finishedTournamentsArea
                 color: mainWindow.colorA
                 radius: 5
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: pageLayout.width / 2
+
+                Text {
+                    id: finishedTournamentsTitle
+                    text: qsTr("Finished Tournaments")
+                    color: mainWindow.fontColor
+                    font.pointSize: 25
+                    font.bold: true
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 10
+                }
+
+                TournamentsListScheme {
+                    id: finishedTournamentsView
+                    notLoadedResponseText: qsTr("Couldn't load your finished tournaments list")
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: finishedTournamentsTitle.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 5
+                    anchors.topMargin: 15
+
+                    onItemDoubleClicked: console.log(tournamentName, hostName)
+                }
+            }
+
+            Rectangle {
+                id: ongoingTournamentsArea
+                color: mainWindow.colorA
+                radius: 5
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: pageLayout.width / 2
+
+                Text {
+                    id: ongoingTournamentsTitle
+                    text: qsTr("Ongoing Tournaments")
+                    color: mainWindow.fontColor
+                    font.pointSize: 25
+                    font.bold: true
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 10
+                }
+
+                TournamentsListScheme {
+                    id: ongoingTournamentsView
+                    notLoadedResponseText: qsTr("Couldn't load your ongoing tournaments list")
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: ongoingTournamentsTitle.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 5
+                    anchors.topMargin: 15
+
+                    onItemDoubleClicked: console.log(tournamentName, hostName)
+                }
             }
         }
     }
 
-    Component.onCompleted: backend.downloadUserInfo(currentUser.username)
+    Component.onCompleted: {
+        downloadProfile()
+        finishedTournamentsView.startLoading()
+        ongoingTournamentsView.startLoading()
+    }
 
     Connections {
         target: packetProcessor
@@ -169,5 +206,42 @@ Page {
             nicknameText.text = currentUser.username
             profileDescription.text = description
         }
+
+        onFinishedTournamentsListArrived: {
+            if(numberOfItems === 0)
+            {
+                finishedTournamentsView.notLoadedResponseText =
+                qsTr("You weren't participating in any tournaments yet")
+            }
+            finishedTournamentsView.stopLoading()
+        }
+
+        onOngoingTournamentsListArrived: {
+            if(numberOfItems === 0)
+            {
+                ongoingTournamentsView.notLoadedResponseText =
+                qsTr("There aren't any ongoing tournaments that you participate in")
+            }
+            ongoingTournamentsView.stopLoading()
+        }
+
+        onFinishedTournamentsListItemArrived: finishedTournamentsView.addItem(tournamentName, hostName)
+        onOngoingTournamentsListItemArrived: ongoingTournamentsView.addItem(tournamentName, hostName)
+    }
+
+    function downloadProfile()
+    {
+        backend.downloadUserInfo(currentUser.username)
+        backend.pullFinishedTournaments(currentUser.username)
+        backend.pullOngoingTournaments(currentUser.username)
+    }
+
+    function refresh()
+    {
+        finishedTournamentsView.clear()
+        ongoingTournamentsView.clear()
+        downloadProfile()
+        finishedTournamentsView.startLoading()
+        ongoingTournamentsView.startLoading()
     }
 }

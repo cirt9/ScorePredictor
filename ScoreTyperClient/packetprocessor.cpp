@@ -19,6 +19,8 @@ namespace Client
         case Packet::ID_REGISTER: manageRegistrationReply(data); break;
         case Packet::ID_LOGIN: manageLoggingReply(data); break;
         case Packet::ID_DOWNLOAD_USER_INFO: manageUserInfoReply(data); break;
+        case Packet::ID_PULL_FINISHED_TOURNAMENTS: manageFinishedTournamentsPullReply(data); break;
+        case Packet::ID_PULL_ONGOING_TOURNAMENTS: manageOngoingTournamentsPullReply(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
         case Packet::ID_PULL_TOURNAMENTS: manageTournamentsPullReply(data); break;
 
@@ -46,6 +48,34 @@ namespace Client
         emit userInfoDownloadReply(replyData[0].toString());
     }
 
+    void PacketProcessor::manageFinishedTournamentsPullReply(const QVariantList & replyData)
+    {
+        emit finishedTournamentsListArrived(replyData.size());
+
+        for(int i=0; i<replyData.size(); i++)
+        {
+            QVariantList finishedTournamentData = replyData[i].value<QVariantList>();
+            QString tournamentName = finishedTournamentData[0].toString();
+            QString hostName = finishedTournamentData[1].toString();
+
+            emit finishedTournamentsListItemArrived(tournamentName, hostName);
+        }
+    }
+
+    void PacketProcessor::manageOngoingTournamentsPullReply(const QVariantList & replyData)
+    {
+        emit ongoingTournamentsListArrived(replyData.size());
+
+        for(int i=0; i<replyData.size(); i++)
+        {
+            QVariantList ongoingTournamentData = replyData[i].value<QVariantList>();
+            QString tournamentName = ongoingTournamentData[0].toString();
+            QString hostName = ongoingTournamentData[1].toString();
+
+            emit ongoingTournamentsListItemArrived(tournamentName, hostName);
+        }
+    }
+
     void PacketProcessor::manageTournamentCreationReply(const QVariantList & replyData)
     {
         emit tournamentCreationReply(replyData[0].toBool(), replyData[1].toString());
@@ -69,7 +99,7 @@ namespace Client
             else
                 tournamentData << QString("No");
 
-            tournamentsListItemArrived(tournamentData);
+            emit tournamentsListItemArrived(tournamentData);
         }
     }
 }

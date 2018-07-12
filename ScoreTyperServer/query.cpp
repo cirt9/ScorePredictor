@@ -69,6 +69,18 @@ bool Query::getUserInfo(const QString & nickname)
         return false;
 }
 
+void Query::findUserTournaments(unsigned int userId, bool opened)
+{
+    prepare("SELECT tournament.name, user.nickname AS host_name FROM tournament "
+            "INNER JOIN user ON tournament.host_user_id = user.id "
+            "WHERE tournament.opened = :opened AND tournament.id IN "
+            "(SELECT tournament_id FROM tournament_participant WHERE user_id = :userId) "
+            "ORDER BY entries_end_time desc ");
+    bindValue(":userId", userId);
+    bindValue(":opened", opened);
+    exec();
+}
+
 bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId)
 {
     prepare("SELECT 1 FROM tournament WHERE name=:tournamentName AND host_user_id=:hostId");

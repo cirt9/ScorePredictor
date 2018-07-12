@@ -22,7 +22,13 @@ namespace Client
         void requestError(const QString & errorMessage);
         void registrationReply(bool replyState, const QString & message);
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
+
         void userInfoDownloadReply(const QString & description);
+        void finishedTournamentsListArrived(int numberOfItems);
+        void finishedTournamentsListItemArrived(const QString & tournamentName, const QString & hostName);
+        void ongoingTournamentsListArrived(int numberOfItems);
+        void ongoingTournamentsListItemArrived(const QString & tournamentName, const QString & hostName);
+
         void tournamentCreationReply(bool replyState, const QString & message);
         void tournamentsListArrived();
         void tournamentsListItemArrived(const QStringList & tournamentData);

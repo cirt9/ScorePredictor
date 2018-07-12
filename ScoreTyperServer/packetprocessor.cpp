@@ -21,9 +21,11 @@ namespace Server
         {
         case Packet::ID_REGISTER: registerUser(data); break;
         case Packet::ID_LOGIN: loginUser(data); break;
-        case Packet::ID_DOWNLOAD_USER_INFO: manageUserInfoRequest(data); break;
+        case Packet::ID_DOWNLOAD_USER_INFO: managePullingUserInfo(data); break;
+        case Packet::ID_PULL_FINISHED_TOURNAMENTS: managePullingUserTournaments(data, false); break;
+        case Packet::ID_PULL_ONGOING_TOURNAMENTS: managePullingUserTournaments(data, true); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
-        case Packet::ID_PULL_TOURNAMENTS: managePullingTournamentsRequest(data); break;
+        case Packet::ID_PULL_TOURNAMENTS: managePullingTournaments(data); break;
 
         default: break;
         }
@@ -87,7 +89,7 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::manageUserInfoRequest(const QVariantList & userData)
+    void PacketProcessor::managePullingUserInfo(const QVariantList & userData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
@@ -104,6 +106,38 @@ namespace Server
             qDebug() << "Profile loading error";
             responseData << Packet::ID_ERROR << QString("Couldn't load your profile");
         }
+        emit response(responseData);
+    }
+
+    void PacketProcessor::managePullingUserTournaments(const QVariantList & userData, bool opened)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(userData[0].toString()))
+        {
+            if(opened)
+            {
+                qDebug() << "Request for ongoing tournaments";
+                responseData << Packet::ID_PULL_ONGOING_TOURNAMENTS;
+            }
+            else
+            {
+                qDebug() << "Request for finished tournaments";
+                responseData << Packet::ID_PULL_FINISHED_TOURNAMENTS;
+            }
+            query.findUserTournaments(query.value("id").toUInt(), opened);
+
+            while(query.next())
+            {
+                QVariantList tournamentData;
+                tournamentData << query.value("name") << query.value("host_name");
+                responseData << QVariant::fromValue(tournamentData);
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("User does not exist");
+
         emit response(responseData);
     }
 
@@ -146,7 +180,7 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::managePullingTournamentsRequest(const QVariantList & requestData)
+    void PacketProcessor::managePullingTournaments(const QVariantList & requestData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
