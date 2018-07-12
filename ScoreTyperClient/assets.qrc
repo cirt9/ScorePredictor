@@ -19,5 +19,4 @@
         <file>icons/icons8_Refresh.png</file>
         <file>icons/icons8_Add_New.png</file>
     </qresource>
-    <qresource prefix="/"/>
 </RCC>

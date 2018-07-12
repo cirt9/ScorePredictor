@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../components"
 
 Item {
     id: root
@@ -15,6 +16,7 @@ Item {
         model: tournamentsList
         spacing: 2
         headerPositioning: ListView.OverlayHeader
+        highlightMoveDuration: 250
         anchors.fill: parent
 
         highlight: Rectangle {

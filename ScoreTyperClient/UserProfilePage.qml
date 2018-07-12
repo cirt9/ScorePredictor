@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import "../components"
+import "../reusableWidgets"
 
 Page {
     id: userProfilePage
@@ -143,8 +144,8 @@ Page {
                     anchors.topMargin: 10
                 }
 
-                TournamentsListScheme {
-                    id: finishedTournamentsView
+                UserTournamentsList {
+                    id: finishedTournamentsList
                     notLoadedResponseText: qsTr("Couldn't load your finished tournaments list")
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -177,8 +178,8 @@ Page {
                     anchors.topMargin: 10
                 }
 
-                TournamentsListScheme {
-                    id: ongoingTournamentsView
+                UserTournamentsList {
+                    id: ongoingTournamentsList
                     notLoadedResponseText: qsTr("Couldn't load your ongoing tournaments list")
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -195,8 +196,8 @@ Page {
 
     Component.onCompleted: {
         downloadProfile()
-        finishedTournamentsView.startLoading()
-        ongoingTournamentsView.startLoading()
+        finishedTournamentsList.startLoading()
+        ongoingTournamentsList.startLoading()
     }
 
     Connections {
@@ -210,23 +211,23 @@ Page {
         onFinishedTournamentsListArrived: {
             if(numberOfItems === 0)
             {
-                finishedTournamentsView.notLoadedResponseText =
+                finishedTournamentsList.notLoadedResponseText =
                 qsTr("You weren't participating in any tournaments yet")
             }
-            finishedTournamentsView.stopLoading()
+            finishedTournamentsList.stopLoading()
         }
 
         onOngoingTournamentsListArrived: {
             if(numberOfItems === 0)
             {
-                ongoingTournamentsView.notLoadedResponseText =
+                ongoingTournamentsList.notLoadedResponseText =
                 qsTr("There aren't any ongoing tournaments that you participate in")
             }
-            ongoingTournamentsView.stopLoading()
+            ongoingTournamentsList.stopLoading()
         }
 
-        onFinishedTournamentsListItemArrived: finishedTournamentsView.addItem(tournamentName, hostName)
-        onOngoingTournamentsListItemArrived: ongoingTournamentsView.addItem(tournamentName, hostName)
+        onFinishedTournamentsListItemArrived: finishedTournamentsList.addItem(tournamentName, hostName)
+        onOngoingTournamentsListItemArrived: ongoingTournamentsList.addItem(tournamentName, hostName)
     }
 
     function downloadProfile()
@@ -238,10 +239,10 @@ Page {
 
     function refresh()
     {
-        finishedTournamentsView.clear()
-        ongoingTournamentsView.clear()
+        finishedTournamentsList.clear()
+        ongoingTournamentsList.clear()
         downloadProfile()
-        finishedTournamentsView.startLoading()
-        ongoingTournamentsView.startLoading()
+        finishedTournamentsList.startLoading()
+        ongoingTournamentsList.startLoading()
     }
 }
