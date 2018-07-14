@@ -30,6 +30,9 @@ namespace Client
                 this, &PacketProcessorWrapper::tournamentsListArrived);
         connect(packetProcessor, &Client::PacketProcessor::tournamentsListItemArrived,
                 this, &PacketProcessorWrapper::tournamentsListItemArrived);
+
+        connect(packetProcessor, &Client::PacketProcessor::tournamentJoiningReply,
+                this, &PacketProcessorWrapper::tournamentJoiningReply);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

@@ -288,7 +288,7 @@ Page {
                     backend.createTournament(tournament, tournamentPasswordInput.text)
                     tournament.destroy()
 
-                    tournamentCreatorPage.enabled = false
+                    navigationPage.enabled = false
                     mainWindow.startBusyIndicator()
                     busyTimer.restart()
                 }
@@ -301,7 +301,7 @@ Page {
 
         onTournamentCreationReply: {
             busyTimer.stop()
-            tournamentCreatorPage.enabled = true
+            navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
 
             if(replyState)
@@ -322,10 +322,10 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            tournamentCreatorPage.enabled = true
+            navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
             backend.disconnectFromServer()
-            mainWindow.showErrorPopup(qsTr("Connection lost, try again later"))
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
     }
 

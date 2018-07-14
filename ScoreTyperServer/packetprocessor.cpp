@@ -26,6 +26,7 @@ namespace Server
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: managePullingUserTournaments(data, true); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS: managePullingTournaments(data); break;
+        case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningRequest(data); break;
 
         default: break;
         }
@@ -104,7 +105,7 @@ namespace Server
         else
         {
             qDebug() << "Profile loading error";
-            responseData << Packet::ID_ERROR << QString("Couldn't load your profile");
+            responseData << Packet::ID_ERROR << QString("Couldn't load user data");
         }
         emit response(responseData);
     }
@@ -164,7 +165,7 @@ namespace Server
                 {
                     qDebug() << "Tournament couldn't be created";
                     responseData << Packet::ID_CREATE_TOURNAMENT << false
-                                 << QString("Tournament couldn't be created, try again later");
+                                 << QString("Tournament couldn't be created. Try again later.");
                 }
             }
             else
@@ -212,6 +213,46 @@ namespace Server
                                << query.value("typers") << query.value("typers_limit");
                 responseData << QVariant::fromValue(tournamentData);
             }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("User does not exist");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageTournamentJoiningRequest(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(requestData[0].toString()))
+        {
+            unsigned int userId = query.value("id").toUInt();
+
+            if(query.findUserId(requestData[2].toString()) &&
+               query.findTournamentId(requestData[1].toString(), query.value("id").toUInt()))
+            {
+                unsigned int tournamentId = query.value("id").toUInt();
+
+                if(!query.tournamentIsOpened(tournamentId))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("This tournament is closed");
+
+                else if(query.userPatricipatesInTournament(tournamentId, userId))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false
+                                 << QString("You are already participating in this tournament");
+
+                else if(query.tournamentRequiresPassword(tournamentId))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false <<
+                                    QString("This tournament requires password");
+
+                else if(query.addUserToTournament(tournamentId, userId))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << true << QString("You joined the tournament");
+
+                else
+                    responseData << Packet::ID_ERROR << false << QString("A problem occured. Try again later.");
+            }
+            else
+                responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("This tournament does not exist");
         }
         else
             responseData << Packet::ID_ERROR << QString("User does not exist");

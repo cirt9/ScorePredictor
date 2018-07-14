@@ -23,6 +23,7 @@ namespace Client
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: manageOngoingTournamentsPullReply(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
         case Packet::ID_PULL_TOURNAMENTS: manageTournamentsPullReply(data); break;
+        case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningReply(data); break;
 
         default: break;
         }
@@ -101,5 +102,10 @@ namespace Client
 
             emit tournamentsListItemArrived(tournamentData);
         }
+    }
+
+    void PacketProcessor::manageTournamentJoiningReply(const QVariantList & replyData)
+    {
+        emit tournamentJoiningReply(replyData[0].toBool(), replyData[1].toString());
     }
 }

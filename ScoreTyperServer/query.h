@@ -23,6 +23,11 @@ public:
     bool tournamentExists(const QString & tournamentName, unsigned int hostId);
     bool createTournament(const Tournament & tournament, unsigned int hostId, const QString & password);
     void findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName);
+    bool findTournamentId(const QString & tournamentName, unsigned int hostId);
+    bool tournamentIsOpened(unsigned int tournamentId);
+    bool userPatricipatesInTournament(unsigned int tournamentId, unsigned int userId);
+    bool tournamentRequiresPassword(unsigned int tournamentId);
+    bool addUserToTournament(unsigned int tournamentId, unsigned int userId);
 };
 
 #endif // QUERY_H

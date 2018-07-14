@@ -32,9 +32,9 @@ ApplicationWindow {
    }
 
     Item {
-        anchors.centerIn: parent
         width: errorPopup.width
         height: errorPopup.height
+        anchors.centerIn: parent
 
         PopupBox {
             id: errorPopup
@@ -44,11 +44,18 @@ ApplicationWindow {
             focus: true
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-            Text {
+            TextEdit {
                 id: popupText
-                anchors.centerIn: parent
                 font.pointSize: 12
                 color: fontColor
+                readOnly: true
+                wrapMode: TextEdit.Wrap
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
             }
         }
 

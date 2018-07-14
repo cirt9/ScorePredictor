@@ -131,6 +131,9 @@ Page {
 
     function pushTournament(page)
     {
+        if(tournamentView.depth > 1)
+            popTournament()
+
         tournamentView.push(page)
     }
 

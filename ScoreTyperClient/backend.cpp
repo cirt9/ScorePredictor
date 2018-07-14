@@ -97,6 +97,13 @@ void BackEnd::pullTournaments(const QString & requesterName, int itemsLimit, con
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::joinTournament(const QString & nickname, const QString & tournamentName, const QString & hostName)
+{
+    QVariantList data;
+    data << Packet::ID_JOIN_TOURNAMENT << nickname << tournamentName << hostName;
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

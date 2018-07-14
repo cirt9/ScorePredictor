@@ -292,7 +292,16 @@ Page {
 
             onClicked: {
                 var chosenTournament = visibleTournamentsList.get(tournamentsView.currentIndex)
-                console.log(chosenTournament.tournamentName)
+
+                if(chosenTournament.passwordRequired === "Yes")
+                    console.log("Password required")
+                else
+                {
+                    backend.joinTournament(currentUser.username, chosenTournament.tournamentName, chosenTournament.hostName)
+                    navigationPage.enabled = false
+                    mainWindow.startBusyIndicator()
+                    busyTimer.restart()
+                }
             }
         }
 
@@ -329,10 +338,22 @@ Page {
     }
 
     Timer {
-        id: timeoutTimer
+        id: searchingTimeoutTimer
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: searchingState = false
+    }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
+        }
     }
 
     Connections {
@@ -340,7 +361,7 @@ Page {
 
         onTournamentsListArrived: {
             searchingState = false
-            timeoutTimer.stop()
+            searchingTimeoutTimer.stop()
         }
 
         onTournamentsListItemArrived: {
@@ -355,6 +376,12 @@ Page {
                 visibleTournamentsList.append(item)
             else
                 nextTournamentsList.append(item)
+        }
+
+        onTournamentJoiningReply: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
         }
     }
 
@@ -418,7 +445,7 @@ Page {
             var itemsToPull = itemsForPage * numberOfPages
             backend.pullTournaments(currentUser.username, itemsToPull, tournamentPhrase)
             searchingState = true
-            timeoutTimer.restart()
+            searchingTimeoutTimer.restart()
         }
     }
 
@@ -437,7 +464,7 @@ Page {
 
             backend.pullTournaments(currentUser.username, itemsToPull, tournamentPhrase, startFromDate)
             searchingState = true
-            timeoutTimer.restart()
+            searchingTimeoutTimer.restart()
         }
     }
 

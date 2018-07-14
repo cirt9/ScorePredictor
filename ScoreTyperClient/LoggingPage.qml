@@ -312,7 +312,7 @@ Page {
             unblockLoggingPage()
             mainWindow.stopBusyIndicator()
             backend.disconnectFromServer()
-            mainWindow.showErrorPopup(qsTr("Connection lost, try again later"))
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
     }
 
