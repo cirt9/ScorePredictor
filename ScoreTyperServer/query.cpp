@@ -190,6 +190,18 @@ bool Query::tournamentRequiresPassword(unsigned int tournamentId)
     return value("password_required").toBool();
 }
 
+bool Query::tournamentIsFull(unsigned int tournamentId)
+{
+    prepare("SELECT (SELECT CASE WHEN (SELECT count(id) FROM tournament_participant "
+            "WHERE tournament_id = :tournamentId) < typers_limit THEN 0 ELSE 1 END) "
+            "as is_full FROM tournament WHERE id = :tournamentId");
+    bindValue(":tournamentId", tournamentId);
+    exec();
+    next();
+
+    return value("is_full").toBool();
+}
+
 bool Query::addUserToTournament(unsigned int tournamentId, unsigned int userId)
 {
     prepare("INSERT INTO tournament_participant (tournament_id, user_id) "

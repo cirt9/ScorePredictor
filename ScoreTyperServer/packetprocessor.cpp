@@ -245,6 +245,9 @@ namespace Server
                     responseData << Packet::ID_JOIN_TOURNAMENT << false <<
                                     QString("This tournament requires password");
 
+                else if(query.tournamentIsFull(tournamentId))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("This tournament is full");
+
                 else if(query.addUserToTournament(tournamentId, userId))
                     responseData << Packet::ID_JOIN_TOURNAMENT << true << QString("You joined the tournament");
 

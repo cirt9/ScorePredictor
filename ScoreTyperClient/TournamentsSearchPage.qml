@@ -356,6 +356,57 @@ Page {
         }
     }
 
+    Rectangle {
+        id: responseArea
+        color: mainWindow.backgroundColor
+        radius: 5
+        width: 300
+        height: 100
+        visible: false
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 25
+        anchors.rightMargin: 10
+
+        TextEdit {
+            id: responseText
+            text: "You are already participating in this tournament"
+            font.pointSize: 12
+            color: mainWindow.deniedColor
+            readOnly: true
+            wrapMode: TextEdit.Wrap
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+        }
+
+        IconButtonHover {
+            id: closeResponseAreaButton
+            width: 20
+            height: 20
+            iconSource: "qrc://assets/icons/icons/icons8_Delete.png"
+            color: mainWindow.colorA
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 3
+
+            onClicked: {
+                responseTimer.stop()
+                responseArea.visible = false
+            }
+        }
+
+        Timer {
+            id: responseTimer
+            interval: 10000
+
+            onTriggered: responseArea.visible = false
+        }
+    }
+
     Connections {
         target: packetProcessor
 
@@ -382,6 +433,13 @@ Page {
             busyTimer.stop()
             navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
+
+            if(!replyState)
+            {
+                responseText.text = message
+                responseTimer.restart()
+                responseArea.visible = true
+            }
         }
     }
 

@@ -27,6 +27,7 @@ public:
     bool tournamentIsOpened(unsigned int tournamentId);
     bool userPatricipatesInTournament(unsigned int tournamentId, unsigned int userId);
     bool tournamentRequiresPassword(unsigned int tournamentId);
+    bool tournamentIsFull(unsigned int tournamentId);
     bool addUserToTournament(unsigned int tournamentId, unsigned int userId);
 };
 

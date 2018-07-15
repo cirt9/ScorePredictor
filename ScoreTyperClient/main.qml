@@ -40,9 +40,6 @@ ApplicationWindow {
             id: errorPopup
             width: 600
             height: 200
-            modal: true
-            focus: true
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             TextEdit {
                 id: popupText
