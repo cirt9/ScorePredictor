@@ -165,6 +165,17 @@ bool Query::tournamentIsOpened(unsigned int tournamentId)
     return value("opened").toBool();
 }
 
+bool Query::tournamentEntriesExpired(unsigned int tournamentId)
+{
+    prepare("SELECT CASE WHEN datetime(entries_end_time) <= datetime('now', 'localtime') "
+            "THEN 1 ELSE 0 END as expired FROM tournament WHERE id = :tournamentId");
+    bindValue(":tournamentId", tournamentId);
+    exec();
+    next();
+
+    return value("expired").toBool();
+}
+
 bool Query::userPatricipatesInTournament(unsigned int tournamentId, unsigned int userId)
 {
     prepare("SELECT 1 FROM tournament_participant "
@@ -192,9 +203,9 @@ bool Query::tournamentRequiresPassword(unsigned int tournamentId)
 
 bool Query::tournamentIsFull(unsigned int tournamentId)
 {
-    prepare("SELECT (SELECT CASE WHEN (SELECT count(id) FROM tournament_participant "
-            "WHERE tournament_id = :tournamentId) < typers_limit THEN 0 ELSE 1 END) "
-            "as is_full FROM tournament WHERE id = :tournamentId");
+    prepare("SELECT CASE WHEN (SELECT count(id) FROM tournament_participant WHERE "
+            "tournament_id = :tournamentId) < typers_limit THEN 0 ELSE 1 END as is_full "
+            "FROM tournament WHERE id = :tournamentId");
     bindValue(":tournamentId", tournamentId);
     exec();
     next();
@@ -215,4 +226,16 @@ bool Query::addUserToTournament(unsigned int tournamentId, unsigned int userId)
         return true;
     else
         return false;
+}
+
+bool Query::tournamentPasswordIsCorrect(unsigned int tournamentId, const QString & password)
+{
+    prepare("SELECT CASE WHEN password = :password THEN 1 ELSE 0 END as password_ok FROM tournament "
+            "WHERE id = :tournamentId");
+    bindValue(":tournamentId", tournamentId);
+    bindValue(":password", password);
+    exec();
+    next();
+
+    return value("password_ok").toBool();
 }

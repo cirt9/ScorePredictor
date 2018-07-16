@@ -22,7 +22,10 @@ namespace Server
         void managePullingUserTournaments(const QVariantList & userData, bool opened);
         void manageTournamentCreationRequest(QVariantList & tournamentData);
         void managePullingTournaments(const QVariantList & requestData);
-        void manageTournamentJoiningRequest(const QVariantList & requestData);
+        void manageJoiningTournament(const QVariantList & requestData);
+        void manageJoiningTournamentWithPassword(const QVariantList & requestData);
+
+        QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
 
     public:
         explicit PacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);

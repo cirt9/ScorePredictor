@@ -237,6 +237,16 @@ Page {
         backend.pullOngoingTournaments(currentUser.username)
     }
 
+    function refreshTournamentsLists()
+    {
+        finishedTournamentsList.clear()
+        ongoingTournamentsList.clear()
+        backend.pullFinishedTournaments(currentUser.username)
+        backend.pullOngoingTournaments(currentUser.username)
+        finishedTournamentsList.startLoading()
+        ongoingTournamentsList.startLoading()
+    }
+
     function refresh()
     {
         finishedTournamentsList.clear()

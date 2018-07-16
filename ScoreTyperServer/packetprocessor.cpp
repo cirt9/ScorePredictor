@@ -26,7 +26,8 @@ namespace Server
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: managePullingUserTournaments(data, true); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS: managePullingTournaments(data); break;
-        case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningRequest(data); break;
+        case Packet::ID_JOIN_TOURNAMENT: manageJoiningTournament(data); break;
+        case Packet::ID_JOIN_TOURNAMENT_PASSWORD: manageJoiningTournamentWithPassword(data); break;
 
         default: break;
         }
@@ -220,7 +221,7 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::manageTournamentJoiningRequest(const QVariantList & requestData)
+    void PacketProcessor::manageJoiningTournament(const QVariantList & requestData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
@@ -233,20 +234,14 @@ namespace Server
                query.findTournamentId(requestData[1].toString(), query.value("id").toUInt()))
             {
                 unsigned int tournamentId = query.value("id").toUInt();
+                QString validationReply = validateTournamentJoining(tournamentId, userId);
 
-                if(!query.tournamentIsOpened(tournamentId))
-                    responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("This tournament is closed");
-
-                else if(query.userPatricipatesInTournament(tournamentId, userId))
-                    responseData << Packet::ID_JOIN_TOURNAMENT << false
-                                 << QString("You are already participating in this tournament");
+                if(validationReply.size() > 0)
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false << validationReply;
 
                 else if(query.tournamentRequiresPassword(tournamentId))
                     responseData << Packet::ID_JOIN_TOURNAMENT << false <<
                                     QString("This tournament requires password");
-
-                else if(query.tournamentIsFull(tournamentId))
-                    responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("This tournament is full");
 
                 else if(query.addUserToTournament(tournamentId, userId))
                     responseData << Packet::ID_JOIN_TOURNAMENT << true << QString("You joined the tournament");
@@ -261,5 +256,60 @@ namespace Server
             responseData << Packet::ID_ERROR << QString("User does not exist");
 
         emit response(responseData);
+    }
+
+    void PacketProcessor::manageJoiningTournamentWithPassword(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(requestData[0].toString()))
+        {
+            unsigned int userId = query.value("id").toUInt();
+
+            if(query.findUserId(requestData[2].toString()) &&
+               query.findTournamentId(requestData[1].toString(), query.value("id").toUInt()))
+            {
+                unsigned int tournamentId = query.value("id").toUInt();
+                QString validationReply = validateTournamentJoining(tournamentId, userId);
+
+                if(validationReply.size() > 0)
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false << validationReply;
+
+                else if(!query.tournamentPasswordIsCorrect(tournamentId, requestData[3].toString()))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("Incorrect password");
+
+                else if(query.addUserToTournament(tournamentId, userId))
+                    responseData << Packet::ID_JOIN_TOURNAMENT << true << QString("You joined the tournament");
+
+                else
+                    responseData << Packet::ID_ERROR << false << QString("A problem occured. Try again later.");
+            }
+            else
+                responseData << Packet::ID_JOIN_TOURNAMENT << false << QString("This tournament does not exist");
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("User does not exist");
+
+        emit response(responseData);
+    }
+
+    QString PacketProcessor::validateTournamentJoining(unsigned int tournamentId, unsigned int userId)
+    {
+        Query query(dbConnection->getConnection());
+
+        if(!query.tournamentIsOpened(tournamentId))
+            return QString("This tournament is closed");
+
+        if(query.tournamentEntriesExpired(tournamentId))
+            return QString("Entries for this tournament have expired");
+
+        if(query.userPatricipatesInTournament(tournamentId, userId))
+            return QString("You are already participating in this tournament");
+
+        if(query.tournamentIsFull(tournamentId))
+            return QString("This tournament is full");
+
+        return QString("");
     }
 }

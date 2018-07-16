@@ -150,13 +150,13 @@ Page {
         Button {
             id: registerButton
             text: qsTr("REGISTER")
+            font.pointSize: 16
+            font.bold: true
+            anchors.horizontalCenter: parent.horizontalCenter
 
             Layout.maximumWidth: 400
             Layout.minimumWidth: 250
             Layout.preferredWidth: 300
-            font.pointSize: 16
-            font.bold: true
-            anchors.horizontalCenter: parent.horizontalCenter
 
             onClicked: {
                 var formFilledCorrectly = true

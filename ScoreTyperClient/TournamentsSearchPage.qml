@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import "../components"
 
@@ -291,10 +290,12 @@ Page {
             anchors.bottomMargin: 10
 
             onClicked: {
+                responseTimer.stop()
+                animateHidingResponseArea.start()
                 var chosenTournament = visibleTournamentsList.get(tournamentsView.currentIndex)
 
                 if(chosenTournament.passwordRequired === "Yes")
-                    console.log("Password required")
+                    passwordRequiredPopup.open()
                 else
                 {
                     backend.joinTournament(currentUser.username, chosenTournament.tournamentName, chosenTournament.hostName)
@@ -362,7 +363,7 @@ Page {
         radius: 5
         width: 300
         height: 100
-        visible: false
+        opacity: 0
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 25
@@ -370,7 +371,6 @@ Page {
 
         TextEdit {
             id: responseText
-            text: "You are already participating in this tournament"
             font.pointSize: 12
             color: mainWindow.deniedColor
             readOnly: true
@@ -395,15 +395,96 @@ Page {
 
             onClicked: {
                 responseTimer.stop()
-                responseArea.visible = false
+                animateHidingResponseArea.start()
+            }
+
+            NumberAnimation {
+                id: animateShowingResponseArea
+                target: responseArea
+                properties: "opacity"
+                from: responseArea.opacity
+                to: 1.0
+                duration: 500
+                easing {type: Easing.Linear;}
+            }
+
+            NumberAnimation {
+                id: animateHidingResponseArea
+                target: responseArea
+                properties: "opacity"
+                from: responseArea.opacity
+                to: 0
+                duration: 500
+                easing {type: Easing.Linear;}
             }
         }
 
         Timer {
             id: responseTimer
-            interval: 10000
+            interval: 7000
 
-            onTriggered: responseArea.visible = false
+            onTriggered: animateHidingResponseArea.start()
+        }
+    }
+
+    Item {
+        id: passwordRequiredPopupArea
+        anchors.centerIn: parent
+        width: passwordRequiredPopup.width
+        height: passwordRequiredPopup.height
+
+        PopupBox {
+            id: passwordRequiredPopup
+            width: 450
+            height: 300
+
+            Text {
+                id: passwordRequiredTitle
+                text: qsTr("Password Required")
+                color: mainWindow.fontColor
+                font.bold: true
+                font.pointSize: 25
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 15
+            }
+
+            TextLineField {
+                id: passwordRequiredInput
+                placeholderText: qsTr("Password")
+                width: 300
+                fontSize: 16
+                selectByMouse: true
+                maximumLength: 30
+                textColor: mainWindow.fontColor
+                selectedTextColor: mainWindow.fontColor
+                selectionColor: mainWindow.accentColor
+                underlineColorOnFocus: mainWindow.accentColor
+                anchors.centerIn: parent
+            }
+
+            Button {
+                id: passwordRequiredButton
+                text: qsTr("Join")
+                width: 300
+                enabled: passwordRequiredInput.text.length === 0 ? false : true
+                font.pointSize: 20
+                font.bold: true
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: passwordRequiredInput.horizontalCenter
+
+                onClicked: {
+                    var chosenTournament = visibleTournamentsList.get(tournamentsView.currentIndex)
+
+                    backend.joinTournament(currentUser.username, chosenTournament.tournamentName,
+                                           chosenTournament.hostName, passwordRequiredInput.text)
+                    navigationPage.enabled = false
+                    passwordRequiredInput.text = ""
+                    passwordRequiredPopup.close()
+                    mainWindow.startBusyIndicator()
+                    busyTimer.restart()
+                }
+            }
         }
     }
 
@@ -434,11 +515,16 @@ Page {
             navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
 
-            if(!replyState)
+            if(replyState)
+            {
+                refresh();
+                userProfilePage.refreshTournamentsLists()
+            }
+            else
             {
                 responseText.text = message
                 responseTimer.restart()
-                responseArea.visible = true
+                animateShowingResponseArea.start()
             }
         }
     }

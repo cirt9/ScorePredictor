@@ -25,8 +25,10 @@ public:
     void findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName);
     bool findTournamentId(const QString & tournamentName, unsigned int hostId);
     bool tournamentIsOpened(unsigned int tournamentId);
+    bool tournamentEntriesExpired(unsigned int tournamentId);
     bool userPatricipatesInTournament(unsigned int tournamentId, unsigned int userId);
     bool tournamentRequiresPassword(unsigned int tournamentId);
+    bool tournamentPasswordIsCorrect(unsigned int tournamentId, const QString & password);
     bool tournamentIsFull(unsigned int tournamentId);
     bool addUserToTournament(unsigned int tournamentId, unsigned int userId);
 };
