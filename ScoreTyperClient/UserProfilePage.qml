@@ -188,7 +188,13 @@ Page {
                     anchors.margins: 5
                     anchors.topMargin: 15
 
-                    onTournamentChosen: console.log(tournamentName, hostName)
+                    onTournamentChosen: {
+                        currentTournament.name = tournamentName
+                        currentTournament.hostName = hostName
+
+                        navigationPage.pushTournament("qrc:/pages/TournamentNavigationPage.qml")
+                        navigationPage.changePage(1)
+                    }
                 }
             }
         }
@@ -237,13 +243,17 @@ Page {
         backend.pullOngoingTournaments(currentUser.username)
     }
 
-    function refreshTournamentsLists()
+    function refreshFinishedTournamentsList()
     {
         finishedTournamentsList.clear()
-        ongoingTournamentsList.clear()
         backend.pullFinishedTournaments(currentUser.username)
-        backend.pullOngoingTournaments(currentUser.username)
         finishedTournamentsList.startLoading()
+    }
+
+    function refreshOngoingTournamentsList()
+    {
+        ongoingTournamentsList.clear()
+        backend.pullOngoingTournaments(currentUser.username)
         ongoingTournamentsList.startLoading()
     }
 

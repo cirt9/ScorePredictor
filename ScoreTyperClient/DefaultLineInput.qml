@@ -15,6 +15,7 @@ Item {
     property alias selectByMouse: inputText.selectByMouse
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
+    property alias inputFocus: inputText.focus
     property bool trimText: true
     signal focusChanged()
 

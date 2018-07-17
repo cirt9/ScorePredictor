@@ -267,6 +267,8 @@ Rectangle {
 
     function reset()
     {
+        hoursInput.focus = false
+        minutesInput.focus = false
         hoursInput.text = "12"
         minutesInput.text = "00"
     }

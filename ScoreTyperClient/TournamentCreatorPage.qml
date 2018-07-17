@@ -306,6 +306,10 @@ Page {
 
             if(replyState)
             {
+                currentTournament.name = tournamentNameInput.text
+                currentTournament.hostName = currentUser.username
+
+                userProfilePage.refreshOngoingTournamentsList()
                 navigationPage.pushTournament("qrc:/pages/TournamentNavigationPage.qml")
                 navigationPage.changePage(1)
             }
@@ -314,6 +318,7 @@ Page {
                 replyText.text = message
                 showReplyArea()
             }
+            refresh()
         }
     }
 
@@ -324,6 +329,7 @@ Page {
         onTriggered: {
             navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
+            refresh()
             backend.disconnectFromServer()
             mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
@@ -348,7 +354,10 @@ Page {
     function refresh()
     {
         tournamentNameInput.text = ""
+        tournamentNameInput.inputFocus = false
         tournamentPasswordInput.text = ""
+        tournamentPasswordInput.inputFocus = false
+        typersLimit.focus = false
         typersLimit.value = 16
         entriesEndTimePicker.reset()
         entriesEndDatePicker.reset()

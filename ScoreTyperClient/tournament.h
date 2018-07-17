@@ -9,12 +9,12 @@
 class Tournament : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ getName WRITE setName)
-    Q_PROPERTY(QString hostName READ getHostName WRITE setHostName)
-    Q_PROPERTY(bool passwordRequired READ getPasswordRequired WRITE setPasswordRequired)
-    Q_PROPERTY(QDateTime entriesEndTime READ getEntriesEndTime WRITE setEntriesEndTime)
-    Q_PROPERTY(unsigned int typersNumber READ getTypersNumber WRITE setTypersNumber)
-    Q_PROPERTY(unsigned int typersLimit READ getTypersLimit WRITE setTypersLimit)
+    Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString hostName READ getHostName WRITE setHostName NOTIFY hostNameChanged)
+    Q_PROPERTY(bool passwordRequired READ getPasswordRequired WRITE setPasswordRequired NOTIFY passwordRequiredChanged)
+    Q_PROPERTY(QDateTime entriesEndTime READ getEntriesEndTime WRITE setEntriesEndTime NOTIFY entriesEndTimeChanged)
+    Q_PROPERTY(unsigned int typersNumber READ getTypersNumber WRITE setTypersNumber NOTIFY typersNumberChanged)
+    Q_PROPERTY(unsigned int typersLimit READ getTypersLimit WRITE setTypersLimit NOTIFY typersLimitChanged)
 
 private:
     QString name;
@@ -28,6 +28,8 @@ public:
     Tournament(QObject * parent = nullptr);
     Tournament(const QVariantList & tournamentData, QObject * parent = nullptr);
     ~Tournament() {}
+
+    Q_INVOKABLE void reset();
 
     QString getName() const;
     QString getHostName() const;
@@ -43,6 +45,14 @@ public:
     void setTypersLimit(unsigned int value);
 
     friend QVariantList & operator<<(QVariantList & list, const Tournament & tournament);
+
+signals:
+    void nameChanged();
+    void hostNameChanged();
+    void passwordRequiredChanged();
+    void entriesEndTimeChanged();
+    void typersNumberChanged();
+    void typersLimitChanged();
 };
 
 #endif // TOURNAMENT_H

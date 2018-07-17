@@ -94,10 +94,6 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: tournamentsListView.currentIndex = index
-                onDoubleClicked: {
-                    var chosenTournament = tournamentsList.get(tournamentsListView.currentIndex)
-                    root.tournamentChosen(chosenTournament.tournamentName, chosenTournament.hostName)
-                }
             }
 
             RowLayout {

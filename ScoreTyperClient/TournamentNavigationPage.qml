@@ -22,7 +22,7 @@ Page {
 
             Text {
                 id: tournamentName
-                text: "World Cup 2018"
+                text: currentTournament.name
                 color: mainWindow.fontColor
                 width: parent.width * 0.5
                 font.pointSize: 23
@@ -35,7 +35,7 @@ Page {
 
             Text {
                 id: hostName
-                text: "by WorldCupCreator"
+                text: "by " + currentTournament.hostName
                 color: mainWindow.fontColor
                 opacity: 0.5
                 width: parent.width * 0.5

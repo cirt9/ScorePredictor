@@ -517,8 +517,14 @@ Page {
 
             if(replyState)
             {
+                var chosenTournament = visibleTournamentsList.get(tournamentsView.currentIndex)
+                currentTournament.name = chosenTournament.tournamentName
+                currentTournament.hostName = chosenTournament.hostName
+
+                navigationPage.pushTournament("qrc:/pages/TournamentNavigationPage.qml")
+                navigationPage.changePage(1)
                 refresh();
-                userProfilePage.refreshTournamentsLists()
+                userProfilePage.refreshOngoingTournamentsList()
             }
             else
             {
