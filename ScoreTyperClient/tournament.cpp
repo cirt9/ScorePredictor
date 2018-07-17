@@ -1,18 +1,10 @@
 #include "tournament.h"
 
-unsigned int Tournament::getTypersNumber() const
-{
-    return typersNumber;
-}
-
-void Tournament::setTypersNumber(unsigned int value)
-{
-    typersNumber = value;
-}
-
 Tournament::Tournament(QObject * parent) : QObject(parent)
 {
-
+    passwordRequired = false;
+    typersNumber = 0;
+    typersLimit = 0;
 }
 
 Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : QObject(parent)
@@ -48,6 +40,11 @@ QDateTime Tournament::getEntriesEndTime() const
     return entriesEndTime;
 }
 
+unsigned int Tournament::getTypersNumber() const
+{
+    return typersNumber;
+}
+
 unsigned int Tournament::getTypersLimit() const
 {
     return typersLimit;
@@ -71,6 +68,11 @@ void Tournament::setPasswordRequired(bool required)
 void Tournament::setEntriesEndTime(const QDateTime & value)
 {
     entriesEndTime = value;
+}
+
+void Tournament::setTypersNumber(unsigned int value)
+{
+    typersNumber = value;
 }
 
 void Tournament::setTypersLimit(unsigned int value)

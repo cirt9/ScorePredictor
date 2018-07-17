@@ -9,7 +9,7 @@ Item {
 
     property alias notLoadedResponseText: notLoadedResponse.text
     property bool loadingState: false
-    signal itemDoubleClicked(var tournamentName, var hostName)
+    signal tournamentChosen(var tournamentName, var hostName)
 
     ListView {
         id: tournamentsListView
@@ -54,7 +54,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: headerLayout.width / 2
+                        Layout.preferredWidth: (headerLayout.width / 2) - buttonPlaceholder.width
                     }
 
                     Text {
@@ -65,7 +65,14 @@ Item {
                         verticalAlignment: Text.AlignVCenter
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: headerLayout.width / 2
+                        Layout.preferredWidth: (headerLayout.width / 2) - buttonPlaceholder.width
+                    }
+
+                    Item {
+                        id: buttonPlaceholder
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 30
                     }
                 }
             }
@@ -84,6 +91,15 @@ Item {
                 anchors.fill: parent
             }
 
+            MouseArea {
+                anchors.fill: parent
+                onClicked: tournamentsListView.currentIndex = index
+                onDoubleClicked: {
+                    var chosenTournament = tournamentsList.get(tournamentsListView.currentIndex)
+                    root.tournamentChosen(chosenTournament.tournamentName, chosenTournament.hostName)
+                }
+            }
+
             RowLayout {
                 id: componentLayout
                 anchors.fill: parent
@@ -100,7 +116,7 @@ Item {
                     elide: Text.ElideRight
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: componentLayout.width / 2
+                    Layout.preferredWidth: (componentLayout.width / 2) - buttonArea.width
                 }
 
                 Text {
@@ -112,28 +128,50 @@ Item {
                     elide: Text.ElideRight
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: componentLayout.width / 2
+                    Layout.preferredWidth: (componentLayout.width / 2) - buttonArea.width
                 }
-            }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: tournamentsListView.currentIndex = index
-                onDoubleClicked: {
-                    var chosenTournament = tournamentsList.get(tournamentsListView.currentIndex)
-                    root.itemDoubleClicked(chosenTournament.tournamentName, chosenTournament.hostName)
+                Item {
+                    id: buttonArea
+
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 30
+
+                    IconButton {
+                        id: viewTournamentButton
+                        width: 30
+                        height: 30
+                        iconSource: "qrc://assets/icons/icons/icons8_List_View.png"
+                        margins: 3
+                        marginsOnPressed: 5
+                        anchors.centerIn: parent
+
+                        onClicked: {
+                            tournamentsListView.currentIndex = index
+
+                            var chosenTournament = tournamentsList.get(tournamentsListView.currentIndex)
+                            root.tournamentChosen(chosenTournament.tournamentName, chosenTournament.hostName)
+                        }
+                    }
                 }
             }
         }
 
-        Text {
+        TextEdit {
             id: notLoadedResponse
-            color: mainWindow.fontColor
-            opacity: 0.75
-            font.bold: true
             font.pointSize: 16
+            font.bold: true
+            color: mainWindow.fontColor
+            readOnly: true
+            wrapMode: TextEdit.WordWrap
             visible: !loadingState && tournamentsList.count === 0 ? true : false
-            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.margins: 10
         }
 
         SearchIndicator {

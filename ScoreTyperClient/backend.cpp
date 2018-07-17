@@ -3,6 +3,7 @@
 BackEnd::BackEnd(QObject * parent) : QObject(parent)
 {
     currentUser = new User(this);
+    currentTournament = new Tournament(this);
     workerThread = new QThread(this);
     clientWrapper = new TcpClientWrapper(this);
     connect(workerThread, &QThread::finished, clientWrapper->getClient(), &TcpClient::disconnectFromServer);
@@ -125,4 +126,9 @@ Client::PacketProcessorWrapper * BackEnd::getPacketProcessorWrapper() const
 User * BackEnd::getCurrentUser() const
 {
     return currentUser;
+}
+
+Tournament * BackEnd::getCurrentTournament() const
+{
+    return currentTournament;
 }

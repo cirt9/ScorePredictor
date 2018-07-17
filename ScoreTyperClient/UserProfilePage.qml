@@ -154,7 +154,7 @@ Page {
                     anchors.margins: 5
                     anchors.topMargin: 15
 
-                    onItemDoubleClicked: console.log(tournamentName, hostName)
+                    onTournamentChosen: console.log(tournamentName, hostName)
                 }
             }
 
@@ -188,7 +188,7 @@ Page {
                     anchors.margins: 5
                     anchors.topMargin: 15
 
-                    onItemDoubleClicked: console.log(tournamentName, hostName)
+                    onTournamentChosen: console.log(tournamentName, hostName)
                 }
             }
         }

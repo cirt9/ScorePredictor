@@ -18,6 +18,7 @@ private:
     TcpClientWrapper * clientWrapper;
     Client::PacketProcessorWrapper * packetProcessorWrapper;
     User * currentUser;
+    Tournament * currentTournament;
 
 public:
     explicit BackEnd(QObject * parent = nullptr);
@@ -42,6 +43,7 @@ public:
     TcpClientWrapper * getClientWrapper() const;
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;
     User * getCurrentUser() const;
+    Tournament * getCurrentTournament() const;
 };
 
 #endif // BACKEND_H

@@ -18,5 +18,6 @@
         <file>icons/icons8_Sort_Right.png</file>
         <file>icons/icons8_Refresh.png</file>
         <file>icons/icons8_Add_New.png</file>
+        <file>icons/icons8_List_View.png</file>
     </qresource>
 </RCC>
