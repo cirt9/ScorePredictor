@@ -31,6 +31,8 @@ public:
     bool tournamentPasswordIsCorrect(unsigned int tournamentId, const QString & password);
     bool tournamentIsFull(unsigned int tournamentId);
     bool addUserToTournament(unsigned int tournamentId, unsigned int userId);
+    void findTournamentInfo(unsigned int tournamentId);
+    void findTournamentRounds(unsigned int tournamentId);
 };
 
 #endif // QUERY_H

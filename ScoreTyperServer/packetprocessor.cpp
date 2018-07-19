@@ -21,13 +21,14 @@ namespace Server
         {
         case Packet::ID_REGISTER: registerUser(data); break;
         case Packet::ID_LOGIN: loginUser(data); break;
-        case Packet::ID_DOWNLOAD_USER_INFO: managePullingUserInfo(data); break;
+        case Packet::ID_DOWNLOAD_USER_INFO: manageDownloadingUserInfo(data); break;
         case Packet::ID_PULL_FINISHED_TOURNAMENTS: managePullingUserTournaments(data, false); break;
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: managePullingUserTournaments(data, true); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS: managePullingTournaments(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageJoiningTournament(data); break;
         case Packet::ID_JOIN_TOURNAMENT_PASSWORD: manageJoiningTournamentWithPassword(data); break;
+        case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageDownloadingTournamentInfo(data); break;
 
         default: break;
         }
@@ -91,7 +92,7 @@ namespace Server
         emit response(responseData);
     }
 
-    void PacketProcessor::managePullingUserInfo(const QVariantList & userData)
+    void PacketProcessor::manageDownloadingUserInfo(const QVariantList & userData)
     {
         Query query(dbConnection->getConnection());
         QVariantList responseData;
@@ -311,5 +312,39 @@ namespace Server
             return QString("This tournament is full");
 
         return QString("");
+    }
+
+    void PacketProcessor::manageDownloadingTournamentInfo(const QVariantList & tournamentData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(tournamentData[1].toString()) &&
+           query.findTournamentId(tournamentData[0].toString(), query.value("id").toUInt()) )
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+            query.findTournamentInfo(tournamentId);
+            query.next();
+
+            QVariantList tournamentInfo;
+
+            tournamentInfo << query.value("password_required").toBool() << query.value("entries_end_time")
+                           << query.value("typers").toUInt() << query.value("typers_limit").toUInt();
+
+            responseData << Packet::ID_DOWNLOAD_TOURNAMENT_INFO << QVariant::fromValue(tournamentInfo)
+                         << query.value("opened").toBool();
+
+            query.findTournamentRounds(tournamentId);
+            QVariantList roundsData;
+
+            while(query.next())
+                roundsData << query.value("name");
+
+            responseData << QVariant::fromValue(roundsData);
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist");
+
+        emit response(responseData);
     }
 }

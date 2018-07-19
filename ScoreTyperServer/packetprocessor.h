@@ -18,12 +18,13 @@ namespace Server
 
         void registerUser(const QVariantList & userData);
         void loginUser(const QVariantList & userData);
-        void managePullingUserInfo(const QVariantList & userData);
+        void manageDownloadingUserInfo(const QVariantList & userData);
         void managePullingUserTournaments(const QVariantList & userData, bool opened);
         void manageTournamentCreationRequest(QVariantList & tournamentData);
         void managePullingTournaments(const QVariantList & requestData);
         void manageJoiningTournament(const QVariantList & requestData);
         void manageJoiningTournamentWithPassword(const QVariantList & requestData);
+        void manageDownloadingTournamentInfo(const QVariantList & tournamentData);
 
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
 

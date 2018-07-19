@@ -26,6 +26,8 @@ namespace Client
 
         void manageTournamentJoiningReply(const QVariantList & replyData);
 
+        void manageTournamentInfoReply(const QVariantList & replyData);
+
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
         ~PacketProcessor() {}
@@ -49,6 +51,9 @@ namespace Client
         void tournamentsListItemArrived(const QStringList & tournamentData);
 
         void tournamentJoiningReply(bool replyState, const QString & message);
+
+        void tournamentInfoDownloadReply(const QStringList & tournamentInfo, bool opened);
+        void tournamentRoundNameArrived(const QString & name);
     };
 }
 

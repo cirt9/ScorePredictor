@@ -113,6 +113,13 @@ void BackEnd::joinTournament(const QString & nickname, const QString & tournamen
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::downloadTournamentInfo(const QString & tournamentName, const QString & hostName)
+{
+    QVariantList data;
+    data << Packet::ID_DOWNLOAD_TOURNAMENT_INFO << tournamentName << hostName;
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

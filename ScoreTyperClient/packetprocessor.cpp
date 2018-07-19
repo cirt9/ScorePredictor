@@ -24,6 +24,7 @@ namespace Client
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
         case Packet::ID_PULL_TOURNAMENTS: manageTournamentsPullReply(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningReply(data); break;
+        case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageTournamentInfoReply(data); break;
 
         default: break;
         }
@@ -93,12 +94,9 @@ namespace Client
 
             tournamentData << tournament.getName() << tournament.getHostName()
                            << tournament.getEntriesEndTime().toString("dd.MM.yyyy hh:mm")
-                           << QString::number(tournament.getTypersNumber()) + "/"
-                              + QString::number(tournament.getTypersLimit());
-            if(tournament.getPasswordRequired())
-                tournamentData << QString("Yes");
-            else
-                tournamentData << QString("No");
+                           << QString::number(tournament.getTypersNumber()) + "/" +
+                              QString::number(tournament.getTypersLimit())
+                           << (tournament.getPasswordRequired() ? QString("Yes") : QString("No"));
 
             emit tournamentsListItemArrived(tournamentData);
         }
@@ -107,5 +105,22 @@ namespace Client
     void PacketProcessor::manageTournamentJoiningReply(const QVariantList & replyData)
     {
         emit tournamentJoiningReply(replyData[0].toBool(), replyData[1].toString());
+    }
+
+    void PacketProcessor::manageTournamentInfoReply(const QVariantList & replyData)
+    {
+        QVariantList tournamentData = replyData[0].value<QVariantList>();
+        QStringList tournamentInfo;
+        QVariantList roundsData = replyData[2].value<QVariantList>();
+
+        tournamentInfo << (tournamentData[0].toBool() ? QString("Yes") : QString("No"))
+                       << tournamentData[1].toDateTime().toString("dd.MM.yyyy hh:mm")
+                       << QString::number(tournamentData[2].toUInt())
+                       << QString::number(tournamentData[3].toUInt());
+
+        emit tournamentInfoDownloadReply(tournamentInfo, replyData[1].toBool());
+
+        for(int i=0; i<roundsData.size(); i++)
+            emit tournamentRoundNameArrived(roundsData[i].toString());
     }
 }

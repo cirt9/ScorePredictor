@@ -201,6 +201,18 @@ bool Query::tournamentRequiresPassword(unsigned int tournamentId)
     return value("password_required").toBool();
 }
 
+bool Query::tournamentPasswordIsCorrect(unsigned int tournamentId, const QString & password)
+{
+    prepare("SELECT CASE WHEN password = :password THEN 1 ELSE 0 END as password_ok FROM tournament "
+            "WHERE id = :tournamentId");
+    bindValue(":tournamentId", tournamentId);
+    bindValue(":password", password);
+    exec();
+    next();
+
+    return value("password_ok").toBool();
+}
+
 bool Query::tournamentIsFull(unsigned int tournamentId)
 {
     prepare("SELECT CASE WHEN (SELECT count(id) FROM tournament_participant WHERE "
@@ -228,14 +240,22 @@ bool Query::addUserToTournament(unsigned int tournamentId, unsigned int userId)
         return false;
 }
 
-bool Query::tournamentPasswordIsCorrect(unsigned int tournamentId, const QString & password)
+void Query::findTournamentInfo(unsigned int tournamentId)
 {
-    prepare("SELECT CASE WHEN password = :password THEN 1 ELSE 0 END as password_ok FROM tournament "
-            "WHERE id = :tournamentId");
+    prepare("SELECT (SELECT CASE WHEN length(password) > 0 THEN 1 ELSE 0 END "
+            "FROM tournament WHERE id = :tournamentId) AS password_required, entries_end_time, "
+            "(SELECT count(id) FROM tournament_participant WHERE tournament_id = :tournamentId) "
+            "AS typers, typers_limit, opened FROM tournament "
+            "INNER JOIN user ON tournament.host_user_id = user.id "
+            "WHERE tournament.id = :tournamentId");
     bindValue(":tournamentId", tournamentId);
-    bindValue(":password", password);
     exec();
-    next();
+}
 
-    return value("password_ok").toBool();
+void Query::findTournamentRounds(unsigned int tournamentId)
+{
+    prepare("SELECT name FROM round WHERE tournament_id = :tournamentId "
+            "ORDER BY number");
+    bindValue(":tournamentId", tournamentId);
+    exec();
 }
