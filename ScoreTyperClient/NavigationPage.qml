@@ -114,6 +114,73 @@ Page {
         }
     }
 
+    Rectangle {
+        id: responseArea
+        color: mainWindow.backgroundColor
+        radius: 5
+        width: 300
+        height: 100
+        opacity: 0
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 25
+        anchors.rightMargin: 10
+
+        TextEdit {
+            id: responseText
+            font.pointSize: 12
+            color: mainWindow.deniedColor
+            readOnly: true
+            wrapMode: TextEdit.Wrap
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+        }
+
+        IconButtonHover {
+            id: closeResponseAreaButton
+            width: 20
+            height: 20
+            iconSource: "qrc://assets/icons/icons/icons8_Delete.png"
+            color: mainWindow.colorA
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 3
+
+            onClicked: hideResponse()
+
+            NumberAnimation {
+                id: animateShowingResponseArea
+                target: responseArea
+                properties: "opacity"
+                from: responseArea.opacity
+                to: 1.0
+                duration: 500
+                easing {type: Easing.Linear;}
+            }
+
+            NumberAnimation {
+                id: animateHidingResponseArea
+                target: responseArea
+                properties: "opacity"
+                from: responseArea.opacity
+                to: 0
+                duration: 500
+                easing {type: Easing.Linear;}
+            }
+        }
+
+        Timer {
+            id: responseTimer
+            interval: 7000
+
+            onTriggered: animateHidingResponseArea.start()
+        }
+    }
+
     function logout()
     {
         mainWindow.popPage()
@@ -141,5 +208,18 @@ Page {
     {
         while(tournamentView.depth > 1)
             tournamentView.pop()
+    }
+
+    function showResponse(response)
+    {
+        responseText.text = response
+        responseTimer.restart()
+        animateShowingResponseArea.start()
+    }
+
+    function hideResponse(responseText)
+    {
+        responseTimer.stop()
+        animateHidingResponseArea.start()
     }
 }
