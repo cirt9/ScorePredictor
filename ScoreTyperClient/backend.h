@@ -40,6 +40,7 @@ public:
     Q_INVOKABLE void joinTournament(const QString & nickname, const QString & tournamentName, const QString & hostName,
                                     const QString & password);
     Q_INVOKABLE void downloadTournamentInfo(const QString & tournamentName, const QString & hostName);
+    Q_INVOKABLE void finishTournament(const QString & tournamentName, const QString & hostName);
 
     TcpClientWrapper * getClientWrapper() const;
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;

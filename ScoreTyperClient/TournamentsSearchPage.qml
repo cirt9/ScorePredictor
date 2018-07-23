@@ -358,9 +358,9 @@ Page {
 
     Item {
         id: passwordRequiredPopupArea
-        anchors.centerIn: parent
         width: passwordRequiredPopup.width
         height: passwordRequiredPopup.height
+        anchors.centerIn: parent
 
         PopupBox {
             id: passwordRequiredPopup
@@ -456,7 +456,7 @@ Page {
                 userProfilePage.refreshOngoingTournamentsList()
             }
             else
-                navigationPage.showResponse(message)
+                navigationPage.showDeniedResponse(message)
         }
     }
 

@@ -120,6 +120,13 @@ void BackEnd::downloadTournamentInfo(const QString & tournamentName, const QStri
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::finishTournament(const QString & tournamentName, const QString & hostName)
+{
+    QVariantList data;
+    data << Packet::ID_FINISH_TOURNAMENT << tournamentName << hostName;
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

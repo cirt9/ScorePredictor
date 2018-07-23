@@ -210,6 +210,18 @@ Page {
             tournamentView.pop()
     }
 
+    function showAcceptedResponse(response)
+    {
+        responseText.color = mainWindow.acceptedColor
+        showResponse(response)
+    }
+
+    function showDeniedResponse(response)
+    {
+        responseText.color = mainWindow.deniedColor
+        showResponse(response)
+    }
+
     function showResponse(response)
     {
         responseText.text = response

@@ -17,11 +17,11 @@
         <file>icons/icons8_Sort_Left.png</file>
         <file>icons/icons8_Sort_Right.png</file>
         <file>icons/icons8_Refresh.png</file>
-        <file>icons/icons8_List_View.png</file>
-        <file>icons/icons8_Close_Window.png</file>
-        <file>icons/icons8_Question_Mark.png</file>
         <file>icons/icons8_Add_New.png</file>
+        <file>icons/icons8_Close_Window.png</file>
+        <file>icons/icons8_List_View.png</file>
         <file>icons/icons8_Lock.png</file>
         <file>icons/icons8_Padlock.png</file>
+        <file>icons/icons8_Question_Mark.png</file>
     </qresource>
 </RCC>
