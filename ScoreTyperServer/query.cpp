@@ -11,10 +11,7 @@ bool Query::findUserId(const QString & nickname)
     bindValue(":nickname", nickname);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 bool Query::isUserRegistered(const QString & nickname)
@@ -23,10 +20,7 @@ bool Query::isUserRegistered(const QString & nickname)
     bindValue(":nickname", nickname);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 bool Query::registerUser(const QString & nickname, const QString & password)
@@ -36,10 +30,7 @@ bool Query::registerUser(const QString & nickname, const QString & password)
     bindValue(":password", password);
     exec();
 
-    if(numRowsAffected() > 0)
-        return true;
-    else
-        return false;
+    return numRowsAffected() > 0 ? true : false;
 }
 
 bool Query::isPasswordCorrect(const QString & nickname, const QString & password)
@@ -49,10 +40,7 @@ bool Query::isPasswordCorrect(const QString & nickname, const QString & password
     bindValue(":password", password);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 bool Query::getUserInfo(const QString & nickname)
@@ -63,10 +51,7 @@ bool Query::getUserInfo(const QString & nickname)
     bindValue(":nickname", nickname);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 void Query::findUserTournaments(unsigned int userId, bool opened)
@@ -88,10 +73,7 @@ bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId
     bindValue(":hostId", hostId);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 bool Query::createTournament(const Tournament & tournament, unsigned int hostId, const QString & password)
@@ -106,10 +88,7 @@ bool Query::createTournament(const Tournament & tournament, unsigned int hostId,
     bindValue(":opened", true);
     exec();
 
-    if(numRowsAffected() > 0)
-        return true;
-    else
-        return false;
+    return numRowsAffected() > 0 ? true : false;
 }
 
 void Query::findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName)
@@ -149,10 +128,7 @@ bool Query::findTournamentId(const QString & tournamentName, unsigned int hostId
     bindValue(":hostId", hostId);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 bool Query::tournamentIsOpened(unsigned int tournamentId)
@@ -184,10 +160,7 @@ bool Query::userPatricipatesInTournament(unsigned int tournamentId, unsigned int
     bindValue(":userId", userId);
     exec();
 
-    if(first())
-        return true;
-    else
-        return false;
+    return first();
 }
 
 bool Query::tournamentRequiresPassword(unsigned int tournamentId)
@@ -229,15 +202,11 @@ bool Query::addUserToTournament(unsigned int tournamentId, unsigned int userId)
 {
     prepare("INSERT INTO tournament_participant (tournament_id, user_id) "
             "VALUES (:tournamentId, :userId)");
-
     bindValue(":tournamentId", tournamentId);
     bindValue(":userId", userId);
     exec();
 
-    if(numRowsAffected() > 0)
-        return true;
-    else
-        return false;
+    return numRowsAffected() > 0 ? true : false;
 }
 
 void Query::findTournamentInfo(unsigned int tournamentId)
@@ -258,4 +227,13 @@ void Query::findTournamentRounds(unsigned int tournamentId)
             "ORDER BY number");
     bindValue(":tournamentId", tournamentId);
     exec();
+}
+
+bool Query::finishTournament(unsigned int tournamentId)
+{
+    prepare("UPDATE tournament SET opened = 0 WHERE id = :tournamentId");
+    bindValue(":tournamentId", tournamentId);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
 }

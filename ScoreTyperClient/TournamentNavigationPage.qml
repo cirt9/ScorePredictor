@@ -47,35 +47,37 @@ Page {
                 anchors.bottomMargin: 2
             }
 
-            IconButton {
-                id: closeTournamentPageButton
-                width: height
-                iconSource: "qrc://assets/icons/icons/icons8_Close_Window.png"
-                margins: 3
-                marginsOnPressed: 6
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.margins: 5
-
-                onClicked: navigationPage.popTournament()
-            }
-
             ToolTipIcon {
-                id: tournamentInfoToolTip
+                id: tournamentClosedToolTip
                 width: height
-                iconSource: "qrc://assets/icons/icons/icons8_Question_Mark.png"
-                text: "Password Required: ...\n" +
-                      "Entries End Time: ...\n" +
-                      "Typers: ..."
+                iconSource: "qrc://assets/icons/icons/icons8_Lock.png"
+                text: "This tournament has come to an end."
                 margins: 3
                 marginsOnHovered: 6
+                visible: false
+                anchors.right: roundsList.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                anchors.right: closeTournamentPageButton.left
+                anchors.rightMargin: 5
                 anchors.topMargin: 5
                 anchors.bottomMargin: 5
-                anchors.rightMargin: 2
+            }
+
+            IconButton {
+                id: finishTournamentButton
+                width: height
+                iconSource: "qrc://assets/icons/icons/icons8_Padlock.png"
+                margins: 3
+                marginsOnPressed: 6
+                visible: false
+                anchors.right: roundsList.left
+                anchors.top: tournamentHeader.top
+                anchors.bottom: tournamentHeader.bottom
+                anchors.rightMargin: 5
+                anchors.topMargin: 5
+                anchors.bottomMargin: 5
+
+                onClicked: finishTournamentPopup.open()
             }
 
             PopupList {
@@ -96,6 +98,37 @@ Page {
 
                 Component.onCompleted: roundsList.addItem(qsTr("Leaderboards"))
             }
+
+            ToolTipIcon {
+                id: tournamentInfoToolTip
+                width: height
+                iconSource: "qrc://assets/icons/icons/icons8_Question_Mark.png"
+                text: "Password Required: ...\n" +
+                      "Entries End Time: ...\n" +
+                      "Typers: ..."
+                margins: 3
+                marginsOnHovered: 6
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: closeTournamentPageButton.left
+                anchors.topMargin: 5
+                anchors.bottomMargin: 5
+                anchors.rightMargin: 2
+            }
+
+            IconButton {
+                id: closeTournamentPageButton
+                width: height
+                iconSource: "qrc://assets/icons/icons/icons8_Close_Window.png"
+                margins: 3
+                marginsOnPressed: 6
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.margins: 5
+
+                onClicked: navigationPage.popTournament()
+            }
         }
 
         StackView {
@@ -115,31 +148,6 @@ Page {
             iconSource: "qrc://assets/icons/icons/icons8_Add_New.png"
             margins: 3
             marginsOnPressed: 6
-        }
-    }
-
-    Component {
-        id: tournamentClosedToolTipItem
-
-        ToolTipIcon {
-            width: height
-            iconSource: "qrc://assets/icons/icons/icons8_Lock.png"
-            text: "This tournament has come to an end."
-            margins: 3
-            marginsOnHovered: 6
-        }
-    }
-
-    Component {
-        id: finishTournamentButtonItem
-
-        IconButton {
-            width: height
-            iconSource: "qrc://assets/icons/icons/icons8_Padlock.png"
-            margins: 3
-            marginsOnPressed: 6
-
-            onClicked: finishTournamentPopup.open()
         }
     }
 
@@ -195,9 +203,14 @@ Page {
                         finishTournamentPopup.close()
 
                         if(currentUser.username === currentTournament.hostName)
+                        {
                             backend.finishTournament(currentTournament.name, currentTournament.hostName)
+                            navigationPage.enabled = false
+                            mainWindow.startBusyIndicator()
+                            busyTimer.restart()
+                        }
                         else
-                            navigationPage.showResponse(qsTr("You are not the host of this tournament!"))
+                            navigationPage.showDeniedResponse(qsTr("You are not the host of this tournament!"))
                     }
                 }
 
@@ -214,28 +227,57 @@ Page {
         }
     }
 
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
+        }
+    }
+
     Component.onCompleted: backend.downloadTournamentInfo(currentTournament.name, currentTournament.hostName)
 
     Connections {
         target: packetProcessor
 
-        onTournamentInfoDownloadReply: {
-            tournamentInfoToolTip.text = "Password Required: " + tournamentInfo[0] + "\n" +
-                                         "Entries End Time: " + tournamentInfo[1] + "\n" +
-                                         "Typers: " + tournamentInfo[2] + "/" + tournamentInfo[3]
-
-            currentTournament.passwordRequired = tournamentInfo[0] === "Yes" ? true : false
-            currentTournament.entriesEndTime = Date.fromLocaleString(Qt.locale(), tournamentInfo[1], "dd.MM.yyyy hh:mm")
-            currentTournament.typersNumber = parseInt(tournamentInfo[2])
-            currentTournament.typersLimit = parseInt(tournamentInfo[3])
-
-            if(currentTournament.hostName === currentUser.username)
-                enableHostTools(opened)
-            if(!opened)
-                createTournamentClosedToolTip()
-        }
-
+        onTournamentInfoDownloadReply: manageTournamentInfoReply(tournamentInfo, opened)
         onTournamentRoundNameArrived: roundsList.addItem(name)
+        onFinishingTournamentReply: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            if(replyState)
+            {
+                userProfilePage.refreshFinishedTournamentsList()
+                userProfilePage.refreshOngoingTournamentsList()
+                finishTournamentButton.visible = false
+                tournamentClosedToolTip.visible = true
+            }
+            else
+                navigationPage.showDeniedResponse(message)
+        }
+    }
+
+    function manageTournamentInfoReply(tournamentInfo, opened)
+    {
+        tournamentInfoToolTip.text = "Password Required: " + tournamentInfo[0] + "\n" +
+                                     "Entries End Time: " + tournamentInfo[1] + "\n" +
+                                     "Typers: " + tournamentInfo[2] + "/" + tournamentInfo[3]
+
+        currentTournament.passwordRequired = tournamentInfo[0] === "Yes" ? true : false
+        currentTournament.entriesEndTime = Date.fromLocaleString(Qt.locale(), tournamentInfo[1], "dd.MM.yyyy hh:mm")
+        currentTournament.typersNumber = parseInt(tournamentInfo[2])
+        currentTournament.typersLimit = parseInt(tournamentInfo[3])
+
+        if(currentTournament.hostName === currentUser.username)
+            enableHostTools(opened)
+        if(!opened)
+            tournamentClosedToolTip.visible = true
     }
 
     function enableHostTools(opened)
@@ -243,7 +285,7 @@ Page {
         createAddRoundButton()
 
         if(opened)
-            createTournamentCloseButton()
+            finishTournamentButton.visible = true
     }
 
     function createAddRoundButton()
@@ -256,27 +298,5 @@ Page {
 
         roundsList.anchors.right = addRoundButton.left
         roundsList.anchors.rightMargin = 0
-    }
-
-    function createTournamentClosedToolTip()
-    {
-        var tournamentClosedToolTip = tournamentClosedToolTipItem.createObject(tournamentHeader)
-        tournamentClosedToolTip.anchors.right = roundsList.left
-        tournamentClosedToolTip.anchors.top = tournamentHeader.top
-        tournamentClosedToolTip.anchors.bottom = tournamentHeader.bottom
-        tournamentClosedToolTip.anchors.rightMargin = 5
-        tournamentClosedToolTip.anchors.topMargin = 5
-        tournamentClosedToolTip.anchors.bottomMargin = 5
-    }
-
-    function createTournamentCloseButton()
-    {
-        var closeTournamentButton = finishTournamentButtonItem.createObject(tournamentHeader)
-        closeTournamentButton.anchors.right = roundsList.left
-        closeTournamentButton.anchors.top = tournamentHeader.top
-        closeTournamentButton.anchors.bottom = tournamentHeader.bottom
-        closeTournamentButton.anchors.rightMargin = 5
-        closeTournamentButton.anchors.topMargin = 5
-        closeTournamentButton.anchors.bottomMargin = 5
     }
 }

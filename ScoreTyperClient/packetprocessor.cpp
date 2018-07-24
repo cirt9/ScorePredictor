@@ -25,6 +25,7 @@ namespace Client
         case Packet::ID_PULL_TOURNAMENTS: manageTournamentsPullReply(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningReply(data); break;
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageTournamentInfoReply(data); break;
+        case Packet::ID_FINISH_TOURNAMENT: manageFinishingTournament(data); break;
 
         default: break;
         }
@@ -122,5 +123,10 @@ namespace Client
 
         for(int i=0; i<roundsData.size(); i++)
             emit tournamentRoundNameArrived(roundsData[i].toString());
+    }
+
+    void PacketProcessor::manageFinishingTournament(const QVariantList & replyData)
+    {
+        emit finishingTournamentReply(replyData[0].toBool(), replyData[1].toString());
     }
 }

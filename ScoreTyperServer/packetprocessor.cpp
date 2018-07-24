@@ -29,6 +29,7 @@ namespace Server
         case Packet::ID_JOIN_TOURNAMENT: manageJoiningTournament(data); break;
         case Packet::ID_JOIN_TOURNAMENT_PASSWORD: manageJoiningTournamentWithPassword(data); break;
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageDownloadingTournamentInfo(data); break;
+        case Packet::ID_FINISH_TOURNAMENT: manageTournamentFinishing(data); break;
 
         default: break;
         }
@@ -341,6 +342,37 @@ namespace Server
                 roundsData << query.value("name");
 
             responseData << QVariant::fromValue(roundsData);
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageTournamentFinishing(const QVariantList & tournamentData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(tournamentData[1].toString()) &&
+           query.findTournamentId(tournamentData[0].toString(), query.value("id").toUInt()) )
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            if(query.tournamentIsOpened(tournamentId))
+            {
+                if(!query.tournamentEntriesExpired(tournamentId))
+                    responseData << Packet::ID_FINISH_TOURNAMENT << false
+                                 << QString("You cannot close the tournament because it did not start yet.");
+
+                else if(query.finishTournament(tournamentId))
+                    responseData << Packet::ID_FINISH_TOURNAMENT << true << QString("Tournament finished");
+                else
+                    responseData << Packet::ID_FINISH_TOURNAMENT << false
+                                 << QString("Finishing this tournament is not possible now. Try again later.");
+            }
+            else
+                responseData << Packet::ID_FINISH_TOURNAMENT << false << QString("This tournament is already closed.");
         }
         else
             responseData << Packet::ID_ERROR << QString("This tournament does not exist");

@@ -25,6 +25,7 @@ namespace Server
         void manageJoiningTournament(const QVariantList & requestData);
         void manageJoiningTournamentWithPassword(const QVariantList & requestData);
         void manageDownloadingTournamentInfo(const QVariantList & tournamentData);
+        void manageTournamentFinishing(const QVariantList & tournamentData);
 
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
 

@@ -37,6 +37,7 @@ namespace Client
 
         void tournamentInfoDownloadReply(const QStringList & tournamentInfo, bool opened);
         void tournamentRoundNameArrived(const QString & name);
+        void finishingTournamentReply(bool replyState, const QString & message);
     };
 }
 

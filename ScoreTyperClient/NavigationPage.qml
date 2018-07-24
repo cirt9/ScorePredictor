@@ -138,6 +138,8 @@ Page {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+            anchors.rightMargin: 5
+            anchors.leftMargin: 5
         }
 
         IconButtonHover {

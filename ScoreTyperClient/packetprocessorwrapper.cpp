@@ -38,6 +38,8 @@ namespace Client
                 this, &PacketProcessorWrapper::tournamentInfoDownloadReply);
         connect(packetProcessor, &Client::PacketProcessor::tournamentRoundNameArrived,
                 this, &PacketProcessorWrapper::tournamentRoundNameArrived);
+        connect(packetProcessor, &Client::PacketProcessor::finishingTournamentReply,
+                this, &PacketProcessorWrapper::finishingTournamentReply);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

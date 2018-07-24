@@ -33,6 +33,7 @@ public:
     bool addUserToTournament(unsigned int tournamentId, unsigned int userId);
     void findTournamentInfo(unsigned int tournamentId);
     void findTournamentRounds(unsigned int tournamentId);
+    bool finishTournament(unsigned int tournamentId);
 };
 
 #endif // QUERY_H
