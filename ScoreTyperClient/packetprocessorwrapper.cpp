@@ -40,6 +40,8 @@ namespace Client
                 this, &PacketProcessorWrapper::tournamentRoundNameArrived);
         connect(packetProcessor, &Client::PacketProcessor::finishingTournamentReply,
                 this, &PacketProcessorWrapper::finishingTournamentReply);
+        connect(packetProcessor, &Client::PacketProcessor::addingNewRoundReply,
+                this, &PacketProcessorWrapper::addingNewRoundReply);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

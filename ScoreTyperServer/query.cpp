@@ -237,3 +237,25 @@ bool Query::finishTournament(unsigned int tournamentId)
 
     return numRowsAffected() > 0 ? true : false;
 }
+
+bool Query::duplicateNameOfRound(const QString & roundName, unsigned int tournamentId)
+{
+    prepare("SELECT 1 FROM round WHERE name = :roundName AND tournament_id = :tournamentId");
+    bindValue(":roundName", roundName);
+    bindValue(":tournamentId", tournamentId);
+    exec();
+
+    return first();
+}
+
+bool Query::addNewRound(const QString & roundName, unsigned int tournamentId)
+{
+    prepare("INSERT INTO round (tournament_id, name, number) VALUES (:tournamentId, :roundName, "
+            "(SELECT CASE WHEN (SELECT count(id) FROM round WHERE tournament_id = :tournamentId) = 0 THEN 1 "
+            "ELSE (SELECT MAX(number) + 1 FROM round WHERE tournament_id = :tournamentId) END))");
+    bindValue(":roundName", roundName);
+    bindValue(":tournamentId", tournamentId);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}

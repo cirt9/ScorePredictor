@@ -34,6 +34,8 @@ public:
     void findTournamentInfo(unsigned int tournamentId);
     void findTournamentRounds(unsigned int tournamentId);
     bool finishTournament(unsigned int tournamentId);
+    bool duplicateNameOfRound(const QString & roundName, unsigned int tournamentId);
+    bool addNewRound(const QString & roundName, unsigned int tournamentId);
 };
 
 #endif // QUERY_H

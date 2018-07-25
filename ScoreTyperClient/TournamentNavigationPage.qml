@@ -141,13 +141,15 @@ Page {
     }
 
     Component {
-        id: addRoundButtonItem
+        id: showAddRoundPopupButtonItem
 
         IconButton {
             width: height
             iconSource: "qrc://assets/icons/icons/icons8_Add_New.png"
             margins: 3
             marginsOnPressed: 6
+
+            onClicked: addRoundPopup.open()
         }
     }
 
@@ -227,6 +229,68 @@ Page {
         }
     }
 
+    Item {
+        width: addRoundPopup.width
+        height: addRoundPopup.height
+        anchors.centerIn: parent
+
+        PopupBox {
+            id: addRoundPopup
+            width: 500
+            height: 300
+
+            Text {
+                text: qsTr("Adding New Round")
+                color: mainWindow.fontColor
+                font.bold: true
+                font.pointSize: 25
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 15
+            }
+
+            TextLineField {
+                id: newRoundNameInput
+                placeholderText: qsTr("New Round Name")
+                width: 300
+                fontSize: 16
+                selectByMouse: true
+                maximumLength: 30
+                textColor: mainWindow.fontColor
+                selectedTextColor: mainWindow.fontColor
+                selectionColor: mainWindow.accentColor
+                underlineColorOnFocus: mainWindow.accentColor
+                anchors.centerIn: parent
+            }
+
+            Button {
+                id: addNewRoundButton
+                text: qsTr("Add Round")
+                width: 300
+                enabled: newRoundNameInput.text.length === 0 ? false : true
+                font.pointSize: 20
+                font.bold: true
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: newRoundNameInput.horizontalCenter
+
+                onClicked: {
+                    addRoundPopup.close()
+
+                    if(currentUser.username === currentTournament.hostName)
+                    {
+                        backend.addNewRound(currentTournament.name, currentTournament.hostName, newRoundNameInput.text)
+                        newRoundNameInput.text = ""
+                        navigationPage.enabled = false
+                        mainWindow.startBusyIndicator()
+                        busyTimer.restart()
+                    }
+                    else
+                        navigationPage.showDeniedResponse(qsTr("You are not the host of this tournament!"))
+                }
+            }
+        }
+    }
+
     Timer {
         id: busyTimer
         interval: mainWindow.serverResponseWaitingTimeMsec
@@ -261,6 +325,16 @@ Page {
             else
                 navigationPage.showDeniedResponse(message)
         }
+        onAddingNewRoundReply: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            if(replyState)
+                roundsList.addItem(message)
+            else
+                navigationPage.showDeniedResponse(message)
+        }
     }
 
     function manageTournamentInfoReply(tournamentInfo, opened)
@@ -282,21 +356,21 @@ Page {
 
     function enableHostTools(opened)
     {
-        createAddRoundButton()
+        createShowAddRoundPopupButton()
 
         if(opened)
             finishTournamentButton.visible = true
     }
 
-    function createAddRoundButton()
+    function createShowAddRoundPopupButton()
     {
-        var addRoundButton = addRoundButtonItem.createObject(tournamentHeader)
-        addRoundButton.anchors.right = tournamentInfoToolTip.left
-        addRoundButton.anchors.top = tournamentHeader.top
-        addRoundButton.anchors.bottom = tournamentHeader.bottom
-        addRoundButton.anchors.rightMargin = -6
+        var showAddRoundPopupButton = showAddRoundPopupButtonItem.createObject(tournamentHeader)
+        showAddRoundPopupButton.anchors.right = tournamentInfoToolTip.left
+        showAddRoundPopupButton.anchors.top = tournamentHeader.top
+        showAddRoundPopupButton.anchors.bottom = tournamentHeader.bottom
+        showAddRoundPopupButton.anchors.rightMargin = -6
 
-        roundsList.anchors.right = addRoundButton.left
+        roundsList.anchors.right = showAddRoundPopupButton.left
         roundsList.anchors.rightMargin = 0
     }
 }
