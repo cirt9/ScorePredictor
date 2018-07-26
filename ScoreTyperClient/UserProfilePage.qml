@@ -212,7 +212,7 @@ Page {
             if(numberOfItems === 0)
             {
                 finishedTournamentsList.notLoadedResponseText =
-                qsTr("You weren't participating in any tournaments yet")
+                qsTr("You weren't participating in any finished tournaments yet")
             }
             finishedTournamentsList.stopLoading()
         }

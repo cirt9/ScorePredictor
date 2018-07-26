@@ -31,6 +31,7 @@ namespace Server
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageDownloadingTournamentInfo(data); break;
         case Packet::ID_FINISH_TOURNAMENT: manageTournamentFinishing(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRound(data); break;
+        case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingTournamentLeaderboard(data); break;
 
         default: break;
         }
@@ -408,5 +409,25 @@ namespace Server
             responseData << Packet::ID_ERROR << QString("This tournament does not exist");
 
         emit response(responseData);
+    }
+
+    void PacketProcessor::manageDownloadingTournamentLeaderboard(const QVariantList & tournamentData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(tournamentData[1].toString()) &&
+           query.findTournamentId(tournamentData[0].toString(), query.value("id").toUInt()) )
+        {
+            responseData << Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD;
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            query.findTournamentLeaderboard(tournamentId);
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist");
+
+        //emit response(responseData);
+        //TO BE DONE
     }
 }

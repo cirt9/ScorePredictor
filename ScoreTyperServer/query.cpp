@@ -259,3 +259,8 @@ bool Query::addNewRound(const QString & roundName, unsigned int tournamentId)
 
     return numRowsAffected() > 0 ? true : false;
 }
+
+void Query::findTournamentLeaderboard(unsigned int tournamentId)
+{
+    //TO BE DONE
+}

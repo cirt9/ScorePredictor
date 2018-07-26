@@ -36,6 +36,7 @@ public:
     bool finishTournament(unsigned int tournamentId);
     bool duplicateNameOfRound(const QString & roundName, unsigned int tournamentId);
     bool addNewRound(const QString & roundName, unsigned int tournamentId);
+    void findTournamentLeaderboard(unsigned int tournamentId);
 };
 
 #endif // QUERY_H

@@ -205,6 +205,7 @@ Page {
 
             if(replyState)
             {
+                clear()
                 registeringResponseText.text = message
                 animateShowingRegisteringResponseText.start()
                 registeringResponseTextTimer.restart()
@@ -227,5 +228,12 @@ Page {
             backend.disconnectFromServer()
             mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
+    }
+
+    function clear()
+    {
+        nicknameInput.text = ""
+        passwordInput.text = ""
+        passwordConfirmationInput.text = ""
     }
 }

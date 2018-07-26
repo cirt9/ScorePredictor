@@ -134,6 +134,13 @@ void BackEnd::addNewRound(const QString & tournamentName, const QString & hostNa
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::downloadTournamentLeaderboard(const QString & tournamentName, const QString & hostName)
+{
+    QVariantList data;
+    data << Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD << tournamentName << hostName;
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

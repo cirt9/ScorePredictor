@@ -35,9 +35,10 @@
         <file>TournamentNavigationPage.qml</file>
         <file>TournamentsSearchPage.qml</file>
         <file>RoundPage.qml</file>
-        <file>TournamentLeaderbordsPage.qml</file>
+        <file>TournamentLeaderboardPage.qml</file>
     </qresource>
     <qresource prefix="/reusableWidgets">
         <file>UserTournamentsList.qml</file>
+        <file>TournamentLeaderboard.qml</file>
     </qresource>
 </RCC>
