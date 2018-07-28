@@ -5,6 +5,7 @@ import "../components"
 
 Page {
     id: tournamentNavigationPage
+    readonly property alias currentPage: pagesList.currentItemText
 
     ColumnLayout {
         id: pageLayout
@@ -55,7 +56,7 @@ Page {
                 margins: 3
                 marginsOnHovered: 6
                 visible: false
-                anchors.right: roundsList.left
+                anchors.right: pagesList.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.rightMargin: 5
@@ -70,7 +71,7 @@ Page {
                 margins: 3
                 marginsOnPressed: 6
                 visible: false
-                anchors.right: roundsList.left
+                anchors.right: pagesList.left
                 anchors.top: tournamentHeader.top
                 anchors.bottom: tournamentHeader.bottom
                 anchors.rightMargin: 5
@@ -81,7 +82,7 @@ Page {
             }
 
             PopupList {
-                id: roundsList
+                id: pagesList
                 width: 250
                 color: mainWindow.colorB
                 radius: 10
@@ -96,7 +97,16 @@ Page {
                 anchors.bottomMargin: 5
                 anchors.rightMargin: 2
 
-                Component.onCompleted: roundsList.addItem(qsTr("Leaderboards"))
+                readonly property string mainPageName: qsTr("Leaderboard")
+
+                onItemChanged: {
+                    if(currentItemText === mainPageName && tournamentView.depth > 1)
+                        tournamentView.showLeaderboard()
+                    else if(currentItemText !== mainPageName)
+                        tournamentView.showRound()
+                }
+
+                Component.onCompleted: pagesList.addItem(mainPageName)
             }
 
             ToolTipIcon {
@@ -133,10 +143,23 @@ Page {
 
         StackView {
            id: tournamentView
-           initialItem: TournamentLeaderbordsPage {}
+           initialItem: TournamentLeaderboardPage {}
 
            Layout.fillHeight: true
            Layout.fillWidth: true
+
+           function showLeaderboard()
+           {
+               pop()
+           }
+
+           function showRound()
+           {
+               if(depth > 1)
+                   pop()
+
+               push("qrc:/pages/RoundPage.qml")
+           }
         }
     }
 
@@ -309,7 +332,7 @@ Page {
         target: packetProcessor
 
         onTournamentInfoDownloadReply: manageTournamentInfoReply(tournamentInfo, opened)
-        onTournamentRoundNameArrived: roundsList.addItem(name)
+        onTournamentRoundNameArrived: pagesList.addItem(name)
         onFinishingTournamentReply: {
             busyTimer.stop()
             navigationPage.enabled = true
@@ -331,7 +354,7 @@ Page {
             mainWindow.stopBusyIndicator()
 
             if(replyState)
-                roundsList.addItem(message)
+                pagesList.addItem(message)
             else
                 navigationPage.showDeniedResponse(message)
         }
@@ -370,7 +393,7 @@ Page {
         showAddRoundPopupButton.anchors.bottom = tournamentHeader.bottom
         showAddRoundPopupButton.anchors.rightMargin = -6
 
-        roundsList.anchors.right = showAddRoundPopupButton.left
-        roundsList.anchors.rightMargin = 0
+        pagesList.anchors.right = showAddRoundPopupButton.left
+        pagesList.anchors.rightMargin = 0
     }
 }

@@ -40,5 +40,6 @@
     <qresource prefix="/reusableWidgets">
         <file>UserTournamentsList.qml</file>
         <file>TournamentLeaderboard.qml</file>
+        <file>ListOfMatches.qml</file>
     </qresource>
 </RCC>
