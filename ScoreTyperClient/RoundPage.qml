@@ -21,7 +21,7 @@ Page {
 
             ListOfMatches {
                 id: listOfMatches
-                hostMode: currentTournament.hostName === currentUser.username ? true : false
+                hostMode: true//currentTournament.hostName === currentUser.username ? true : false
                 anchors.fill: parent
                 anchors.margins: 5
             }

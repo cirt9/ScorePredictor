@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../components"
 
 Item {
     id: root
@@ -142,6 +143,22 @@ Item {
                         color: mainWindow.fontColor
                         font.pointSize: 12
                         verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                        visible: hostMode ? false : true
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: matchHeaderLayout.width * 0.15
+                    }
+
+                    ScoreInput {
+                        id: scoreInput
+                        color: mainWindow.fontColor
+                        maxLength: 3
+                        inputWidth: 30
+                        inputHeight: 30
+                        leftScore: firstCompetitorScore
+                        rightScore: secondCompetitorScore
+                        visible: hostMode ? true : false
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: matchHeaderLayout.width * 0.15
@@ -206,7 +223,57 @@ Item {
                         elide: Text.ElideRight
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: predictionDelegateLayout.width * 0.5
+                        Layout.preferredWidth: predictionDelegateLayout.width * 0.25
+                    }
+
+                    Item {
+                        id: predictionDelegateSpacer
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: predictionDelegateLayout.width * 0.15
+                    }
+
+                    Text {
+                        id: earnedPointsData
+                        text: earnedPoints + " " + qsTr("Points")
+                        color: mainWindow.fontColor
+                        font.pointSize: 10
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: predictionDelegateLayout.width * 0.1
+
+                        property int earnedPoints: 0
+
+                        Component.onCompleted: calculatePoints()
+
+                        function calculatePoints()
+                        {
+                            if(firstCompetitorScore === firstCompetitorPredictedScore &&
+                               secondCompetitorScore === secondCompetitorPredictedScore)
+                                earnedPointsData.earnedPoints = 3
+                            else if(firstCompetitorScore === secondCompetitorScore)
+                            {
+                                if(firstCompetitorPredictedScore === secondCompetitorPredictedScore)
+                                    earnedPointsData.earnedPoints = 1
+                                else
+                                    earnedPointsData.earnedPoints = 0
+                            }
+                            else if(firstCompetitorPredictedScore === secondCompetitorPredictedScore)
+                                earnedPointsData.earnedPoints = 0
+                            else
+                            {
+                                var actualWinner = firstCompetitorScore > secondCompetitorScore ?
+                                                   firstCompetitor : secondCompetitor
+                                var predictedWinner = firstCompetitorPredictedScore > secondCompetitorPredictedScore ?
+                                                      firstCompetitor : secondCompetitor
+
+                                if(actualWinner === predictedWinner)
+                                    earnedPointsData.earnedPoints = 1
+                                else
+                                    earnedPointsData.earnedPoints = 0
+                            }
+                        }
                     }
                 }
             }
@@ -277,6 +344,11 @@ Item {
                     nickname: "John"
                     firstCompetitorPredictedScore: 2
                     secondCompetitorPredictedScore: 2
+                },
+                ListElement {
+                    nickname: "TestUser"
+                    firstCompetitorPredictedScore: 0
+                    secondCompetitorPredictedScore: 0
                 }
             ]
             collapsed: true

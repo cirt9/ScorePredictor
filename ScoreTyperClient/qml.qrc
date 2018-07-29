@@ -22,6 +22,7 @@
         <file>SearchIndicator.qml</file>
         <file>PopupList.qml</file>
         <file>ToolTipIcon.qml</file>
+        <file>ScoreInput.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
