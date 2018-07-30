@@ -7,7 +7,7 @@ Item {
     id: root
     clip: true
 
-    property bool hostMode: false
+    readonly property bool hostMode: true//currentTournament.hostName === currentUser.username ? true : false
     readonly property int viewHeaderHeight: 45
     readonly property int matchHeaderHeight: 40
     readonly property int predictionDelegateHeight: 30
@@ -89,8 +89,16 @@ Item {
         ListView {
             id: predictionsView
             width: matchesView.width
-            height: collapsed ? matchHeaderHeight : matchHeaderHeight + predictions.count * predictionDelegateHeight +
-                                                    (predictions.count - 1) * spacing + matchesSpacing
+            height: {
+                if(collapsed)
+                    return matchHeaderHeight
+                else if(!currentUserMadePrediction)
+                    return matchHeaderHeight + predictions.count * predictionDelegateHeight +
+                           (predictions.count - 1) * spacing + matchesSpacing + predictionDelegateHeight + matchesSpacing
+                else
+                    return matchHeaderHeight + predictions.count * predictionDelegateHeight +
+                           (predictions.count - 1) * spacing + matchesSpacing
+            }
             model: predictions
             headerPositioning: ListView.OverlayHeader
             spacing: 2
@@ -99,13 +107,14 @@ Item {
             header: Item {
                 id: matchHeader
                 width: matchesView.width
-                height: matchHeaderHeight
+                height: currentUserMadePrediction ? matchHeaderHeight : matchHeaderHeight + predictionDelegateHeight +
+                                                    matchesSpacing
                 z: 2
 
                 Rectangle {
                     id: matchHeaderBackground
                     width: parent.width
-                    height: parent.height - matchesSpacing
+                    height: matchHeaderHeight - matchesSpacing
                     color: mainWindow.colorB
                     radius: 5
                     opacity: 0.7
@@ -115,7 +124,7 @@ Item {
 
                 MouseArea {
                     anchors.fill: matchHeaderBackground
-                    onClicked: predictions.count > 0 ? collapsed = !collapsed : collapsed = collapsed
+                    onClicked: collapsed = !collapsed
                 }
 
                 RowLayout {
@@ -176,6 +185,101 @@ Item {
                         Layout.preferredWidth: matchHeaderLayout.width * 0.35
                     }
                 }
+
+                Rectangle {
+                    id: makePredictionArea
+                    width: parent.width
+                    height: predictionDelegateHeight
+                    color: mainWindow.colorB
+                    opacity: 0.4
+                    radius: 5
+                    visible: collapsed ? false : (currentUserMadePrediction ? false : true)
+                    anchors.top: matchHeaderBackground.bottom
+                    anchors.left: matchHeaderBackground.left
+                    anchors.topMargin: matchesSpacing
+                }
+
+                RowLayout {
+                    id: makePredictionLayout
+                    visible: collapsed ? false : (currentUserMadePrediction ? false : true)
+                    anchors.fill: makePredictionArea
+                    anchors.margins: 2
+                    anchors.leftMargin: 5
+                    anchors.rightMargin: 5
+
+                    Text {
+                        id: yourPredictionText
+                        text: qsTr("Your Prediction")
+                        color: mainWindow.fontColor
+                        font.pointSize: 10
+                        font.bold: true
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: makePredictionLayout.width * 0.5
+                    }
+
+                    ScoreInput {
+                        id: initialPredictionScoreInput
+                        color: mainWindow.fontColor
+                        maxLength: 3
+                        inputWidth: 30
+                        inputHeight: 25
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: makePredictionLayout.width * 0.15
+                    }
+
+                    TextButton {
+                        id: makePredictionButton
+                        text: qsTr("MAKE PREDICTION")
+                        textColor: mainWindow.fontColor
+                        textColorHovered: mainWindow.accentColor
+                        fontSize: 10
+                        bold: true
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: makePredictionLayout.width * 0.35
+                    }
+                }
+
+                IconButton {
+                    id: saveMatchScoreButton
+                    width: height
+                    iconSource: "qrc://assets/icons/icons/icons8_Save.png"
+                    margins: 10
+                    marginsOnPressed: 11
+                    visible: hostMode ? true : false
+                    anchors.top: matchHeaderBackground.top
+                    anchors.bottom: matchHeaderBackground.bottom
+                    anchors.right: deleteMatchButton.left
+                    anchors.rightMargin: -15
+
+                    onClicked: {
+                        if(scoreInput.enteredLeftScore.length > 0 && scoreInput.enteredRightScore.length > 0)
+                        {
+                            firstCompetitorScore = parseInt(scoreInput.enteredLeftScore)
+                            secondCompetitorScore = parseInt(scoreInput.enteredRightScore)
+                            scoreInput.reset()
+                        }
+                    }
+                }
+
+                IconButton {
+                    id: deleteMatchButton
+                    width: height
+                    iconSource: "qrc://assets/icons/icons/icons8_Delete_Accent.png"
+                    margins: 7
+                    marginsOnPressed: 8
+                    visible: hostMode ? true : false
+                    anchors.top: matchHeaderBackground.top
+                    anchors.bottom: matchHeaderBackground.bottom
+                    anchors.right: matchHeaderBackground.right
+                    anchors.rightMargin: -5
+
+                    onClicked: matchesModel.remove(index)
+                }
             }
 
             delegate: Item {
@@ -221,58 +325,75 @@ Item {
                         font.pointSize: 10
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
+                        visible: nickname === "TournamentTester1" && acceptingPredictions ? false : true
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: predictionDelegateLayout.width * 0.25
+                        Layout.preferredWidth: predictionDelegateLayout.width * 0.5
                     }
 
-                    Item {
-                        id: predictionDelegateSpacer
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: predictionDelegateLayout.width * 0.15
-                    }
-
-                    Text {
-                        id: earnedPointsData
-                        text: earnedPoints + " " + qsTr("Points")
+                    ScoreInput {
+                        id: predictedScoreInput
                         color: mainWindow.fontColor
-                        font.pointSize: 10
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
+                        maxLength: 3
+                        inputWidth: 30
+                        inputHeight: 25
+                        leftScore: firstCompetitorPredictedScore
+                        rightScore: secondCompetitorPredictedScore
+                        visible: nickname === "TournamentTester1" && acceptingPredictions ? true : false
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: predictionDelegateLayout.width * 0.1
+                        Layout.preferredWidth: predictionDelegateLayout.width * 0.5
+                    }
+                }
 
-                        property int earnedPoints: 0
+                IconButton {
+                    id: savePredictionScoreButton
+                    width: height
+                    iconSource: "qrc://assets/icons/icons/icons8_Save.png"
+                    margins: 6
+                    marginsOnPressed: 7
+                    visible: nickname === "TournamentTester1" && acceptingPredictions ? true : false
+                    anchors.top: predictionDelegateBackground.top
+                    anchors.bottom: predictionDelegateBackground.bottom
+                    anchors.right: earnedPointsData.left
+                }
 
-                        Component.onCompleted: calculatePoints()
+                Text {
+                    id: earnedPointsData
+                    text: earnedPoints + " " + qsTr("Points")
+                    color: mainWindow.fontColor
+                    font.pointSize: 10
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    anchors.top: predictionDelegateBackground.top
+                    anchors.bottom: predictionDelegateBackground.bottom
+                    anchors.right: predictionDelegateBackground.right
+                    anchors.rightMargin: 5
 
-                        function calculatePoints()
+                    property int earnedPoints: {
+                        if(firstCompetitorScore === firstCompetitorPredictedScore &&
+                           secondCompetitorScore === secondCompetitorPredictedScore)
+                            return 3
+                        else if(firstCompetitorScore === secondCompetitorScore)
                         {
-                            if(firstCompetitorScore === firstCompetitorPredictedScore &&
-                               secondCompetitorScore === secondCompetitorPredictedScore)
-                                earnedPointsData.earnedPoints = 3
-                            else if(firstCompetitorScore === secondCompetitorScore)
-                            {
-                                if(firstCompetitorPredictedScore === secondCompetitorPredictedScore)
-                                    earnedPointsData.earnedPoints = 1
-                                else
-                                    earnedPointsData.earnedPoints = 0
-                            }
-                            else if(firstCompetitorPredictedScore === secondCompetitorPredictedScore)
-                                earnedPointsData.earnedPoints = 0
+                            if(firstCompetitorPredictedScore === secondCompetitorPredictedScore)
+                                return 1
                             else
-                            {
-                                var actualWinner = firstCompetitorScore > secondCompetitorScore ?
-                                                   firstCompetitor : secondCompetitor
-                                var predictedWinner = firstCompetitorPredictedScore > secondCompetitorPredictedScore ?
-                                                      firstCompetitor : secondCompetitor
+                                return 0
+                        }
+                        else if(firstCompetitorPredictedScore === secondCompetitorPredictedScore)
+                            return 0
+                        else
+                        {
+                            var actualWinner = firstCompetitorScore > secondCompetitorScore ?
+                                               firstCompetitor : secondCompetitor
+                            var predictedWinner = firstCompetitorPredictedScore > secondCompetitorPredictedScore ?
+                                                  firstCompetitor : secondCompetitor
 
-                                if(actualWinner === predictedWinner)
-                                    earnedPointsData.earnedPoints = 1
-                                else
-                                    earnedPointsData.earnedPoints = 0
-                            }
+                            if(actualWinner === predictedWinner)
+                                return 1
+                            else
+                                return 0
                         }
                     }
                 }
@@ -289,6 +410,7 @@ Item {
             firstCompetitorScore: 2
             secondCompetitorScore: 4
             predictionsEndTime: "15-07-2018 17:00"
+            acceptingPredictions: true
             predictions: [
                 ListElement {
                     nickname: "John"
@@ -308,6 +430,7 @@ Item {
                     secondCompetitorPredictedScore: 1
                 }
             ]
+            currentUserMadePrediction: true
             collapsed: true
         }
 
@@ -317,6 +440,7 @@ Item {
             firstCompetitorScore: 0
             secondCompetitorScore: 1
             predictionsEndTime: "11-07-2018 19:00"
+            acceptingPredictions: true
             predictions: [
                 ListElement {
                     nickname: "John"
@@ -330,6 +454,7 @@ Item {
                     secondCompetitorPredictedScore: 0
                 }
             ]
+            currentUserMadePrediction: true
             collapsed: true
         }
 
@@ -339,6 +464,7 @@ Item {
             firstCompetitorScore: 2
             secondCompetitorScore: 2
             predictionsEndTime: "12-07-2018 19:00"
+            acceptingPredictions: true
             predictions: [
                 ListElement {
                     nickname: "John"
@@ -351,7 +477,42 @@ Item {
                     secondCompetitorPredictedScore: 0
                 }
             ]
+            currentUserMadePrediction: true
             collapsed: true
+        }
+
+        ListElement {
+            firstCompetitor: "Belgium"
+            secondCompetitor: "England"
+            firstCompetitorScore: 2
+            secondCompetitorScore: 0
+            predictionsEndTime: "14-07-2018 19:00"
+            acceptingPredictions: true
+            predictions: []
+            currentUserMadePrediction: true
+            collapsed: true
+        }
+    }
+
+    Component.onCompleted: {
+        //this has to be done after downloading list of matches from server
+
+        for(var i=0; i<matchesModel.count; i++)
+        {
+            var match = matchesModel.get(i)
+            var currentUserMadePrediction = false
+
+            for(var j=0; j<match.predictions.count; j++)
+            {
+                var prediction = match.predictions.get(j)
+
+                if(prediction.nickname === "TournamentTester1")
+                {
+                    currentUserMadePrediction = true
+                    break
+                }
+            }
+            match.currentUserMadePrediction = currentUserMadePrediction
         }
     }
 }

@@ -136,5 +136,7 @@ Item {
     {
         leftScoreInput.text = ""
         rightScoreInput.text = ""
+        leftScoreInput.focus = false
+        rightScoreInput.focus = false
     }
 }

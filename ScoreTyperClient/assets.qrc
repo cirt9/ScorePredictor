@@ -23,5 +23,7 @@
         <file>icons/icons8_Lock.png</file>
         <file>icons/icons8_Padlock.png</file>
         <file>icons/icons8_Question_Mark.png</file>
+        <file>icons/icons8_Save.png</file>
+        <file>icons/icons8_Delete_Accent.png</file>
     </qresource>
 </RCC>
