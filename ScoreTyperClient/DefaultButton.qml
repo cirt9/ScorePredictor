@@ -57,6 +57,7 @@ Item {
     MouseArea {
         id: mouseArea
         hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
         anchors.fill: parent
 
         onClicked: root.clicked()

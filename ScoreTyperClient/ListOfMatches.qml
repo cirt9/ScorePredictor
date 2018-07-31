@@ -9,6 +9,7 @@ Item {
 
     readonly property bool hostMode: true//currentTournament.hostName === currentUser.username ? true : false
     readonly property int viewHeaderHeight: 45
+    readonly property int viewFooterHeight: 45
     readonly property int matchHeaderHeight: 40
     readonly property int predictionDelegateHeight: 30
     readonly property int matchesSpacing: 2
@@ -19,6 +20,8 @@ Item {
         delegate: matchesDelegate
         header: headerDelegate
         headerPositioning: ListView.OverlayHeader
+        footer: footerDelegate
+        footerPositioning: ListView.OverlayFooter
         anchors.fill: parent
     }
 
@@ -33,7 +36,7 @@ Item {
             Rectangle {
                 id: headerBackground
                 width: parent.width
-                height: 40
+                height: viewHeaderHeight - 5
                 color: mainWindow.colorB
                 radius: 5
                 anchors.top: parent.top
@@ -209,7 +212,7 @@ Item {
 
                     Text {
                         id: yourPredictionText
-                        text: qsTr("Your Prediction")
+                        text: qsTr("Make Your Prediction")
                         color: mainWindow.fontColor
                         font.pointSize: 10
                         font.bold: true
@@ -231,16 +234,20 @@ Item {
                         Layout.preferredWidth: makePredictionLayout.width * 0.15
                     }
 
-                    TextButton {
-                        id: makePredictionButton
-                        text: qsTr("MAKE PREDICTION")
-                        textColor: mainWindow.fontColor
-                        textColorHovered: mainWindow.accentColor
-                        fontSize: 10
-                        bold: true
+                    Item {
+                        id: makePredictionButtonContainer
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: makePredictionLayout.width * 0.35
+
+                        TextButton {
+                            id: makePredictionButton
+                            text: qsTr("READY")
+                            textColor: mainWindow.fontColor
+                            fontSize: 10
+                            bold: true
+                            anchors.centerIn: parent
+                        }
                     }
                 }
 
@@ -356,6 +363,8 @@ Item {
                     anchors.top: predictionDelegateBackground.top
                     anchors.bottom: predictionDelegateBackground.bottom
                     anchors.right: earnedPointsData.left
+
+                    onClicked: console.log(firstCompetitor, predictedScoreInput.enteredLeftScore, secondCompetitor, predictedScoreInput.enteredRightScore)
                 }
 
                 Text {
@@ -396,6 +405,91 @@ Item {
                                 return 0
                         }
                     }
+                }
+            }
+        }
+    }
+
+    Component {
+        id: footerDelegate
+
+        Item {
+            width: matchesView.width
+            height: viewFooterHeight
+            visible: hostMode ? true : false
+            z: 3
+
+            Rectangle {
+                id: footerBackground
+                width: parent.width
+                height: viewFooterHeight - 5
+                color: mainWindow.colorB
+                radius: 5
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+            }
+
+            RowLayout {
+                id: viewFooterLayout
+                anchors.fill: footerBackground
+                anchors.margins: 5
+                anchors.leftMargin: 5
+                anchors.rightMargin: 5
+
+                InputWithBorder {
+                    id: firstCompetitorInput
+                    color: mainWindow.fontColor
+                    fontSize: 14
+                    radius: 3
+                    maxLength: 30
+                    placeholderText: qsTr("First Competitor")
+                    selectByMouse: true
+                    selectedTextColor: mainWindow.fontColor
+                    selectionColor: mainWindow.accentColor
+                    trimText: true
+
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: viewFooterLayout.width * 0.35
+                }
+
+                Text {
+                    id: newMatchVersusText
+                    text: qsTr("vs")
+                    color: mainWindow.fontColor
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 20
+
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 25
+                }
+
+                InputWithBorder {
+                    id: secondCompetitorInput
+                    color: mainWindow.fontColor
+                    fontSize: 14
+                    radius: 3
+                    maxLength: 30
+                    placeholderText: qsTr("Second Competitor")
+                    selectByMouse: true
+                    selectedTextColor: mainWindow.fontColor
+                    selectionColor: mainWindow.accentColor
+                    trimText: true
+
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: viewFooterLayout.width * 0.35
+                }
+
+                DefaultButton {
+                    id: createMatchButton
+                    text: qsTr("Create Match")
+                    color: mainWindow.backgroundColor
+                    textColor: mainWindow.fontColor
+                    fontSize: 14
+                    radius: 5
+
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                 }
             }
         }
