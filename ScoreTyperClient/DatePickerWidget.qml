@@ -31,6 +31,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
+        cursorShape: Qt.IBeamCursor
         onClicked: hideCalendar()
     }
 

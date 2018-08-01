@@ -29,8 +29,9 @@ Item  {
 
     MouseArea {
         id: mouseArea
-        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
+        anchors.fill: parent
 
         onClicked: root.clicked()
     }

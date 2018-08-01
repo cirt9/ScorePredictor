@@ -13,6 +13,7 @@ Item {
     readonly property int matchHeaderHeight: 40
     readonly property int predictionDelegateHeight: 30
     readonly property int matchesSpacing: 2
+    signal creatingNewMatch()
 
     ListView {
         id: matchesView
@@ -429,12 +430,23 @@ Item {
                 anchors.left: parent.left
             }
 
-            RowLayout {
+            TextButton {
+                id: createNewMatchButton
+                text: qsTr("Create New Match")
+                textColor: mainWindow.fontColor
+                fontSize: 18
+                bold: true
+                anchors.top: footerBackground.top
+                anchors.bottom: footerBackground.bottom
+                anchors.horizontalCenter: footerBackground.horizontalCenter
+
+                onClicked: root.creatingNewMatch()
+            }
+
+            /*RowLayout {
                 id: viewFooterLayout
                 anchors.fill: footerBackground
                 anchors.margins: 5
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
 
                 InputWithBorder {
                     id: firstCompetitorInput
@@ -449,7 +461,8 @@ Item {
                     trimText: true
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: viewFooterLayout.width * 0.35
+                    Layout.preferredWidth: viewFooterLayout.width * 0.2
+                    Layout.minimumWidth: 175
                 }
 
                 Text {
@@ -477,7 +490,8 @@ Item {
                     trimText: true
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: viewFooterLayout.width * 0.35
+                    Layout.preferredWidth: viewFooterLayout.width * 0.2
+                    Layout.minimumWidth: 175
                 }
 
                 DefaultButton {
@@ -491,7 +505,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
-            }
+            }*/
         }
     }
 

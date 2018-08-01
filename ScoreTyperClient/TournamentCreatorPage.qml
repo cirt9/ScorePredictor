@@ -246,9 +246,9 @@ Page {
                     calendarSideColor: "#6A352E"
                     calendarInactiveColor: "#766363"
                     minimumDate: new Date()
+                    calendarAlignRight: true
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
-                    calendarAlignRight: true
                 }
             }
         }

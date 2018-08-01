@@ -7,6 +7,8 @@ Rectangle {
 
     readonly property string time: hoursInput.text + colon.text + minutesInput.text
     readonly property string fullTime: hoursInput.text + colon.text + minutesInput.text + ":" + "00"
+    property string minimumTime: "08:34"
+    readonly property bool minimumTimeSet: minimumTime.length === 5 ? true : false
     property int fontSize: 12
     property color fontColor: "white"
     property color selectedTextColor: "black"
@@ -32,7 +34,7 @@ Rectangle {
             width: textMetrics.width * 1.25
             height: textMetrics.height
             inputMask: "00"
-            text: "12"
+            text: minimumTimeSet ? minimumTime.slice(0, 2) : "12"
             font.pointSize: fontSize
             activeFocusOnTab: true
             horizontalAlignment: Text.AlignHCenter
@@ -42,7 +44,21 @@ Rectangle {
             anchors.right: colon.left
             anchors.verticalCenter: parent.verticalCenter
 
-            onEditingFinished: text = resetText(text)
+            onEditingFinished: {
+                text = resetText(text)
+
+                if(minimumTimeSet)
+                {
+                    if(text < minimumTime.slice(0, 2))
+                        text = minimumTime.slice(0, 2)
+
+                    if(text === minimumTime.slice(0, 2))
+                    {
+                        if(minutesInput.text < minimumTime.slice(3, 5))
+                            minutesInput.text = minimumTime.slice(3, 5)
+                    }
+                }
+            }
             onTextChanged: text = validateText(text, "23")
             onFocusChanged: {
                 if(focus)
@@ -71,7 +87,7 @@ Rectangle {
             width: textMetrics.width * 1.25
             height: textMetrics.height
             inputMask: "00"
-            text: "00"
+            text: minimumTimeSet ? minimumTime.slice(3, 5) : "00"
             font.pointSize: fontSize
             activeFocusOnTab: true
             selectByMouse: root.selectByMouse
@@ -83,7 +99,15 @@ Rectangle {
 
             onEditingFinished: {
                 text = resetText(text)
-                root.timeChanged()
+
+                if(minimumTimeSet)
+                {
+                    if(hoursInput.text === minimumTime.slice(0, 2))
+                    {
+                        if(text < minimumTime.slice(3, 5))
+                            text = minimumTime.slice(3, 5)
+                    }
+                }
             }
             onTextChanged: text = validateText(text, "59")
             onFocusChanged: {
@@ -134,6 +158,29 @@ Rectangle {
                 container.focusedInput.focus = false
                 addTime()
                 addButtonTimer.running = true
+
+                if(minimumTimeSet)
+                {
+                    if(container.focusedInput === hoursInput)
+                    {
+                        if(hoursInput.text === "00")
+                            hoursInput.text = minimumTime.slice(0, 2)
+
+                        if(hoursInput.text === minimumTime.slice(0, 2))
+                        {
+                            if(minutesInput.text < minimumTime.slice(3, 5))
+                                minutesInput.text = minimumTime.slice(3, 5)
+                        }
+                    }
+                    else if(container.focusedInput === minutesInput)
+                    {
+                        if(hoursInput.text === "00")
+                        {
+                            hoursInput.text = minimumTime.slice(0, 2)
+                            minutesInput.text = minimumTime.slice(3, 5)
+                        }
+                    }
+                }
             }
             else
                 addButtonTimer.running = false
@@ -166,6 +213,32 @@ Rectangle {
                 container.focusedInput.focus = false
                 substractTime()
                 substractButtonTimer.running = true
+
+                if(minimumTimeSet)
+                {
+                    if(container.focusedInput === hoursInput)
+                    {
+                        if(hoursInput.text < minimumTime.slice(0, 2))
+                            hoursInput.text = "23"
+
+                        if(hoursInput.text === minimumTime.slice(0, 2))
+                        {
+                            if(minutesInput.text < minimumTime.slice(3, 5))
+                                minutesInput.text = minimumTime.slice(3, 5)
+                        }
+                    }
+                    else if(container.focusedInput === minutesInput)
+                    {
+                        if(hoursInput.text === minimumTime.slice(0, 2))
+                        {
+                            if(minutesInput.text < minimumTime.slice(3, 5))
+                            {
+                                hoursInput.text = "23"
+                                minutesInput.text = "59"
+                            }
+                        }
+                    }
+                }
             }
             else
                 substractButtonTimer.running = false
@@ -265,11 +338,26 @@ Rectangle {
             return "0" + oldTime
     }
 
+    function defocus()
+    {
+        hoursInput.focus = false
+        minutesInput.focus = false
+    }
+
     function reset()
     {
         hoursInput.focus = false
         minutesInput.focus = false
-        hoursInput.text = "12"
-        minutesInput.text = "00"
+
+        if(minimumTimeSet)
+        {
+            hoursInput.text = minimumTime.slice(0, 2)
+            minutesInput.text = minimumTime.slice(3, 5)
+        }
+        else
+        {
+            hoursInput.text = "12"
+            minutesInput.text = "00"
+        }
     }
 }
