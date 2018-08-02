@@ -225,6 +225,15 @@ Page {
                     selectedTextColor: mainWindow.fontColor
                     selectionColor: mainWindow.accentColor
                     hoveredButtonColor: mainWindow.backgroundColor
+                    minimumTime: {
+                        var now = new Date()
+                        var currentDate = now.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
+
+                        if(currentDate === entriesEndDatePicker.simplifiedDate)
+                            return now.toLocaleTimeString(Qt.locale(), "hh:mm")
+                        else
+                            return ""
+                    }
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                 }

@@ -1,6 +1,5 @@
 #include "packetprocessor.h"
 
-
 namespace Server
 {
     PacketProcessor::PacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent) : QObject(parent)

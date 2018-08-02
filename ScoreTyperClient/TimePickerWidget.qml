@@ -7,8 +7,8 @@ Rectangle {
 
     readonly property string time: hoursInput.text + colon.text + minutesInput.text
     readonly property string fullTime: hoursInput.text + colon.text + minutesInput.text + ":" + "00"
-    property string minimumTime: "08:34"
-    readonly property bool minimumTimeSet: minimumTime.length === 5 ? true : false
+    property string minimumTime
+    readonly property bool minimumTimeSet: determineMinimumTimeSetState()
     property int fontSize: 12
     property color fontColor: "white"
     property color selectedTextColor: "black"
@@ -17,6 +17,8 @@ Rectangle {
     property url addIcon
     property url substractIcon
     property color hoveredButtonColor: "black"
+
+    onMinimumTimeSetChanged: adjustTimeForMinimumTime()
 
     Item {
         id: container
@@ -48,16 +50,7 @@ Rectangle {
                 text = resetText(text)
 
                 if(minimumTimeSet)
-                {
-                    if(text < minimumTime.slice(0, 2))
-                        text = minimumTime.slice(0, 2)
-
-                    if(text === minimumTime.slice(0, 2))
-                    {
-                        if(minutesInput.text < minimumTime.slice(3, 5))
-                            minutesInput.text = minimumTime.slice(3, 5)
-                    }
-                }
+                    validateMinimumTimeWhileModifyingHoursInput()
             }
             onTextChanged: text = validateText(text, "23")
             onFocusChanged: {
@@ -101,13 +94,7 @@ Rectangle {
                 text = resetText(text)
 
                 if(minimumTimeSet)
-                {
-                    if(hoursInput.text === minimumTime.slice(0, 2))
-                    {
-                        if(text < minimumTime.slice(3, 5))
-                            text = minimumTime.slice(3, 5)
-                    }
-                }
+                    validateMinimumTimeWhileModifyingMinutesInput()
             }
             onTextChanged: text = validateText(text, "59")
             onFocusChanged: {
@@ -160,27 +147,7 @@ Rectangle {
                 addButtonTimer.running = true
 
                 if(minimumTimeSet)
-                {
-                    if(container.focusedInput === hoursInput)
-                    {
-                        if(hoursInput.text === "00")
-                            hoursInput.text = minimumTime.slice(0, 2)
-
-                        if(hoursInput.text === minimumTime.slice(0, 2))
-                        {
-                            if(minutesInput.text < minimumTime.slice(3, 5))
-                                minutesInput.text = minimumTime.slice(3, 5)
-                        }
-                    }
-                    else if(container.focusedInput === minutesInput)
-                    {
-                        if(hoursInput.text === "00")
-                        {
-                            hoursInput.text = minimumTime.slice(0, 2)
-                            minutesInput.text = minimumTime.slice(3, 5)
-                        }
-                    }
-                }
+                    validateMinimumTimeWhileAdding()
             }
             else
                 addButtonTimer.running = false
@@ -188,7 +155,12 @@ Rectangle {
 
         IntervalChangingTimer {
             id: addButtonTimer
-            onTriggered: addTime()
+            onTriggered: {
+                addTime()
+
+                if(minimumTimeSet)
+                    validateMinimumTimeWhileAdding()
+            }
             startingIntervalValue: 300
             targetIntervalValue: 50
             ticksToReachTargetValue: 7
@@ -215,30 +187,7 @@ Rectangle {
                 substractButtonTimer.running = true
 
                 if(minimumTimeSet)
-                {
-                    if(container.focusedInput === hoursInput)
-                    {
-                        if(hoursInput.text < minimumTime.slice(0, 2))
-                            hoursInput.text = "23"
-
-                        if(hoursInput.text === minimumTime.slice(0, 2))
-                        {
-                            if(minutesInput.text < minimumTime.slice(3, 5))
-                                minutesInput.text = minimumTime.slice(3, 5)
-                        }
-                    }
-                    else if(container.focusedInput === minutesInput)
-                    {
-                        if(hoursInput.text === minimumTime.slice(0, 2))
-                        {
-                            if(minutesInput.text < minimumTime.slice(3, 5))
-                            {
-                                hoursInput.text = "23"
-                                minutesInput.text = "59"
-                            }
-                        }
-                    }
-                }
+                    validateMinimumTimeWhileSubstracting()
             }
             else
                 substractButtonTimer.running = false
@@ -246,7 +195,12 @@ Rectangle {
 
         IntervalChangingTimer {
             id: substractButtonTimer
-            onTriggered: substractTime()
+            onTriggered: {
+                substractTime()
+
+                if(minimumTimeSet)
+                    validateMinimumTimeWhileSubstracting()
+            }
             startingIntervalValue: 300
             targetIntervalValue: 50
             ticksToReachTargetValue: 7
@@ -338,16 +292,125 @@ Rectangle {
             return "0" + oldTime
     }
 
-    function defocus()
+    function validateMinimumTimeWhileModifyingHoursInput()
     {
-        hoursInput.focus = false
-        minutesInput.focus = false
+        var minHours = minimumTime.slice(0, 2)
+        var minMinutes = minimumTime.slice(3, 5)
+
+        if(hoursInput.text < minHours)
+            hoursInput.text = minHours
+
+        if(hoursInput.text === minHours)
+        {
+            if(minutesInput.text < minMinutes)
+                minutesInput.text = minMinutes
+        }
+    }
+
+    function validateMinimumTimeWhileModifyingMinutesInput()
+    {
+        var minHours = minimumTime.slice(0, 2)
+        var minMinutes = minimumTime.slice(3, 5)
+
+        if(hoursInput.text === minHours)
+        {
+            if(minutesInput.text < minMinutes)
+                minutesInput.text = minMinutes
+        }
+    }
+
+    function validateMinimumTimeWhileAdding()
+    {
+        var minHours = minimumTime.slice(0, 2)
+        var minMinutes = minimumTime.slice(3, 5)
+
+        if(container.focusedInput === hoursInput)
+        {
+            if(hoursInput.text === "00")
+                hoursInput.text = minHours
+
+            if(hoursInput.text === minHours)
+            {
+                if(minutesInput.text < minMinutes)
+                    minutesInput.text = minMinutes
+            }
+        }
+        else if(container.focusedInput === minutesInput)
+        {
+            if(hoursInput.text === "00")
+            {
+                hoursInput.text = minHours
+
+                if(minutesInput.text < minMinutes)
+                    minutesInput.text = minMinutes
+            }
+        }
+    }
+
+    function validateMinimumTimeWhileSubstracting()
+    {
+        var minHours = minimumTime.slice(0, 2)
+        var minMinutes = minimumTime.slice(3, 5)
+
+        if(container.focusedInput === hoursInput)
+        {
+            if(hoursInput.text < minHours)
+                hoursInput.text = "23"
+
+            if(hoursInput.text === minHours)
+            {
+                if(minutesInput.text < minMinutes)
+                    minutesInput.text = minMinutes
+            }
+        }
+        else if(container.focusedInput === minutesInput)
+        {
+            if(hoursInput.text === minHours)
+            {
+                if(minutesInput.text < minMinutes)
+                {
+                    hoursInput.text = "23"
+                    minutesInput.text = "59"
+                }
+            }
+        }
+    }
+
+    function determineMinimumTimeSetState()
+    {
+        var minTimeSet = false
+
+        if(minimumTime.length === 5)
+        {
+            var minTimeHours = parseInt(minimumTime.slice(0, 2))
+            var minTimeMinutes = parseInt(minimumTime.slice(3, 5))
+
+            var colonOccurs = minimumTime.charAt(2) === ":" ? true : false
+            var hoursValid = minTimeHours >= 0 && minTimeHours <= 23 ? true : false
+            var minutesValid = minTimeMinutes >= 0 && minTimeMinutes <= 59 ? true : false
+
+            if(hoursValid && colonOccurs && minutesValid)
+                minTimeSet = true
+        }
+
+        return minTimeSet
+    }
+
+    function adjustTimeForMinimumTime()
+    {
+        var timeNumber = parseInt(time.slice(0, 2) + time.slice(3, 5))
+        var minimumTimeNumber = parseInt(minimumTime.slice(0, 2) + minimumTime.slice(3, 5))
+
+        if(timeNumber < minimumTimeNumber)
+        {
+            hoursInput.text = minimumTime.slice(0, 2)
+            minutesInput.text = minimumTime.slice(3, 5)
+        }
     }
 
     function reset()
     {
-        hoursInput.focus = false
-        minutesInput.focus = false
+        defocus()
 
         if(minimumTimeSet)
         {
@@ -359,5 +422,11 @@ Rectangle {
             hoursInput.text = "12"
             minutesInput.text = "00"
         }
+    }
+
+    function defocus()
+    {
+        hoursInput.focus = false
+        minutesInput.focus = false
     }
 }
