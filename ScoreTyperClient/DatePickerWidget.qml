@@ -69,9 +69,15 @@ Rectangle {
         onButtonUnchecked: hideCalendar()
     }
 
-    Calendar {
+    CustomCalendar {
         id: calendar
         visible: false
+        mainColor: calendarMainColor
+        sideColor: calendarSideColor
+        fontColor: fontColor
+        inactiveColor: calendarInactiveColor
+        previousIcon: root.previousIcon
+        nextIcon: root.nextIcon
         anchors.top: parent.bottom
         anchors.topMargin: 5
 
@@ -83,86 +89,6 @@ Rectangle {
             else
                 anchors.horizontalCenter = parent.horizontalCenter
         }
-
-        style: CalendarStyle {
-                gridVisible: true
-                gridColor: calendarMainColor
-
-                background: Rectangle {
-                    color: calendarMainColor
-                    implicitWidth: 250
-                    implicitHeight: 250
-                }
-
-                navigationBar: Rectangle {
-                    color: calendarSideColor
-                    height: 35
-
-                    Text {
-                        text: styleData.title
-                        color: fontColor
-                        font.pointSize: 14
-                        anchors.centerIn: parent
-                    }
-
-                    IconButtonHover {
-                        id: leftButton
-                        iconSource: previousIcon
-                        color: calendarMainColor
-                        height: parent.height
-                        width: height
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 3
-
-                        onClicked: calendar.showPreviousMonth()
-                    }
-
-                    IconButtonHover {
-                        id: rightButton
-                        iconSource: nextIcon
-                        color: calendarMainColor
-                        height: parent.height
-                        width: height
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 3
-
-                        onClicked: calendar.showNextMonth()
-                    }
-
-                    Rectangle {
-                        width: parent.width
-                        height: 1
-                        color: calendarMainColor
-                        anchors.bottom: parent.bottom
-                    }
-                }
-
-                dayOfWeekDelegate: Rectangle {
-                    color: calendarSideColor
-                    height: 30
-
-                    Text {
-                        text: locale.dayName(styleData.dayOfWeek, Locale.ShortFormat)
-                        color: fontColor
-                        anchors.centerIn: parent
-                    }
-                }
-
-                dayDelegate: Rectangle {
-                    color: styleData.selected ? calendarMainColor : calendarSideColor
-
-                    Text {
-                        text: styleData.date.getDate()
-                        color: styleData.selected ? fontColor : (styleData.valid ? (styleData.visibleMonth ?
-                                                    fontColor : calendarInactiveColor) : calendarSideColor)
-                        anchors.centerIn: parent
-                    }
-                }
-            }
     }
 
     function showCalendar()

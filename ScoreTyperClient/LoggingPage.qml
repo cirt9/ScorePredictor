@@ -13,10 +13,10 @@ Page {
 
         GroupBox {
             id: mainBox
-            anchors.centerIn: parent
             Layout.preferredWidth: 850
             Layout.preferredHeight: 600
             padding: 0
+            anchors.centerIn: parent
 
             background: Rectangle {
                 width: parent.width
@@ -25,13 +25,13 @@ Page {
             }
 
             label: Rectangle {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.top
-                anchors.bottomMargin: -height/2
                 color: mainWindow.backgroundColor
                 width: parent.width * 0.5
                 height: title.font.pixelSize * 1.25
                 radius: 5
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.top
+                anchors.bottomMargin: -height/2
 
                 Text {
                     id: title
@@ -95,17 +95,17 @@ Page {
                     color: mainWindow.backgroundColor
                     width: parent.width
                     height: loggingReplyText.font.pointSize * 3
+                    radius: 3
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: inputArea.bottom
                     anchors.topMargin: height
-                    radius: 3
 
                     Text {
                         id: loggingReplyText
-                        anchors.centerIn: parent
                         color: mainWindow.deniedColor
                         font.pointSize: 10
                         opacity: 0
+                        anchors.centerIn: parent
                     }
 
                     Timer {
@@ -139,12 +139,12 @@ Page {
                 Button {
                     id: loginButton
                     text: qsTr("LOGIN")
-                    anchors.top: loggingReplyArea.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.topMargin: loggingReplyArea.height / 2
                     width: parent.width / 2
                     font.pointSize: 16
                     font.bold: true
+                    anchors.top: loggingReplyArea.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: loggingReplyArea.height / 2
 
                     onClicked: {
                         if(nicknameInput.text.length === 0 && passwordInput.text.length === 0)
@@ -183,11 +183,11 @@ Page {
 
             Rectangle {
                 id: navigationArea
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width
                 height: parent.height * 0.1
                 color: mainWindow.colorB
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 TextButton {
                     id: registerButton
@@ -210,8 +210,8 @@ Page {
                     anchors.rightMargin: 10
 
                     Row {
-                        anchors.centerIn: parent
                         spacing: 10
+                        anchors.centerIn: parent
 
                         IconButtonHover {
                             id: settingsButton
@@ -259,9 +259,9 @@ Page {
     }
 
     Item {
-        anchors.centerIn: parent
         width: registrationPopup.width
         height: registrationPopup.height
+        anchors.centerIn: parent
 
         PopupBox {
             id: registrationPopup

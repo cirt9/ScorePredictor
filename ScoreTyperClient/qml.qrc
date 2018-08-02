@@ -24,6 +24,7 @@
         <file>ToolTipIcon.qml</file>
         <file>ScoreInput.qml</file>
         <file>InputWithBorder.qml</file>
+        <file>CustomCalendar.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>

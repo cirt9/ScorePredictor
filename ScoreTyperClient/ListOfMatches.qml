@@ -7,7 +7,7 @@ Item {
     id: root
     clip: true
 
-    readonly property bool hostMode: true//currentTournament.hostName === currentUser.username ? true : false
+    readonly property bool hostMode: currentTournament.hostName === currentUser.username ? true : false
     readonly property int viewHeaderHeight: 45
     readonly property int viewFooterHeight: 45
     readonly property int matchHeaderHeight: 40
@@ -333,7 +333,7 @@ Item {
                         font.pointSize: 10
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
-                        visible: nickname === "TournamentTester1" && acceptingPredictions ? false : true
+                        visible: nickname === currentUser.username && acceptingPredictions ? false : true
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: predictionDelegateLayout.width * 0.5
@@ -347,7 +347,7 @@ Item {
                         inputHeight: 25
                         leftScore: firstCompetitorPredictedScore
                         rightScore: secondCompetitorPredictedScore
-                        visible: nickname === "TournamentTester1" && acceptingPredictions ? true : false
+                        visible: nickname === currentUser.username && acceptingPredictions ? true : false
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: predictionDelegateLayout.width * 0.5
@@ -360,7 +360,7 @@ Item {
                     iconSource: "qrc://assets/icons/icons/icons8_Save.png"
                     margins: 6
                     marginsOnPressed: 7
-                    visible: nickname === "TournamentTester1" && acceptingPredictions ? true : false
+                    visible: nickname === currentUser.username && acceptingPredictions ? true : false
                     anchors.top: predictionDelegateBackground.top
                     anchors.bottom: predictionDelegateBackground.bottom
                     anchors.right: earnedPointsData.left
@@ -442,70 +442,6 @@ Item {
 
                 onClicked: root.creatingNewMatch()
             }
-
-            /*RowLayout {
-                id: viewFooterLayout
-                anchors.fill: footerBackground
-                anchors.margins: 5
-
-                InputWithBorder {
-                    id: firstCompetitorInput
-                    color: mainWindow.fontColor
-                    fontSize: 14
-                    radius: 3
-                    maxLength: 30
-                    placeholderText: qsTr("First Competitor")
-                    selectByMouse: true
-                    selectedTextColor: mainWindow.fontColor
-                    selectionColor: mainWindow.accentColor
-                    trimText: true
-
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: viewFooterLayout.width * 0.2
-                    Layout.minimumWidth: 175
-                }
-
-                Text {
-                    id: newMatchVersusText
-                    text: qsTr("vs")
-                    color: mainWindow.fontColor
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: 20
-
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: 25
-                }
-
-                InputWithBorder {
-                    id: secondCompetitorInput
-                    color: mainWindow.fontColor
-                    fontSize: 14
-                    radius: 3
-                    maxLength: 30
-                    placeholderText: qsTr("Second Competitor")
-                    selectByMouse: true
-                    selectedTextColor: mainWindow.fontColor
-                    selectionColor: mainWindow.accentColor
-                    trimText: true
-
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: viewFooterLayout.width * 0.2
-                    Layout.minimumWidth: 175
-                }
-
-                DefaultButton {
-                    id: createMatchButton
-                    text: qsTr("Create Match")
-                    color: mainWindow.backgroundColor
-                    textColor: mainWindow.fontColor
-                    fontSize: 14
-                    radius: 5
-
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-            }*/
         }
     }
 
@@ -614,7 +550,7 @@ Item {
             {
                 var prediction = match.predictions.get(j)
 
-                if(prediction.nickname === "TournamentTester1")
+                if(prediction.nickname === currentUser.username)
                 {
                     currentUserMadePrediction = true
                     break

@@ -53,14 +53,7 @@ Page {
         PopupBox {
             id: createNewMatchPopup
             width: 500
-            height: 575
-
-            onClosed: predictionsEndDatePicker.hideCalendar()
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: predictionsEndDatePicker.hideCalendar()
-            }
+            height: 600
 
             Text {
                 id: newMatchPopupTitle
@@ -77,7 +70,7 @@ Page {
                 spacing: 5
                 anchors.top: newMatchPopupTitle.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 50
+                anchors.topMargin: 30
 
                 InputWithBorder {
                     id: firstCompetitorInput
@@ -121,9 +114,10 @@ Page {
 
                 Item {
                     id: newMatchPredictionsEndTimeArea
-                    width: 275
+                    width: predictionsEndTimePicker.width + predictionsEndDateText.width + predictionsEndDateText.anchors.leftMargin
                     height: newMatchPredictionsEndTimeText.height + newMatchPredictionsEndTimeText.anchors.topMargin +
                             predictionsEndTimePicker.height + predictionsEndTimePicker.anchors.topMargin
+                    anchors.horizontalCenter: parent.horizontalCenter
 
                     Text {
                         id: newMatchPredictionsEndTimeText
@@ -145,32 +139,62 @@ Page {
                         selectedTextColor: mainWindow.fontColor
                         selectionColor: mainWindow.accentColor
                         hoveredButtonColor: mainWindow.accentColor
+                        minimumTime: {
+                            var now = new Date()
+                            var currentDate = now.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
+                            var selectedDate = calendar.selectedDate.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
+
+                            if(currentDate === selectedDate)
+                                return now.toLocaleTimeString(Qt.locale(), "hh:mm")
+                            else
+                                return ""
+                        }
                         anchors.left: parent.left
                         anchors.top: newMatchPredictionsEndTimeText.bottom
-                        anchors.topMargin: 10
+                        anchors.topMargin: 5
                     }
 
-                    DatePickerWidget {
-                        id: predictionsEndDatePicker
-                        color: mainWindow.backgroundColor
-                        radius: 5
-                        fontSize: 14
-                        fontColor: mainWindow.fontColor
-                        expandCalendarIcon: "qrc://assets/icons/icons/icons8_Expand_Arrow.png"
-                        previousIcon: "qrc://assets/icons/icons/icons8_Chevron_Left.png"
-                        nextIcon: "qrc://assets/icons/icons/icons8_Chevron_Right.png"
-                        hoveredButtonColor: mainWindow.accentColor
+                    MouseArea {
+                        cursorShape: Qt.IBeamCursor
+                        anchors.fill: predictionsEndDateText
+                    }
+
+                    TextEdit {
+                        id: predictionsEndDateText
+                        text: calendar.selectedDate.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
+                        color: mainWindow.fontColor
+                        font.pointSize: 14
+                        readOnly: true
                         selectByMouse: true
+                        selectByKeyboard: true
                         selectedTextColor: mainWindow.fontColor
                         selectionColor: mainWindow.accentColor
-                        calendarMainColor: "#626167"
-                        calendarSideColor: mainWindow.backgroundColor
-                        calendarInactiveColor: "#766363"
-                        minimumDate: new Date()
-                        calendarAlignRight: true
+                        verticalAlignment: Text.AlignVCenter
                         anchors.left: predictionsEndTimePicker.right
                         anchors.top: predictionsEndTimePicker.top
+                        anchors.bottom: predictionsEndTimePicker.bottom
+                        anchors.leftMargin: 15
                     }
+                }
+
+                CustomCalendar {
+                    id: calendar
+                    minimumDate: new Date()
+                    mainColor: "#626167"
+                    sideColor: mainWindow.backgroundColor
+                    fontColor: fontColor
+                    inactiveColor: "#626167"
+                    previousIcon: "qrc://assets/icons/icons/icons8_Chevron_Left.png"
+                    nextIcon: "qrc://assets/icons/icons/icons8_Chevron_Right.png"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Button {
+                    id: createNewMatchButton
+                    text: qsTr("Create Match")
+                    font.pointSize: 16
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
         }

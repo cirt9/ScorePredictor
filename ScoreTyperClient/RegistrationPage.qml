@@ -46,9 +46,9 @@ Page {
 
                 Text {
                     id: nicknameInputReplyText
-                    anchors.right: parent.right
                     color: mainWindow.deniedColor
                     font.pointSize: 8
+                    anchors.right: parent.right
                 }
             }
 
@@ -75,9 +75,9 @@ Page {
 
                 Text {
                     id: passwordInputReplyText
-                    anchors.right: parent.right
                     color: mainWindow.deniedColor
                     font.pointSize: 8
+                    anchors.right: parent.right
                 }
             }
 
@@ -104,9 +104,9 @@ Page {
 
                 Text {
                     id: passwordConfirmationInputReplyText
-                    anchors.right: parent.right
                     color: mainWindow.deniedColor
                     font.pointSize: 8
+                    anchors.right: parent.right
                 }
             }
         }
@@ -116,8 +116,8 @@ Page {
             color: mainWindow.acceptedColor
             font.pointSize: 8
             font.bold: true
-            anchors.horizontalCenter: parent.horizontalCenter
             opacity: 0
+            anchors.horizontalCenter: parent.horizontalCenter
         }
 
         Timer {

@@ -244,7 +244,7 @@ Page {
 
                 Text {
                     text: qsTr("Tournaments not found")
-                    color: mainWindow.backgroundColor
+                    color: mainWindow.fontColor
                     opacity: 0.5
                     font.bold: true
                     font.pointSize: 40
@@ -254,7 +254,7 @@ Page {
 
                 SearchIndicator {
                     text: qsTr("Searching")
-                    color: mainWindow.backgroundColor
+                    color: mainWindow.fontColor
                     opacityOnRunning: 0.5
                     fontBold: true
                     fontSize: 40
