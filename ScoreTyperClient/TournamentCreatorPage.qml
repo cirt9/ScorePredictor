@@ -370,6 +370,5 @@ Page {
         typersLimit.value = 16
         entriesEndTimePicker.reset()
         entriesEndDatePicker.reset()
-        hideReplyArea()
     }
 }

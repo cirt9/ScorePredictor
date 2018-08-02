@@ -159,7 +159,13 @@ namespace Server
 
             if(!query.tournamentExists(tournament.getName(), hostId))
             {
-                if(query.createTournament(tournament, hostId, tournamentData[1].toString()))
+                if(tournament.getEntriesEndTime() < QDateTime::currentDateTime())
+                {
+                    qDebug() << "Entries end time must be greater than the current time";
+                    responseData << Packet::ID_CREATE_TOURNAMENT << false
+                                 << QString("Entries end time must be greater than the current time");
+                }
+                else if(query.createTournament(tournament, hostId, tournamentData[1].toString()))
                 {
                     qDebug() << "New tournament created";
                     responseData << Packet::ID_CREATE_TOURNAMENT << true
