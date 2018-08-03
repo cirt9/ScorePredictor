@@ -3,7 +3,7 @@ import QtQuick 2.9
 Item {
     id: root
 
-    property alias inputText: input.text
+    property alias text: input.text
     property alias placeholderText: placeholder.text
     property color color: "white"
     property int radius: 3
@@ -14,6 +14,7 @@ Item {
     property alias selectedTextColor: input.selectedTextColor
     property alias selectionColor: input.selectionColor
     property bool trimText: false
+    readonly property int lengthWithoutWhitespaces: calculateLengthWithoutWhitespaces()
 
     Rectangle {
         id: inputBorder
@@ -102,6 +103,19 @@ Item {
             }
         }
     ]
+
+    function calculateLengthWithoutWhitespaces()
+    {
+        var numberOfWhitespaces = 0
+
+        for(var i=0; i<text.length; i++)
+        {
+            if(text.charAt(i) === " ")
+                numberOfWhitespaces += 1
+        }
+
+        return text.length - numberOfWhitespaces
+    }
 
     function reset()
     {

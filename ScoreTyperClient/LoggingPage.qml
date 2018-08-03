@@ -193,7 +193,6 @@ Page {
                     id: registerButton
                     text: qsTr("REGISTER")
                     textColor: mainWindow.accentColor
-                    textColorHovered: mainWindow.colorC
                     fontSize: 15
                     bold: true
                     anchors.centerIn: parent

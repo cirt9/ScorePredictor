@@ -6,6 +6,7 @@ import "../components"
 Page {
     id: tournamentNavigationPage
     readonly property alias currentPage: pagesList.currentItemText
+    readonly property int headerHeight: 50
 
     ColumnLayout {
         id: pageLayout
@@ -19,7 +20,7 @@ Page {
             radius: 5
 
             Layout.fillWidth: true
-            Layout.preferredHeight: 50
+            Layout.preferredHeight: headerHeight
 
             Text {
                 id: tournamentName
@@ -218,7 +219,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
-                    id: yesButton
+                    id: tournamentFinishingConfirmationButton
                     text: qsTr("Yes")
                     width: 150
                     font.pointSize: 20
@@ -240,7 +241,7 @@ Page {
                 }
 
                 Button {
-                    id: noButton
+                    id: tournamentFinishingDenyingButton
                     text: qsTr("No")
                     width: 150
                     font.pointSize: 20
@@ -272,17 +273,19 @@ Page {
                 anchors.topMargin: 15
             }
 
-            TextLineField {
+            InputWithBorder {
                 id: newRoundNameInput
-                placeholderText: qsTr("New Round Name")
                 width: 300
+                height: 35
+                color: mainWindow.fontColor
+                placeholderText: qsTr("New Round Name")
                 fontSize: 16
+                radius: 3
+                maxLength: 30
                 selectByMouse: true
-                maximumLength: 30
-                textColor: mainWindow.fontColor
                 selectedTextColor: mainWindow.fontColor
                 selectionColor: mainWindow.accentColor
-                underlineColorOnFocus: mainWindow.accentColor
+                trimText: true
                 anchors.centerIn: parent
             }
 
@@ -290,7 +293,7 @@ Page {
                 id: addNewRoundButton
                 text: qsTr("Add Round")
                 width: 300
-                enabled: newRoundNameInput.text.length === 0 ? false : true
+                enabled: newRoundNameInput.lengthWithoutWhitespaces === 0 ? false : true
                 font.pointSize: 20
                 font.bold: true
                 anchors.bottom: parent.bottom
@@ -301,8 +304,8 @@ Page {
 
                     if(currentUser.username === currentTournament.hostName)
                     {
-                        backend.addNewRound(currentTournament.name, currentTournament.hostName, newRoundNameInput.text)
-                        newRoundNameInput.text = ""
+                        backend.addNewRound(currentTournament.name, currentTournament.hostName, newRoundNameInput.text.trim())
+                        newRoundNameInput.reset()
                         navigationPage.enabled = false
                         mainWindow.startBusyIndicator()
                         busyTimer.restart()

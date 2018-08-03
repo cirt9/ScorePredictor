@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../reusableWidgets"
 import "../components"
-
+import QtQuick.Window 2.3
 Page {
     id: roundPage
 
@@ -48,7 +48,8 @@ Page {
     Item {
         width: createNewMatchPopup.width
         height: createNewMatchPopup.height
-        anchors.centerIn: parent
+        y: parent.height / 2 - height / 2 - tournamentNavigationPage.headerHeight
+        anchors.horizontalCenter: parent.horizontalCenter
 
         PopupBox {
             id: createNewMatchPopup
@@ -194,6 +195,8 @@ Page {
                     text: qsTr("Create Match")
                     font.pointSize: 16
                     font.bold: true
+                    enabled: firstCompetitorInput.lengthWithoutWhitespaces > 0 &&
+                             secondCompetitorInput.lengthWithoutWhitespaces > 0 ? true : false
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
