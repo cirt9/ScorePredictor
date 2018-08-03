@@ -317,20 +317,6 @@ Page {
         }
     }
 
-    Timer {
-        id: busyTimer
-        interval: mainWindow.serverResponseWaitingTimeMsec
-
-        onTriggered: {
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
-            backend.disconnectFromServer()
-            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
-        }
-    }
-
-    Component.onCompleted: backend.downloadTournamentInfo(currentTournament.name, currentTournament.hostName)
-
     Connections {
         target: packetProcessor
 
@@ -362,6 +348,20 @@ Page {
                 navigationPage.showDeniedResponse(message)
         }
     }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
+        }
+    }
+
+    Component.onCompleted: backend.downloadTournamentInfo(currentTournament.name, currentTournament.hostName)
 
     function manageTournamentInfoReply(tournamentInfo, opened)
     {

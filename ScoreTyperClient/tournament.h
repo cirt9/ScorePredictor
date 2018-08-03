@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QDateTime>
 #include <QVariantList>
-#include <QDataStream>
 
 class Tournament : public QObject
 {
@@ -25,8 +24,8 @@ private:
     unsigned int typersLimit;
 
 public:
-    Tournament(QObject * parent = nullptr);
-    Tournament(const QVariantList & tournamentData, QObject * parent = nullptr);
+    explicit Tournament(QObject * parent = nullptr);
+    explicit Tournament(const QVariantList & tournamentData, QObject * parent = nullptr);
     ~Tournament() {}
 
     Q_INVOKABLE void reset();

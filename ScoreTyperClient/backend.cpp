@@ -141,6 +141,15 @@ void BackEnd::downloadTournamentLeaderboard(const QString & tournamentName, cons
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::createNewMatch(Match * newMatch)
+{
+    QVariantList data;
+    QVariantList matchData;
+    matchData << *newMatch;
+    data << Packet::ID_CREATE_MATCH << QVariant::fromValue(matchData);
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

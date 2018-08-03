@@ -106,6 +106,6 @@ Rectangle {
     function reset()
     {
         hideCalendar()
-        calendar.selectedDate = new Date()
+        calendar.reset()
     }
 }

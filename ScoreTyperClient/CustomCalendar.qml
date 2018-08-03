@@ -91,4 +91,9 @@ Calendar {
             }
         }
     }
+
+    function reset()
+    {
+        selectedDate = new Date()
+    }
 }

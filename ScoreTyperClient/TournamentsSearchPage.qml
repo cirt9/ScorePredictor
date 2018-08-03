@@ -337,25 +337,6 @@ Page {
         }
     }
 
-    Timer {
-        id: searchingTimeoutTimer
-        interval: mainWindow.serverResponseWaitingTimeMsec
-
-        onTriggered: searchingState = false
-    }
-
-    Timer {
-        id: busyTimer
-        interval: mainWindow.serverResponseWaitingTimeMsec
-
-        onTriggered: {
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
-            backend.disconnectFromServer()
-            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
-        }
-    }
-
     Item {
         id: passwordRequiredPopupArea
         width: passwordRequiredPopup.width
@@ -457,6 +438,25 @@ Page {
             }
             else
                 navigationPage.showDeniedResponse(message)
+        }
+    }
+
+    Timer {
+        id: searchingTimeoutTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: searchingState = false
+    }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
     }
 

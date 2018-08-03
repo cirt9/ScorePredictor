@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../reusableWidgets"
 import "../components"
-import QtQuick.Window 2.3
+
 Page {
     id: roundPage
 
@@ -198,8 +198,41 @@ Page {
                     enabled: firstCompetitorInput.lengthWithoutWhitespaces > 0 &&
                              secondCompetitorInput.lengthWithoutWhitespaces > 0 ? true : false
                     anchors.horizontalCenter: parent.horizontalCenter
+
+                    onClicked: {
+                        var dateString = predictionsEndDateText.text + " " + predictionsEndTimePicker.fullTime
+                        var predictionsEndDate = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
+                        var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}',
+                                                           roundPage);
+
+                        match.firstCompetitor = firstCompetitorInput.text
+                        match.secondCompetitor = secondCompetitorInput.text
+                        match.predictionsEndTime = predictionsEndDate
+                        match.tournamentName = currentTournament.name
+                        match.tournamentHostName = currentTournament.hostName
+                        match.roundName = tournamentNavigationPage.currentPage
+                        backend.createNewMatch(match)
+                        match.destroy()
+
+                        createNewMatchPopup.close()
+                        navigationPage.enabled = false
+                        mainWindow.startBusyIndicator()
+                        busyTimer.restart()
+                    }
                 }
             }
+        }
+    }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
     }
 

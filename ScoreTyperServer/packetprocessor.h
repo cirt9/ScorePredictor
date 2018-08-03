@@ -6,6 +6,7 @@
 #include <query.h>
 #include <QSharedPointer>
 #include <../ScoreTyperClient/tournament.h>
+#include <../ScoreTyperClient/match.h>
 
 namespace Server
 {
@@ -28,6 +29,7 @@ namespace Server
         void manageTournamentFinishing(const QVariantList & tournamentData);
         void manageAddingNewRound(const QVariantList & tournamentData);
         void manageDownloadingTournamentLeaderboard(const QVariantList & tournamentData);
+        void manageCreatingNewMatch(const QVariantList & matchData);
 
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
 

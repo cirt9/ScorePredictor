@@ -31,6 +31,7 @@ namespace Server
         case Packet::ID_FINISH_TOURNAMENT: manageTournamentFinishing(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRound(data); break;
         case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingTournamentLeaderboard(data); break;
+        case Packet::ID_CREATE_MATCH: manageCreatingNewMatch(data); break;
 
         default: break;
         }
@@ -434,5 +435,12 @@ namespace Server
 
         //emit response(responseData);
         //TO BE DONE
+    }
+
+    void PacketProcessor::manageCreatingNewMatch(const QVariantList & matchData)
+    {
+        Match match(matchData[0].value<QVariantList>());
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
     }
 }
