@@ -30,6 +30,8 @@ namespace Client
         void manageFinishingTournamentReply(const QVariantList & replyData);
         void manageAddingNewRoundReply(const QVariantList & replyData);
 
+        void manageMatchCreatingReply(const QVariantList & replyData);
+
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
         ~PacketProcessor() {}
@@ -58,6 +60,8 @@ namespace Client
         void tournamentRoundNameArrived(const QString & name);
         void finishingTournamentReply(bool replyState, const QString & message);
         void addingNewRoundReply(bool replyState, const QString & message);
+
+        void creatingNewMatchReply(bool replyState, const QString & message);
     };
 }
 

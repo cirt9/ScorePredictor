@@ -27,6 +27,7 @@ namespace Client
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageTournamentInfoReply(data); break;
         case Packet::ID_FINISH_TOURNAMENT: manageFinishingTournamentReply(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRoundReply(data); break;
+        case Packet::ID_CREATE_MATCH: manageMatchCreatingReply(data); break;
 
         default: break;
         }
@@ -134,5 +135,10 @@ namespace Client
     void PacketProcessor::manageAddingNewRoundReply(const QVariantList & replyData)
     {
         emit addingNewRoundReply(replyData[0].toBool(), replyData[1].toString());
+    }
+
+    void PacketProcessor::manageMatchCreatingReply(const QVariantList & replyData)
+    {
+        emit creatingNewMatchReply(replyData[0].toBool(), replyData[1].toString());
     }
 }

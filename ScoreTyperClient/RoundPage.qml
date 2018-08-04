@@ -142,6 +142,7 @@ Page {
                         hoveredButtonColor: mainWindow.accentColor
                         minimumTime: {
                             var now = new Date()
+                            now.setMinutes(now.getMinutes() + 1)
                             var currentDate = now.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
                             var selectedDate = calendar.selectedDate.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
 
@@ -221,6 +222,42 @@ Page {
                     }
                 }
             }
+
+            function reset()
+            {
+                firstCompetitorInput.reset()
+                secondCompetitorInput.reset()
+                predictionsEndTimePicker.reset()
+                calendar.reset()
+            }
+        }
+    }
+
+    Connections {
+        target: packetProcessor
+
+        onCreatingNewMatchReply: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            if(replyState)
+            {
+                var match = {}
+                match.firstCompetitor = firstCompetitorInput.text
+                match.secondCompetitor = secondCompetitorInput.text
+                match.firstCompetitorScore = 0
+                match.secondCompetitorScore = 0
+                match.predictionsEndTime = predictionsEndDateText.text + " " + predictionsEndTimePicker.time
+                match.predictions = []
+                match.currentUserMadePredictions = false
+
+                listOfMatches.addMatch(match)
+            }
+            else
+                navigationPage.showDeniedResponse(message)
+
+            createNewMatchPopup.reset()
         }
     }
 

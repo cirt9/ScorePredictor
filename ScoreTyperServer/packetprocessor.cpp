@@ -412,7 +412,7 @@ namespace Server
                 responseData << Packet::ID_ADD_NEW_ROUND << false << QString("This tournament is closed.");
         }
         else
-            responseData << Packet::ID_ERROR << QString("This tournament does not exist");
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
 
         emit response(responseData);
     }
@@ -431,10 +431,11 @@ namespace Server
             query.findTournamentLeaderboard(tournamentId);
         }
         else
-            responseData << Packet::ID_ERROR << QString("This tournament does not exist");
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
 
         //emit response(responseData);
         //TO BE DONE
+        qDebug() << "TO BE DONE";
     }
 
     void PacketProcessor::manageCreatingNewMatch(const QVariantList & matchData)
@@ -442,5 +443,38 @@ namespace Server
         Match match(matchData[0].value<QVariantList>());
         Query query(dbConnection->getConnection());
         QVariantList responseData;
+
+        if(query.findUserId(match.getTournamentHostName()) &&
+           query.findTournamentId(match.getTournamentName(), query.value("id").toUInt()))
+        {
+            responseData << Packet::ID_CREATE_MATCH;
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            if(!query.tournamentIsOpened(tournamentId))
+                responseData << false << QString("This tournament is closed.");
+
+            else if(!query.findRoundId(match.getRoundName(), tournamentId))
+                responseData << false << QString("This round does not exist.");
+            else
+            {
+                unsigned int roundId = query.value("id").toUInt();
+
+                if(query.duplicateMatch(match.getFirstCompetitor(), match.getSecondCompetitor(), roundId))
+                    responseData << false << QString("The same match already exists.");
+
+                else if(match.getPredictionsEndTime() < QDateTime::currentDateTime())
+                    responseData << false << QString("Predictions end time must be greater than the current time.");
+
+                else if(query.createMatch(roundId, match.getFirstCompetitor(), match.getSecondCompetitor(),
+                                          match.getPredictionsEndTime()))
+                    responseData << true << QString("The match was created successfully.");
+                else
+                    responseData << false << QString("The match couldn't be created. Try again later.");
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+
+        emit response(responseData);
     }
 }

@@ -559,4 +559,37 @@ Item {
             match.currentUserMadePrediction = currentUserMadePrediction
         }
     }
+
+    function addMatch(match)
+    {
+        var predictionsEndDateTime = Date.fromLocaleString(locale, match.predictionsEndTime, "dd.MM.yyyy hh:mm")
+        var now = Date()
+
+        match.acceptingPredictions = now < predictionsEndDateTime ? true : false
+        match.collapsed = true
+
+        matchesModel.append(match)
+    }
 }
+
+/*
+adding predictions
+
+var test2 = matchesModel.get(0)
+var testPreds = test2.predictions
+
+var pred = {}
+pred.nickname = "JDJASJ"
+pred.firstCompetitorPredictedScore = 1
+pred.secondCompetitorPredictedScore = 2
+
+testPreds.append(pred)*/
+
+/*
+modifying predictions
+
+var test2 = matchesModel.get(0)
+var testPreds = test2.predictions
+var testPred = testPreds.get(0)
+
+testPred.nickname = "TEST"*/

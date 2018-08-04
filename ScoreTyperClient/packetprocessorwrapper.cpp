@@ -42,6 +42,9 @@ namespace Client
                 this, &PacketProcessorWrapper::finishingTournamentReply);
         connect(packetProcessor, &Client::PacketProcessor::addingNewRoundReply,
                 this, &PacketProcessorWrapper::addingNewRoundReply);
+
+        connect(packetProcessor, &Client::PacketProcessor::creatingNewMatchReply,
+                this, &PacketProcessorWrapper::creatingNewMatchReply);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

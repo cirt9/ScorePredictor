@@ -264,3 +264,39 @@ void Query::findTournamentLeaderboard(unsigned int tournamentId)
 {
     //TO BE DONE
 }
+
+bool Query::findRoundId(const QString & roundName, unsigned int tournamentId)
+{
+    prepare("SELECT id FROM round WHERE name = :roundName AND tournament_id = :tournamentId");
+    bindValue(":roundName", roundName);
+    bindValue(":tournamentId", tournamentId);
+    exec();
+
+    return first();
+}
+
+bool Query::duplicateMatch(const QString & firstCompetitor, const QString & secondCompetitor, unsigned int roundId)
+{
+    prepare("SELECT 1 FROM match WHERE competitor_1 = :firstCompetitor AND competitor_2 = :secondCompetitor "
+            "AND round_id = :roundId");
+    bindValue(":firstCompetitor", firstCompetitor);
+    bindValue(":secondCompetitor", secondCompetitor);
+    bindValue(":roundId", roundId);
+    exec();
+
+    return first();
+}
+
+bool Query::createMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor,
+                        const QDateTime & predictionsEndTime)
+{
+    prepare("INSERT INTO match (round_id, competitor_1, competitor_2, predictions_end_time) "
+            "VALUES (:roundId, :firstCompetitor, :secondCompetitor, :predictionsEndTime)");
+    bindValue(":roundId", roundId);
+    bindValue(":firstCompetitor", firstCompetitor);
+    bindValue(":secondCompetitor", secondCompetitor);
+    bindValue(":predictionsEndTime", predictionsEndTime);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}

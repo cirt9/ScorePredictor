@@ -39,6 +39,8 @@ namespace Client
         void tournamentRoundNameArrived(const QString & name);
         void finishingTournamentReply(bool replyState, const QString & message);
         void addingNewRoundReply(bool replyState, const QString & message);
+
+        void creatingNewMatchReply(bool replyState, const QString & message);
     };
 }
 

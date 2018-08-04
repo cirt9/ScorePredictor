@@ -226,6 +226,7 @@ Page {
                     hoveredButtonColor: mainWindow.backgroundColor
                     minimumTime: {
                         var now = new Date()
+                        now.setMinutes(now.getMinutes() + 1)
                         var currentDate = now.toLocaleDateString(Qt.locale(), "dd.MM.yyyy")
 
                         if(currentDate === entriesEndDatePicker.simplifiedDate)
