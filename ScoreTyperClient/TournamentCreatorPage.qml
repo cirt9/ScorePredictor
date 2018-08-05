@@ -284,6 +284,8 @@ Page {
                 }
                 else
                 {
+                    entriesEndTimePicker.defocus()
+
                     var dateString = entriesEndDatePicker.simplifiedDate + " " + entriesEndTimePicker.fullTime
                     var date = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
                     var tournament = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Tournament {}',

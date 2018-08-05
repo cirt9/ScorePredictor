@@ -201,6 +201,8 @@ Page {
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     onClicked: {
+                        predictionsEndTimePicker.defocus()
+
                         var dateString = predictionsEndDateText.text + " " + predictionsEndTimePicker.fullTime
                         var predictionsEndDate = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
                         var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}',

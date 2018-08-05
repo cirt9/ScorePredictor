@@ -6,33 +6,16 @@ import "../reusableWidgets"
 Page {
     id: tournamentLeaderboardPage
 
-    RowLayout {
-        id: pageLayout
+    Rectangle {
+        id: leaderboardArea
+        color: mainWindow.colorA
+        radius: 5
         anchors.fill: parent
-        spacing: 10
 
-        Rectangle {
-            id: chatArea
-            color: mainWindow.colorA
-            radius: 5
-
-            Layout.fillHeight: true
-            Layout.preferredWidth: 550
-        }
-
-        Rectangle {
-            id: leaderboardArea
-            color: mainWindow.colorA
-            radius: 5
-
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-
-            TournamentLeaderboard {
-                id: tournamentLeaderboard
-                anchors.fill: parent
-                anchors.margins: 5
-            }
+        TournamentLeaderboard {
+            id: tournamentLeaderboard
+            anchors.fill: parent
+            anchors.margins: 5
         }
     }
 
