@@ -141,6 +141,13 @@ void BackEnd::downloadTournamentLeaderboard(const QString & tournamentName, cons
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::pullMatches(const QString & tournamentName, const QString & hostName, const QString & roundName)
+{
+    QVariantList data;
+    data << Packet::ID_PULL_MATCHES << tournamentName << hostName << roundName;
+    emit clientWrapper->sendData(data);
+}
+
 void BackEnd::createNewMatch(Match * newMatch)
 {
     QVariantList data;

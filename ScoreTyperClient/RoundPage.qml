@@ -22,6 +22,8 @@ Page {
 
             ListOfMatches {
                 id: listOfMatches
+                errorText: qsTr("Couldn't load matches list")
+                matchesNotFoundText: qsTr("There are no matches yet")
                 anchors.fill: parent
                 anchors.margins: 5
 
@@ -275,5 +277,8 @@ Page {
         }
     }
 
-    Component.onCompleted: console.log(tournamentNavigationPage.currentPage)
+    Component.onCompleted: {
+        backend.pullMatches(currentTournament.name, currentTournament.hostName, tournamentNavigationPage.currentPage)
+        listOfMatches.startLoading()
+    }
 }

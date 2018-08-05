@@ -13,6 +13,9 @@ Item {
     readonly property int matchHeaderHeight: 40
     readonly property int predictionDelegateHeight: 30
     readonly property int matchesSpacing: 2
+    property string matchesNotFoundText
+    property string errorText
+    property bool loadingState: false
     signal creatingNewMatch()
 
     ListView {
@@ -21,9 +24,67 @@ Item {
         delegate: matchesDelegate
         header: headerDelegate
         headerPositioning: ListView.OverlayHeader
-        footer: footerDelegate
-        footerPositioning: ListView.OverlayFooter
         anchors.fill: parent
+
+        Item {
+            id: footer
+            width: parent.width
+            height: viewFooterHeight
+            visible: hostMode ? true : false
+            z: 3
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Rectangle {
+                id: footerBackground
+                width: parent.width
+                height: viewFooterHeight - 5
+                color: mainWindow.colorB
+                radius: 5
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+            }
+
+            TextButton {
+                id: createNewMatchButton
+                text: qsTr("Create New Match")
+                textColor: mainWindow.fontColor
+                fontSize: 18
+                bold: true
+                anchors.top: footerBackground.top
+                anchors.bottom: footerBackground.bottom
+                anchors.horizontalCenter: footerBackground.horizontalCenter
+
+                onClicked: root.creatingNewMatch()
+            }
+        }
+
+        TextEdit {
+            id: infoText
+            font.pointSize: 22
+            font.bold: true
+            color: mainWindow.fontColor
+            readOnly: true
+            wrapMode: TextEdit.WordWrap
+            visible: !loadingState && matchesModel.count === 0 ? true : false
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.margins: 10
+        }
+
+        SearchIndicator {
+            text: qsTr("Loading")
+            color: mainWindow.fontColor
+            opacityOnRunning: 0.75
+            fontBold: true
+            fontSize: 22
+            running: loadingState && matchesModel.count === 0 ? true : false
+            anchors.centerIn: parent
+        }
     }
 
     Component {
@@ -411,43 +472,9 @@ Item {
         }
     }
 
-    Component {
-        id: footerDelegate
-
-        Item {
-            width: matchesView.width
-            height: viewFooterHeight
-            visible: hostMode ? true : false
-            z: 3
-
-            Rectangle {
-                id: footerBackground
-                width: parent.width
-                height: viewFooterHeight - 5
-                color: mainWindow.colorB
-                radius: 5
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-            }
-
-            TextButton {
-                id: createNewMatchButton
-                text: qsTr("Create New Match")
-                textColor: mainWindow.fontColor
-                fontSize: 18
-                bold: true
-                anchors.top: footerBackground.top
-                anchors.bottom: footerBackground.bottom
-                anchors.horizontalCenter: footerBackground.horizontalCenter
-
-                onClicked: root.creatingNewMatch()
-            }
-        }
-    }
-
     ListModel {
         id: matchesModel
-
+/*
         ListElement {
             firstCompetitor: "Croatia"
             secondCompetitor: "France"
@@ -535,6 +562,16 @@ Item {
             predictions: []
             currentUserMadePrediction: true
             collapsed: true
+        }*/
+    }
+
+    Timer {
+        id: timeoutTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            loadingState = false
+            infoText.text = errorText
         }
     }
 
@@ -569,6 +606,24 @@ Item {
         match.collapsed = true
 
         matchesModel.append(match)
+    }
+
+    function startLoading()
+    {
+        loadingState = true
+        timeoutTimer.restart()
+    }
+
+    function stopLoading()
+    {
+        loadingState = false
+        timeoutTimer.stop()
+        infoText.text = matchesNotFoundText
+    }
+
+    function clear()
+    {
+        tournamentsList.clear()
     }
 }
 

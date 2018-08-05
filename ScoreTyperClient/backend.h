@@ -28,11 +28,14 @@ public:
     Q_INVOKABLE void close();
     Q_INVOKABLE void connectToServer();
     Q_INVOKABLE void disconnectFromServer();
+
     Q_INVOKABLE void login(const QString & nickname, const QString & password);
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
+
     Q_INVOKABLE void downloadUserInfo(const QString & nickname);
     Q_INVOKABLE void pullFinishedTournaments(const QString & nickname);
     Q_INVOKABLE void pullOngoingTournaments(const QString & nickname);
+
     Q_INVOKABLE void createTournament(Tournament * tournament, const QString & password);
     Q_INVOKABLE void pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName);
     Q_INVOKABLE void pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName,
@@ -40,10 +43,13 @@ public:
     Q_INVOKABLE void joinTournament(const QString & nickname, const QString & tournamentName, const QString & hostName);
     Q_INVOKABLE void joinTournament(const QString & nickname, const QString & tournamentName, const QString & hostName,
                                     const QString & password);
+
     Q_INVOKABLE void downloadTournamentInfo(const QString & tournamentName, const QString & hostName);
     Q_INVOKABLE void finishTournament(const QString & tournamentName, const QString & hostName);
     Q_INVOKABLE void addNewRound(const QString & tournamentName, const QString & hostName, const QString & roundName);
     Q_INVOKABLE void downloadTournamentLeaderboard(const QString & tournamentName, const QString & hostName);
+
+    Q_INVOKABLE void pullMatches(const QString & tournamentName, const QString & hostName, const QString & roundName);
     Q_INVOKABLE void createNewMatch(Match * newMatch);
 
     TcpClientWrapper * getClientWrapper() const;
