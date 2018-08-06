@@ -43,6 +43,13 @@ namespace Client
         connect(packetProcessor, &Client::PacketProcessor::addingNewRoundReply,
                 this, &PacketProcessorWrapper::addingNewRoundReply);
 
+        connect(packetProcessor, &Client::PacketProcessor::matchItemArrived,
+                this, &PacketProcessorWrapper::matchItemArrived);
+        connect(packetProcessor, &Client::PacketProcessor::zeroMatchesToPull,
+                this, &PacketProcessorWrapper::zeroMatchesToPull);
+        connect(packetProcessor, &Client::PacketProcessor::allMatchesPulled,
+                this, &PacketProcessorWrapper::allMatchesPulled);
+
         connect(packetProcessor, &Client::PacketProcessor::creatingNewMatchReply,
                 this, &PacketProcessorWrapper::creatingNewMatchReply);
     }

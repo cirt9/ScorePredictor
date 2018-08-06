@@ -31,6 +31,7 @@ namespace Server
         case Packet::ID_FINISH_TOURNAMENT: manageTournamentFinishing(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRound(data); break;
         case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingTournamentLeaderboard(data); break;
+        case Packet::ID_PULL_MATCHES: managePullingMatches(data); break;
         case Packet::ID_CREATE_MATCH: manageCreatingNewMatch(data); break;
 
         default: break;
@@ -436,6 +437,72 @@ namespace Server
         //emit response(responseData);
         //TO BE DONE
         qDebug() << "TO BE DONE";
+    }
+
+    void PacketProcessor::managePullingMatches(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(requestData[1].toString()) &&
+           query.findTournamentId(requestData[0].toString(), query.value("id").toUInt()) &&
+           query.findRoundId(requestData[2].toString(), query.value("id").toUInt()) )
+        {
+            unsigned int roundId = query.value("id").toUInt();
+            query.findMatches(roundId);
+            bool matchesFound = true;
+
+            if(!query.next())
+            {
+                responseData << Packet::ID_ZERO_MATCHES_TO_PULL;
+                emit response(responseData);
+                matchesFound = false;
+            }
+            else
+                sendMatches(query);
+
+            if(matchesFound)
+            {
+                responseData.clear();
+                responseData << Packet::ID_ALL_MATCHES_PULLED;
+                emit response(responseData);
+            }
+        }
+        else
+        {
+            responseData << Packet::ID_ERROR << QString("This round does not exist.");
+            emit response(responseData);
+        }
+    }
+
+    void PacketProcessor::sendMatches(QSqlQuery & matchesQuery)
+    {
+        QVariantList responseData;
+        int chunkSize = 40;
+        int i = 0;
+
+        do
+        {
+            if(i == chunkSize)
+            {
+                emit response(responseData);
+                responseData.clear();
+                i = 0;
+            }
+
+            if(i == 0)
+                responseData << Packet::ID_PULL_MATCHES;
+
+            QVariantList matchData;
+            matchData << matchesQuery.value("competitor_1") << matchesQuery.value("competitor_2")
+                      << matchesQuery.value("competitor_1_score") << matchesQuery.value("competitor_2_score")
+                      << matchesQuery.value("predictions_end_time").toDateTime();
+            responseData << QVariant::fromValue(matchData);
+
+            i++;
+        } while(matchesQuery.next());
+
+        emit response(responseData);
     }
 
     void PacketProcessor::manageCreatingNewMatch(const QVariantList & matchData)

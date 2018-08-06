@@ -275,6 +275,14 @@ bool Query::findRoundId(const QString & roundName, unsigned int tournamentId)
     return first();
 }
 
+void Query::findMatches(unsigned int roundId)
+{
+    prepare("SELECT competitor_1, competitor_1_score, competitor_2, competitor_2_score, "
+            "predictions_end_time FROM match WHERE round_id = :roundId ORDER BY predictions_end_time");
+    bindValue(":roundId", roundId);
+    exec();
+}
+
 bool Query::duplicateMatch(const QString & firstCompetitor, const QString & secondCompetitor, unsigned int roundId)
 {
     prepare("SELECT 1 FROM match WHERE competitor_1 = :firstCompetitor AND competitor_2 = :secondCompetitor "

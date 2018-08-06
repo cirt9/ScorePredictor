@@ -474,6 +474,11 @@ Item {
 
     ListModel {
         id: matchesModel
+
+        onCountChanged: {
+            if(loadingState && count > 0)
+                stopLoading()
+        }
 /*
         ListElement {
             firstCompetitor: "Croatia"

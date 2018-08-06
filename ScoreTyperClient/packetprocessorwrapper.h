@@ -40,6 +40,10 @@ namespace Client
         void finishingTournamentReply(bool replyState, const QString & message);
         void addingNewRoundReply(bool replyState, const QString & message);
 
+        void matchItemArrived(const QStringList & matchItem);
+        void zeroMatchesToPull();
+        void allMatchesPulled();
+
         void creatingNewMatchReply(bool replyState, const QString & message);
     };
 }

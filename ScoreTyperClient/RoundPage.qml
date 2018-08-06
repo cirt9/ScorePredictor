@@ -199,7 +199,8 @@ Page {
                     font.pointSize: 16
                     font.bold: true
                     enabled: firstCompetitorInput.lengthWithoutWhitespaces > 0 &&
-                             secondCompetitorInput.lengthWithoutWhitespaces > 0 ? true : false
+                             secondCompetitorInput.lengthWithoutWhitespaces > 0 &&
+                             firstCompetitorInput.text !== secondCompetitorInput.text ? true : false
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     onClicked: {
@@ -240,6 +241,21 @@ Page {
     Connections {
         target: packetProcessor
 
+        onZeroMatchesToPull: listOfMatches.stopLoading()
+        onAllMatchesPulled: console.log("PULL PREDICTIONS")
+        onMatchItemArrived: {
+            var match = {}
+            match.firstCompetitor = matchItem[0]
+            match.secondCompetitor = matchItem[1]
+            match.firstCompetitorScore = parseInt(matchItem[2])
+            match.secondCompetitorScore = parseInt(matchItem[3])
+            match.predictionsEndTime = matchItem[4]
+            match.predictions = []
+            match.currentUserMadePrediction = true
+
+            listOfMatches.addMatch(match)
+        }
+
         onCreatingNewMatchReply: {
             busyTimer.stop()
             navigationPage.enabled = true
@@ -254,7 +270,7 @@ Page {
                 match.secondCompetitorScore = 0
                 match.predictionsEndTime = predictionsEndDateText.text + " " + predictionsEndTimePicker.time
                 match.predictions = []
-                match.currentUserMadePredictions = false
+                match.currentUserMadePrediction = false
 
                 listOfMatches.addMatch(match)
             }

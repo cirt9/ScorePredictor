@@ -30,6 +30,10 @@ namespace Client
         void manageFinishingTournamentReply(const QVariantList & replyData);
         void manageAddingNewRoundReply(const QVariantList & replyData);
 
+        void managePullingMatchesReply(const QVariantList & replyData);
+        void managePullingZeroMatchesReply();
+        void managePullingAllMatchesReply();
+
         void manageMatchCreatingReply(const QVariantList & replyData);
 
     public:
@@ -60,6 +64,10 @@ namespace Client
         void tournamentRoundNameArrived(const QString & name);
         void finishingTournamentReply(bool replyState, const QString & message);
         void addingNewRoundReply(bool replyState, const QString & message);
+
+        void matchItemArrived(const QStringList & matchItem);
+        void zeroMatchesToPull();
+        void allMatchesPulled();
 
         void creatingNewMatchReply(bool replyState, const QString & message);
     };

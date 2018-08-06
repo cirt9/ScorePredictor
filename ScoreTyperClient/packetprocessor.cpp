@@ -27,6 +27,9 @@ namespace Client
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageTournamentInfoReply(data); break;
         case Packet::ID_FINISH_TOURNAMENT: manageFinishingTournamentReply(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRoundReply(data); break;
+        case Packet::ID_PULL_MATCHES: managePullingMatchesReply(data); break;
+        case Packet::ID_ZERO_MATCHES_TO_PULL: managePullingZeroMatchesReply(); break;
+        case Packet::ID_ALL_MATCHES_PULLED: managePullingAllMatchesReply(); break;
         case Packet::ID_CREATE_MATCH: manageMatchCreatingReply(data); break;
 
         default: break;
@@ -135,6 +138,31 @@ namespace Client
     void PacketProcessor::manageAddingNewRoundReply(const QVariantList & replyData)
     {
         emit addingNewRoundReply(replyData[0].toBool(), replyData[1].toString());
+    }
+
+    void PacketProcessor::managePullingMatchesReply(const QVariantList & replyData)
+    {
+        for(int i=0; i<replyData.size(); i++)
+        {
+            QVariantList matchData = replyData[i].value<QVariantList>();
+            QStringList matchItem;
+
+            matchItem << matchData[0].toString() << matchData[1].toString()
+                      << QString::number(matchData[2].toInt()) << QString::number(matchData[3].toInt())
+                      << matchData[4].toDateTime().toString("dd.MM.yyyy hh:mm");
+
+            emit matchItemArrived(matchItem);
+        }
+    }
+
+    void PacketProcessor::managePullingZeroMatchesReply()
+    {
+        emit zeroMatchesToPull();
+    }
+
+    void PacketProcessor::managePullingAllMatchesReply()
+    {
+        emit allMatchesPulled();
     }
 
     void PacketProcessor::manageMatchCreatingReply(const QVariantList & replyData)
