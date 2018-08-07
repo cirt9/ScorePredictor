@@ -52,6 +52,10 @@ namespace Client
 
         connect(packetProcessor, &Client::PacketProcessor::creatingNewMatchReply,
                 this, &PacketProcessorWrapper::creatingNewMatchReply);
+        connect(packetProcessor, &Client::PacketProcessor::matchDeleted,
+                this, &PacketProcessorWrapper::matchDeleted);
+        connect(packetProcessor, &Client::PacketProcessor::matchDeletingError,
+                this, &PacketProcessorWrapper::matchDeletingError);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

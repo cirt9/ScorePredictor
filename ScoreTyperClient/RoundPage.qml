@@ -28,6 +28,22 @@ Page {
                 anchors.margins: 5
 
                 onCreatingNewMatch: createNewMatchPopup.open()
+                onRemovingMatch: {
+                    var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}',
+                                                       roundPage);
+
+                    match.firstCompetitor = firstCompetitor
+                    match.secondCompetitor = secondCompetitor
+                    match.tournamentName = currentTournament.name
+                    match.tournamentHostName = currentTournament.hostName
+                    match.roundName = tournamentNavigationPage.currentPage
+                    backend.deleteMatch(match)
+                    match.destroy()
+
+                    navigationPage.enabled = false
+                    mainWindow.startBusyIndicator()
+                    busyTimer.restart()
+                }
             }
         }
 
@@ -278,6 +294,22 @@ Page {
                 navigationPage.showDeniedResponse(message)
 
             createNewMatchPopup.reset()
+        }
+
+        onMatchDeleted: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            listOfMatches.deleteMatch(firstCompetitor, secondCompetitor)
+        }
+
+        onMatchDeletingError: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            navigationPage.showDeniedResponse(message)
         }
     }
 

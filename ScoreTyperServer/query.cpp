@@ -308,3 +308,15 @@ bool Query::createMatch(unsigned int roundId, const QString & firstCompetitor, c
 
     return numRowsAffected() > 0 ? true : false;
 }
+
+bool Query::deleteMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor)
+{
+    prepare("DELETE FROM match WHERE round_id = :roundId AND competitor_1 = :firstCompetitor AND "
+            "competitor_2 = :secondCompetitor");
+    bindValue(":roundId", roundId);
+    bindValue(":firstCompetitor", firstCompetitor);
+    bindValue(":secondCompetitor", secondCompetitor);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}

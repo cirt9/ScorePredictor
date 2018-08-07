@@ -45,6 +45,8 @@ namespace Client
         void allMatchesPulled();
 
         void creatingNewMatchReply(bool replyState, const QString & message);
+        void matchDeleted(const QString & firstCompetitor, const QString & secondCompetitor);
+        void matchDeletingError(const QString & message);
     };
 }
 

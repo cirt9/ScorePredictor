@@ -31,6 +31,8 @@ namespace Client
         case Packet::ID_ZERO_MATCHES_TO_PULL: managePullingZeroMatchesReply(); break;
         case Packet::ID_ALL_MATCHES_PULLED: managePullingAllMatchesReply(); break;
         case Packet::ID_CREATE_MATCH: manageMatchCreatingReply(data); break;
+        case Packet::ID_MATCH_DELETED: manageMatchDeletedReply(data); break;
+        case Packet::ID_MATCH_DELETING_ERROR: manageMatchDeletingErrorReply(data); break;
 
         default: break;
         }
@@ -168,5 +170,15 @@ namespace Client
     void PacketProcessor::manageMatchCreatingReply(const QVariantList & replyData)
     {
         emit creatingNewMatchReply(replyData[0].toBool(), replyData[1].toString());
+    }
+
+    void PacketProcessor::manageMatchDeletedReply(const QVariantList & replyData)
+    {
+        emit matchDeleted(replyData[0].toString(), replyData[1].toString());
+    }
+
+    void PacketProcessor::manageMatchDeletingErrorReply(const QVariantList & replyData)
+    {
+        emit matchDeletingError(replyData[0].toString());
     }
 }

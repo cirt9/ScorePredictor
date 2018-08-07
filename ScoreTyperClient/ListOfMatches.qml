@@ -17,6 +17,7 @@ Item {
     property string errorText
     property bool loadingState: false
     signal creatingNewMatch()
+    signal removingMatch(var firstCompetitor, var secondCompetitor)
 
     ListView {
         id: matchesView
@@ -61,6 +62,7 @@ Item {
 
         TextEdit {
             id: infoText
+            text: matchesNotFoundText
             font.pointSize: 22
             font.bold: true
             color: mainWindow.fontColor
@@ -347,7 +349,7 @@ Item {
                     anchors.right: matchHeaderBackground.right
                     anchors.rightMargin: -5
 
-                    onClicked: matchesModel.remove(index)
+                    onClicked: removingMatch(firstCompetitor, secondCompetitor)
                 }
             }
 
@@ -479,8 +481,8 @@ Item {
             if(loadingState && count > 0)
                 stopLoading()
         }
-/*
-        ListElement {
+
+        /*ListElement {
             firstCompetitor: "Croatia"
             secondCompetitor: "France"
             firstCompetitorScore: 2
@@ -611,6 +613,20 @@ Item {
         match.collapsed = true
 
         matchesModel.append(match)
+    }
+
+    function deleteMatch(firstCompetitor, secondCompetitor)
+    {
+        for(var i=0; i<matchesModel.count; i++)
+        {
+            var match = matchesModel.get(i)
+
+            if(match.firstCompetitor === firstCompetitor && match.secondCompetitor === secondCompetitor)
+            {
+                matchesModel.remove(i)
+                break;
+            }
+        }
     }
 
     function startLoading()

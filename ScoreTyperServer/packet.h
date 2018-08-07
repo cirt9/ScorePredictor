@@ -18,7 +18,7 @@ private:
     static const QVariant START_OF_PACKET;
     static const QVariant END_OF_PACKET;
     static const int PACKET_ID_MIN = 0;
-    static const int PACKET_ID_MAX = 17;
+    static const int PACKET_ID_MAX = 20;
 
     void serialize();
     void unserialize(QDataStream & in);
@@ -58,6 +58,9 @@ public:
     static const int ID_ZERO_MATCHES_TO_PULL = 15;
     static const int ID_ALL_MATCHES_PULLED = 16;
     static const int ID_CREATE_MATCH = 17;
+    static const int ID_DELETE_MATCH = 18;
+    static const int ID_MATCH_DELETED = 19;
+    static const int ID_MATCH_DELETING_ERROR = 20;
 };
 
 #endif // PACKET_H

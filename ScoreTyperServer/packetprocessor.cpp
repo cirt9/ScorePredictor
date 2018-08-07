@@ -33,6 +33,7 @@ namespace Server
         case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingTournamentLeaderboard(data); break;
         case Packet::ID_PULL_MATCHES: managePullingMatches(data); break;
         case Packet::ID_CREATE_MATCH: manageCreatingNewMatch(data); break;
+        case Packet::ID_DELETE_MATCH: manageDeletingMatch(data); break;
 
         default: break;
         }
@@ -537,6 +538,39 @@ namespace Server
                     responseData << true << QString("The match was created successfully.");
                 else
                     responseData << false << QString("The match couldn't be created. Try again later.");
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageDeletingMatch(const QVariantList & matchData)
+    {
+        Match match(matchData[0].value<QVariantList>());
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(match.getTournamentHostName()) &&
+           query.findTournamentId(match.getTournamentName(), query.value("id").toUInt()))
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            if(!query.tournamentIsOpened(tournamentId))
+                responseData << Packet::ID_MATCH_DELETING_ERROR << QString("This tournament is closed.");
+
+            else if(!query.findRoundId(match.getRoundName(), tournamentId))
+                responseData << Packet::ID_MATCH_DELETING_ERROR << QString("This round does not exist.");
+            else
+            {
+                unsigned int roundId = query.value("id").toUInt();
+
+                if(query.deleteMatch(roundId, match.getFirstCompetitor(), match.getSecondCompetitor()))
+                    responseData << Packet::ID_MATCH_DELETED << match.getFirstCompetitor() << match.getSecondCompetitor();
+                else
+                    responseData << Packet::ID_MATCH_DELETING_ERROR
+                                 << QString("The match couldn't be deleted. Try again later.");
             }
         }
         else

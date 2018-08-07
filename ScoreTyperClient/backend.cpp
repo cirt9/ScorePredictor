@@ -157,6 +157,15 @@ void BackEnd::createNewMatch(Match * newMatch)
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::deleteMatch(Match * match)
+{
+    QVariantList data;
+    QVariantList matchData;
+    matchData << *match;
+    data << Packet::ID_DELETE_MATCH << QVariant::fromValue(matchData);
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

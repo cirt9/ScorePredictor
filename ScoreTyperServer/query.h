@@ -48,6 +48,7 @@ public:
     bool duplicateMatch(const QString & firstCompetitor, const QString & secondCompetitor, unsigned int roundId);
     bool createMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor,
                      const QDateTime & predictionsEndTime);
+    bool deleteMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor);
 };
 
 #endif // QUERY_H

@@ -51,6 +51,7 @@ public:
 
     Q_INVOKABLE void pullMatches(const QString & tournamentName, const QString & hostName, const QString & roundName);
     Q_INVOKABLE void createNewMatch(Match * newMatch);
+    Q_INVOKABLE void deleteMatch(Match * match);
 
     TcpClientWrapper * getClientWrapper() const;
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;
