@@ -166,6 +166,15 @@ void BackEnd::deleteMatch(Match * match)
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::updateMatchScore(Match * match)
+{
+    QVariantList data;
+    QVariantList matchData;
+    matchData << *match;
+    data << Packet::ID_UPDATE_MATCH_SCORE << QVariant::fromValue(matchData);
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

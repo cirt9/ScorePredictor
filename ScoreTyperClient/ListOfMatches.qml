@@ -18,6 +18,7 @@ Item {
     property bool loadingState: false
     signal creatingNewMatch()
     signal removingMatch(var firstCompetitor, var secondCompetitor)
+    signal updatingMatchScore(var firstCompetitor, var secondCompetitor, var firstScore, var secondScore)
 
     ListView {
         id: matchesView
@@ -330,8 +331,14 @@ Item {
                     onClicked: {
                         if(scoreInput.enteredLeftScore.length > 0 && scoreInput.enteredRightScore.length > 0)
                         {
-                            firstCompetitorScore = parseInt(scoreInput.enteredLeftScore)
-                            secondCompetitorScore = parseInt(scoreInput.enteredRightScore)
+                            if(scoreInput.leftScore !== scoreInput.enteredLeftScore ||
+                               scoreInput.rightScore !== scoreInput.enteredRightScore)
+                            {
+                                updatingMatchScore(firstCompetitor, secondCompetitor,
+                                                   parseInt(scoreInput.enteredLeftScore),
+                                                   parseInt(scoreInput.enteredRightScore))
+                            }
+
                             scoreInput.reset()
                         }
                     }
@@ -624,6 +631,21 @@ Item {
             if(match.firstCompetitor === firstCompetitor && match.secondCompetitor === secondCompetitor)
             {
                 matchesModel.remove(i)
+                break;
+            }
+        }
+    }
+
+    function updateMatchScore(firstCompetitor, secondCompetitor, firstCompetitorScore, secondCompetitorScore)
+    {
+        for(var i=0; i<matchesModel.count; i++)
+        {
+            var match = matchesModel.get(i)
+
+            if(match.firstCompetitor === firstCompetitor && match.secondCompetitor === secondCompetitor)
+            {
+                match.firstCompetitorScore = firstCompetitorScore
+                match.secondCompetitorScore = secondCompetitorScore
                 break;
             }
         }

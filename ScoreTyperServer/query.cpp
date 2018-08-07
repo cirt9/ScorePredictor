@@ -295,6 +295,18 @@ bool Query::duplicateMatch(const QString & firstCompetitor, const QString & seco
     return first();
 }
 
+bool Query::findMatchId(const QString & firstCompetitor, const QString & secondCompetitor, unsigned int roundId)
+{
+    prepare("SELECT id FROM match WHERE competitor_1 = :firstCompetitor "
+            "AND competitor_2 = :secondCompetitor AND round_id = :roundId");
+    bindValue(":firstCompetitor", firstCompetitor);
+    bindValue(":secondCompetitor", secondCompetitor);
+    bindValue(":roundId", roundId);
+    exec();
+
+    return first();
+}
+
 bool Query::createMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor,
                         const QDateTime & predictionsEndTime)
 {
@@ -316,6 +328,18 @@ bool Query::deleteMatch(unsigned int roundId, const QString & firstCompetitor, c
     bindValue(":roundId", roundId);
     bindValue(":firstCompetitor", firstCompetitor);
     bindValue(":secondCompetitor", secondCompetitor);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}
+
+bool Query::updateMatchScore(unsigned int matchId, unsigned int firstCompetitorScore, unsigned int secondCompetitorScore)
+{
+    prepare("UPDATE match SET competitor_1_score = :firstCompetitorScore, "
+            "competitor_2_score = :secondCompetitorScore WHERE id = :matchId");
+    bindValue(":firstCompetitorScore", firstCompetitorScore);
+    bindValue(":secondCompetitorScore", secondCompetitorScore);
+    bindValue(":matchId", matchId);
     exec();
 
     return numRowsAffected() > 0 ? true : false;

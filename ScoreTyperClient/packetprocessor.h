@@ -3,6 +3,7 @@
 
 #include <../ScoreTyperServer/packet.h>
 #include <tournament.h>
+#include <match.h>
 
 #include <QDebug>
 
@@ -37,6 +38,8 @@ namespace Client
         void manageMatchCreatingReply(const QVariantList & replyData);
         void manageMatchDeletedReply(const QVariantList & replyData);
         void manageMatchDeletingErrorReply(const QVariantList & replyData);
+        void manageMatchScoreUpdatedReply(const QVariantList & replyData);
+        void manageMatchScoreUpdatingErrorReply(const QVariantList & replyData);
 
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
@@ -74,6 +77,8 @@ namespace Client
         void creatingNewMatchReply(bool replyState, const QString & message);
         void matchDeleted(const QString & firstCompetitor, const QString & secondCompetitor);
         void matchDeletingError(const QString & message);
+        void matchScoreUpdated(const QStringList & updatedMatch);
+        void matchScoreUpdatingError(const QString & message);
     };
 }
 

@@ -29,15 +29,32 @@ Page {
 
                 onCreatingNewMatch: createNewMatchPopup.open()
                 onRemovingMatch: {
-                    var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}',
-                                                       roundPage);
-
+                    var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}', roundPage);
                     match.firstCompetitor = firstCompetitor
                     match.secondCompetitor = secondCompetitor
                     match.tournamentName = currentTournament.name
                     match.tournamentHostName = currentTournament.hostName
                     match.roundName = tournamentNavigationPage.currentPage
+
                     backend.deleteMatch(match)
+                    match.destroy()
+
+                    navigationPage.enabled = false
+                    mainWindow.startBusyIndicator()
+                    busyTimer.restart()
+                }
+
+                onUpdatingMatchScore: {
+                    var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}', roundPage);
+                    match.firstCompetitor = firstCompetitor
+                    match.secondCompetitor = secondCompetitor
+                    match.firstCompetitorScore = firstScore
+                    match.secondCompetitorScore = secondScore
+                    match.tournamentName = currentTournament.name
+                    match.tournamentHostName = currentTournament.hostName
+                    match.roundName = tournamentNavigationPage.currentPage
+
+                    backend.updateMatchScore(match)
                     match.destroy()
 
                     navigationPage.enabled = false
@@ -224,15 +241,14 @@ Page {
 
                         var dateString = predictionsEndDateText.text + " " + predictionsEndTimePicker.fullTime
                         var predictionsEndDate = Date.fromLocaleString(Qt.locale(), dateString, "dd.MM.yyyy hh:mm:ss")
-                        var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}',
-                                                           roundPage);
-
+                        var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}', roundPage);
                         match.firstCompetitor = firstCompetitorInput.text
                         match.secondCompetitor = secondCompetitorInput.text
                         match.predictionsEndTime = predictionsEndDate
                         match.tournamentName = currentTournament.name
                         match.tournamentHostName = currentTournament.hostName
                         match.roundName = tournamentNavigationPage.currentPage
+
                         backend.createNewMatch(match)
                         match.destroy()
 
@@ -305,6 +321,22 @@ Page {
         }
 
         onMatchDeletingError: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            navigationPage.showDeniedResponse(message)
+        }
+
+        onMatchScoreUpdated: {
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            listOfMatches.updateMatchScore(updatedMatch[0], updatedMatch[1], parseInt(updatedMatch[2]), parseInt(updatedMatch[3]))
+        }
+
+        onMatchScoreUpdatingError: {
             busyTimer.stop()
             navigationPage.enabled = true
             mainWindow.stopBusyIndicator()

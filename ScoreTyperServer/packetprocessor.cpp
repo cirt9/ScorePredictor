@@ -34,6 +34,7 @@ namespace Server
         case Packet::ID_PULL_MATCHES: managePullingMatches(data); break;
         case Packet::ID_CREATE_MATCH: manageCreatingNewMatch(data); break;
         case Packet::ID_DELETE_MATCH: manageDeletingMatch(data); break;
+        case Packet::ID_UPDATE_MATCH_SCORE: manageUpdatingMatchScore(data); break;
 
         default: break;
         }
@@ -571,6 +572,46 @@ namespace Server
                 else
                     responseData << Packet::ID_MATCH_DELETING_ERROR
                                  << QString("The match couldn't be deleted. Try again later.");
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageUpdatingMatchScore(const QVariantList & matchData)
+    {
+        Match match(matchData[0].value<QVariantList>());
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(match.getTournamentHostName()) &&
+           query.findTournamentId(match.getTournamentName(), query.value("id").toUInt()))
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            if(!query.tournamentIsOpened(tournamentId))
+                responseData << Packet::ID_MATCH_SCORE_UPDATE_ERROR << QString("This tournament is closed.");
+
+            else if(!query.findRoundId(match.getRoundName(), tournamentId))
+                responseData << Packet::ID_MATCH_SCORE_UPDATE_ERROR << QString("This round does not exist.");
+            else
+            {
+                unsigned int roundId = query.value("id").toUInt();
+
+                if(query.findMatchId(match.getFirstCompetitor(), match.getSecondCompetitor(), roundId))
+                {
+                    unsigned int matchId = query.value("id").toUInt();
+
+                    if(query.updateMatchScore(matchId, match.getFirstCompetitorScore(), match.getSecondCompetitorScore()))
+                        responseData << Packet::ID_MATCH_SCORE_UPDATED << matchData;
+                    else
+                        responseData << Packet::ID_MATCH_SCORE_UPDATE_ERROR
+                                     << QString("The score couldn't be udpated. Try again later.");
+                }
+                else
+                    responseData << Packet::ID_MATCH_SCORE_UPDATE_ERROR << QString("This match does not exist.");
             }
         }
         else

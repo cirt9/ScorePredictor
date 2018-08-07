@@ -46,9 +46,11 @@ public:
 
     void findMatches(unsigned int roundId);
     bool duplicateMatch(const QString & firstCompetitor, const QString & secondCompetitor, unsigned int roundId);
+    bool findMatchId(const QString & firstCompetitor, const QString & secondCompetitor, unsigned int roundId);
     bool createMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor,
                      const QDateTime & predictionsEndTime);
     bool deleteMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor);
+    bool updateMatchScore(unsigned int matchId, unsigned int firstCompetitorScore, unsigned int secondCompetitorScore);
 };
 
 #endif // QUERY_H

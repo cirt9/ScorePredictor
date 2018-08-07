@@ -33,6 +33,8 @@ namespace Client
         case Packet::ID_CREATE_MATCH: manageMatchCreatingReply(data); break;
         case Packet::ID_MATCH_DELETED: manageMatchDeletedReply(data); break;
         case Packet::ID_MATCH_DELETING_ERROR: manageMatchDeletingErrorReply(data); break;
+        case Packet::ID_MATCH_SCORE_UPDATED: manageMatchScoreUpdatedReply(data); break;
+        case Packet::ID_MATCH_SCORE_UPDATE_ERROR: manageMatchScoreUpdatingErrorReply(data); break;
 
         default: break;
         }
@@ -180,5 +182,21 @@ namespace Client
     void PacketProcessor::manageMatchDeletingErrorReply(const QVariantList & replyData)
     {
         emit matchDeletingError(replyData[0].toString());
+    }
+
+    void PacketProcessor::manageMatchScoreUpdatedReply(const QVariantList & replyData)
+    {
+        Match match(replyData[0].value<QVariantList>());
+        QStringList updatedMatchData;
+
+        updatedMatchData << match.getFirstCompetitor() << match.getSecondCompetitor()
+                         << QString::number(match.getFirstCompetitorScore())
+                         << QString::number(match.getSecondCompetitorScore());
+        emit matchScoreUpdated(updatedMatchData);
+    }
+
+    void PacketProcessor::manageMatchScoreUpdatingErrorReply(const QVariantList & replyData)
+    {
+        emit matchScoreUpdatingError(replyData[0].toString());
     }
 }
