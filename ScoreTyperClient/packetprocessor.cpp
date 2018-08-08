@@ -147,16 +147,7 @@ namespace Client
     void PacketProcessor::managePullingMatchesReply(const QVariantList & replyData)
     {
         for(int i=0; i<replyData.size(); i++)
-        {
-            QVariantList matchData = replyData[i].value<QVariantList>();
-            QStringList matchItem;
-
-            matchItem << matchData[0].toString() << matchData[1].toString()
-                      << QString::number(matchData[2].toInt()) << QString::number(matchData[3].toInt())
-                      << matchData[4].toDateTime().toString("dd.MM.yyyy hh:mm");
-
-            emit matchItemArrived(matchItem);
-        }
+            emit matchItemArrived(replyData[i].toStringList());
     }
 
     void PacketProcessor::managePullingZeroMatchesReply()
@@ -186,13 +177,7 @@ namespace Client
 
     void PacketProcessor::manageMatchScoreUpdatedReply(const QVariantList & replyData)
     {
-        Match match(replyData[0].value<QVariantList>());
-        QStringList updatedMatchData;
-
-        updatedMatchData << match.getFirstCompetitor() << match.getSecondCompetitor()
-                         << QString::number(match.getFirstCompetitorScore())
-                         << QString::number(match.getSecondCompetitorScore());
-        emit matchScoreUpdated(updatedMatchData);
+        emit matchScoreUpdated(replyData[0].toStringList());
     }
 
     void PacketProcessor::manageMatchScoreUpdatingErrorReply(const QVariantList & replyData)

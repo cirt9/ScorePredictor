@@ -495,11 +495,13 @@ namespace Server
             if(i == 0)
                 responseData << Packet::ID_PULL_MATCHES;
 
-            QVariantList matchData;
-            matchData << matchesQuery.value("competitor_1") << matchesQuery.value("competitor_2")
-                      << matchesQuery.value("competitor_1_score") << matchesQuery.value("competitor_2_score")
-                      << matchesQuery.value("predictions_end_time").toDateTime();
-            responseData << QVariant::fromValue(matchData);
+            QStringList matchData;
+            matchData << matchesQuery.value("competitor_1").toString()
+                      << matchesQuery.value("competitor_2").toString()
+                      << QString::number(matchesQuery.value("competitor_1_score").toUInt())
+                      << QString::number(matchesQuery.value("competitor_2_score").toUInt())
+                      << matchesQuery.value("predictions_end_time").toDateTime().toString("dd.MM.yyyy hh:mm");
+            responseData << matchData;
 
             i++;
         } while(matchesQuery.next());
@@ -605,7 +607,14 @@ namespace Server
                     unsigned int matchId = query.value("id").toUInt();
 
                     if(query.updateMatchScore(matchId, match.getFirstCompetitorScore(), match.getSecondCompetitorScore()))
-                        responseData << Packet::ID_MATCH_SCORE_UPDATED << matchData;
+                    {
+                        QStringList updatedMatchData;
+                        updatedMatchData << match.getFirstCompetitor() << match.getSecondCompetitor()
+                                         << QString::number(match.getFirstCompetitorScore())
+                                         << QString::number(match.getSecondCompetitorScore());
+
+                        responseData << Packet::ID_MATCH_SCORE_UPDATED << updatedMatchData;
+                    }
                     else
                         responseData << Packet::ID_MATCH_SCORE_UPDATE_ERROR
                                      << QString("The score couldn't be udpated. Try again later.");
