@@ -10,6 +10,9 @@ Item {
     property alias rightScore: rightScoreText.text
     property alias enteredLeftScore: leftScoreInput.text
     property alias enteredRightScore: rightScoreInput.text
+    property color selectedTextColor: "black"
+    property color selectionColor: "white"
+    property bool selectByMouse: true
 
     Rectangle {
         id: leftScoreBorder
@@ -54,6 +57,9 @@ Item {
             maximumLength: maxLength
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
+            selectByMouse: root.selectByMouse
+            selectionColor: root.selectionColor
+            selectedTextColor: root.selectedTextColor
             activeFocusOnTab: true
             validator : RegExpValidator { regExp : /[0-9]+/ }
             anchors.fill: parent
@@ -119,6 +125,9 @@ Item {
             maximumLength: maxLength
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
+            selectByMouse: root.selectByMouse
+            selectionColor: root.selectionColor
+            selectedTextColor: root.selectedTextColor
             activeFocusOnTab: true
             validator : RegExpValidator { regExp : /[0-9]+/ }
             anchors.fill: parent

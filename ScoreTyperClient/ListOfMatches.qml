@@ -235,6 +235,9 @@ Item {
                         inputHeight: 30
                         leftScore: firstCompetitorScore
                         rightScore: secondCompetitorScore
+                        selectByMouse: true
+                        selectedTextColor: mainWindow.fontColor
+                        selectionColor: mainWindow.accentColor
                         visible: hostMode ? true : false
 
                         Layout.fillHeight: true
@@ -329,14 +332,17 @@ Item {
                     anchors.rightMargin: -15
 
                     onClicked: {
-                        if(scoreInput.enteredLeftScore.length > 0 && scoreInput.enteredRightScore.length > 0)
+                        if(scoreInput.enteredLeftScore.length > 0 || scoreInput.enteredRightScore.length > 0)
                         {
                             if(scoreInput.leftScore !== scoreInput.enteredLeftScore ||
                                scoreInput.rightScore !== scoreInput.enteredRightScore)
                             {
-                                updatingMatchScore(firstCompetitor, secondCompetitor,
-                                                   parseInt(scoreInput.enteredLeftScore),
-                                                   parseInt(scoreInput.enteredRightScore))
+                                var updatedLeftScore = scoreInput.enteredLeftScore.length === 0 ?
+                                                       parseInt(scoreInput.leftScore) : parseInt(scoreInput.enteredLeftScore)
+                                var updatedRightScore = scoreInput.enteredRightScore.length === 0 ?
+                                                        parseInt(scoreInput.rightScore) : parseInt(scoreInput.enteredRightScore)
+
+                                updatingMatchScore(firstCompetitor, secondCompetitor, updatedLeftScore, updatedRightScore)
                             }
 
                             scoreInput.reset()
@@ -417,6 +423,9 @@ Item {
                         inputHeight: 25
                         leftScore: firstCompetitorPredictedScore
                         rightScore: secondCompetitorPredictedScore
+                        selectByMouse: true
+                        selectedTextColor: mainWindow.fontColor
+                        selectionColor: mainWindow.accentColor
                         visible: nickname === currentUser.username && acceptingPredictions ? true : false
 
                         Layout.fillHeight: true
