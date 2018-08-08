@@ -191,6 +191,7 @@ Item {
                 }
 
                 MouseArea {
+                    id: matchHeaderMouseArea
                     anchors.fill: matchHeaderBackground
                     onClicked: collapsed = !collapsed
                 }
@@ -362,7 +363,60 @@ Item {
                     anchors.right: matchHeaderBackground.right
                     anchors.rightMargin: -5
 
-                    onClicked: removingMatch(firstCompetitor, secondCompetitor)
+                    onClicked: {
+                        matchHeaderLayout.visible = false
+                        matchHeaderMouseArea.enabled = false
+                        saveMatchScoreButton.visible = false
+                        deleteMatchButton.visible = false
+                        collapsed = true
+                        matchDeletingConfirmArea.visible = true
+                    }
+                }
+
+                Row {
+                    id: matchDeletingConfirmArea
+                    spacing: 15
+                    visible: false
+                    anchors.centerIn: matchHeaderBackground
+
+                    Text {
+                        color: mainWindow.fontColor
+                        text: qsTr("Are you sure you want to delete this match?")
+                        font.pointSize: 12
+                    }
+
+                    TextButton {
+                        id: confirmDeletingMatchButton
+                        text: qsTr("Yes")
+                        textColor: mainWindow.fontColor
+                        fontSize: 12
+                        bold: true
+
+                        onClicked: {
+                            matchDeletingConfirmArea.visible = false
+                            matchHeaderLayout.visible = true
+                            matchHeaderMouseArea.enabled = true
+                            saveMatchScoreButton.visible = true
+                            deleteMatchButton.visible = true
+                            removingMatch(firstCompetitor, secondCompetitor)
+                        }
+                    }
+
+                    TextButton {
+                        id: cancelDeletingMatchButton
+                        text: qsTr("No")
+                        textColor: mainWindow.fontColor
+                        fontSize: 12
+                        bold: true
+
+                        onClicked: {
+                            matchDeletingConfirmArea.visible = false
+                            matchHeaderLayout.visible = true
+                            matchHeaderMouseArea.enabled = true
+                            saveMatchScoreButton.visible = true
+                            deleteMatchButton.visible = true
+                        }
+                    }
                 }
             }
 

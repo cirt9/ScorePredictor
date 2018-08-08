@@ -39,9 +39,7 @@ Page {
                     backend.deleteMatch(match)
                     match.destroy()
 
-                    navigationPage.enabled = false
-                    mainWindow.startBusyIndicator()
-                    busyTimer.restart()
+                    startLoading()
                 }
 
                 onUpdatingMatchScore: {
@@ -57,9 +55,7 @@ Page {
                     backend.updateMatchScore(match)
                     match.destroy()
 
-                    navigationPage.enabled = false
-                    mainWindow.startBusyIndicator()
-                    busyTimer.restart()
+                    startLoading()
                 }
             }
         }
@@ -253,9 +249,7 @@ Page {
                         match.destroy()
 
                         createNewMatchPopup.close()
-                        navigationPage.enabled = false
-                        mainWindow.startBusyIndicator()
-                        busyTimer.restart()
+                        startLoading()
                     }
                 }
             }
@@ -289,9 +283,7 @@ Page {
         }
 
         onCreatingNewMatchReply: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            stopLoading()
 
             if(replyState)
             {
@@ -313,34 +305,22 @@ Page {
         }
 
         onMatchDeleted: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
-
+            stopLoading()
             listOfMatches.deleteMatch(firstCompetitor, secondCompetitor)
         }
 
         onMatchDeletingError: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
-
+            stopLoading()
             navigationPage.showDeniedResponse(message)
         }
 
         onMatchScoreUpdated: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
-
+            stopLoading()
             listOfMatches.updateMatchScore(updatedMatch[0], updatedMatch[1], parseInt(updatedMatch[2]), parseInt(updatedMatch[3]))
         }
 
         onMatchScoreUpdatingError: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
-
+            stopLoading()
             navigationPage.showDeniedResponse(message)
         }
     }
@@ -360,5 +340,19 @@ Page {
     Component.onCompleted: {
         backend.pullMatches(currentTournament.name, currentTournament.hostName, tournamentNavigationPage.currentPage)
         listOfMatches.startLoading()
+    }
+
+    function startLoading()
+    {
+        navigationPage.enabled = false
+        mainWindow.startBusyIndicator()
+        busyTimer.restart()
+    }
+
+    function stopLoading()
+    {
+        busyTimer.stop()
+        navigationPage.enabled = true
+        mainWindow.stopBusyIndicator()
     }
 }

@@ -199,7 +199,7 @@ Page {
 
             TextEdit {
                 text: qsTr("You will not be able to reopen this tournament! Do you really want to finish it?")
-                font.pointSize: 12
+                font.pointSize: 13
                 color: mainWindow.fontColor
                 readOnly: true
                 wrapMode: TextEdit.Wrap
@@ -219,7 +219,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
-                    id: tournamentFinishingConfirmationButton
+                    id: tournamentFinishingConfirmButton
                     text: qsTr("Yes")
                     width: 150
                     font.pointSize: 20
@@ -241,7 +241,7 @@ Page {
                 }
 
                 Button {
-                    id: tournamentFinishingDenyingButton
+                    id: tournamentFinishingDenyButton
                     text: qsTr("No")
                     width: 150
                     font.pointSize: 20
