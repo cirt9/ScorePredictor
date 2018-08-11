@@ -6,6 +6,7 @@ import "../components"
 
 Page {
     id: roundPage
+    property string name
 
     RowLayout {
         id: pageLayout
@@ -34,7 +35,7 @@ Page {
                     match.secondCompetitor = secondCompetitor
                     match.tournamentName = currentTournament.name
                     match.tournamentHostName = currentTournament.hostName
-                    match.roundName = tournamentNavigationPage.currentPage
+                    match.roundName = roundPage.name
 
                     backend.deleteMatch(match)
                     match.destroy()
@@ -50,7 +51,7 @@ Page {
                     match.secondCompetitorScore = secondScore
                     match.tournamentName = currentTournament.name
                     match.tournamentHostName = currentTournament.hostName
-                    match.roundName = tournamentNavigationPage.currentPage
+                    match.roundName = roundPage.name
 
                     backend.updateMatchScore(match)
                     match.destroy()
@@ -243,7 +244,7 @@ Page {
                         match.predictionsEndTime = predictionsEndDate
                         match.tournamentName = currentTournament.name
                         match.tournamentHostName = currentTournament.hostName
-                        match.roundName = tournamentNavigationPage.currentPage
+                        match.roundName = roundPage.name
 
                         backend.createNewMatch(match)
                         match.destroy()
@@ -268,18 +269,15 @@ Page {
         target: packetProcessor
 
         onZeroMatchesToPull: listOfMatches.stopLoading()
-        onAllMatchesPulled: console.log("PULL PREDICTIONS")
         onMatchItemArrived: {
-            var match = {}
-            match.firstCompetitor = matchItem[0]
-            match.secondCompetitor = matchItem[1]
-            match.firstCompetitorScore = parseInt(matchItem[2])
-            match.secondCompetitorScore = parseInt(matchItem[3])
-            match.predictionsEndTime = matchItem[4]
             match.predictions = []
             match.currentUserMadePrediction = true
-
             listOfMatches.addMatch(match)
+        }
+
+        onAllMatchesPulled: {
+            backend.pullMatchesPredictions(currentUser.username, currentTournament.name,
+                                           currentTournament.hostName, roundPage.name)
         }
 
         onCreatingNewMatchReply: {
@@ -316,7 +314,8 @@ Page {
 
         onMatchScoreUpdated: {
             stopLoading()
-            listOfMatches.updateMatchScore(updatedMatch[0], updatedMatch[1], parseInt(updatedMatch[2]), parseInt(updatedMatch[3]))
+            listOfMatches.updateMatchScore(updatedMatch.firstCompetitor, updatedMatch.secondCompetitor,
+                                           updatedMatch.firstCompetitorScore, updatedMatch.secondCompetitorScore)
         }
 
         onMatchScoreUpdatingError: {
@@ -338,7 +337,8 @@ Page {
     }
 
     Component.onCompleted: {
-        backend.pullMatches(currentTournament.name, currentTournament.hostName, tournamentNavigationPage.currentPage)
+        name = tournamentNavigationPage.currentPage
+        backend.pullMatches(currentTournament.name, currentTournament.hostName, roundPage.name)
         listOfMatches.startLoading()
     }
 

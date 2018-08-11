@@ -54,6 +54,9 @@ public:
     Q_INVOKABLE void deleteMatch(Match * match);
     Q_INVOKABLE void updateMatchScore(Match * match);
 
+    Q_INVOKABLE void pullMatchesPredictions(const QString & requesterName, const QString & tournamentName,
+                                            const QString & hostName, const QString & roundName);
+
     TcpClientWrapper * getClientWrapper() const;
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;
     User * getCurrentUser() const;

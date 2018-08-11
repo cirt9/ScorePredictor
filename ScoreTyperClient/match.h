@@ -57,6 +57,8 @@ public:
     QString getTournamentHostName() const;
     QString getRoundName() const;
 
+    static const int NUMBER_OF_FIELDS = 8;
+
     friend QVariantList & operator<<(QVariantList & list, const Match & match);
 
 signals:

@@ -175,6 +175,14 @@ void BackEnd::updateMatchScore(Match * match)
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::pullMatchesPredictions(const QString & requesterName, const QString & tournamentName,
+                                     const QString & hostName, const QString & roundName)
+{
+    QVariantList data;
+    data << Packet::ID_PULL_MATCHES_PREDICTIONS << requesterName << tournamentName << hostName << roundName;
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

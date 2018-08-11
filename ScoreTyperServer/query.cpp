@@ -344,3 +344,19 @@ bool Query::updateMatchScore(unsigned int matchId, unsigned int firstCompetitorS
 
     return numRowsAffected() > 0 ? true : false;
 }
+
+void Query::findMatchesPredictions(unsigned int tournamentId, unsigned int roundId, unsigned int requesterId)
+{
+    prepare("SELECT nickname, competitor_1_score_prediction, competitor_2_score_prediction, "
+            "competitor_1, competitor_2 FROM match_prediction INNER JOIN tournament_participant ON "
+            "match_prediction.tournament_participant_id = tournament_participant.id "
+            "INNER JOIN user ON tournament_participant.user_id = user.id "
+            "INNER JOIN match ON match_prediction.match_id = match.id "
+            "WHERE tournament_participant.tournament_id = :tournamentId AND match.round_id = :roundId "
+            "AND (datetime('now', 'localtime') >= datetime(predictions_end_time) OR user_id = :requesterId) "
+            "ORDER BY predictions_end_time");
+    bindValue(":tournamentId", tournamentId);
+    bindValue(":roundId", roundId);
+    bindValue(":requesterId", requesterId);
+    exec();
+}

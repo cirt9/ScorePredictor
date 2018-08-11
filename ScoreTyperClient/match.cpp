@@ -8,7 +8,7 @@ Match::Match(QObject * parent) : QObject(parent)
 
 Match::Match(const QVariantList & matchData, QObject * parent) : QObject(parent)
 {
-    if(matchData.size() == 8)
+    if(matchData.size() == Match::NUMBER_OF_FIELDS)
     {
         firstCompetitor = matchData[0].toString();
         secondCompetitor = matchData[1].toString();

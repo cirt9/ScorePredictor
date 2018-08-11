@@ -51,6 +51,8 @@ public:
                      const QDateTime & predictionsEndTime);
     bool deleteMatch(unsigned int roundId, const QString & firstCompetitor, const QString & secondCompetitor);
     bool updateMatchScore(unsigned int matchId, unsigned int firstCompetitorScore, unsigned int secondCompetitorScore);
+
+    void findMatchesPredictions(unsigned int tournamentId, unsigned int roundId, unsigned int requesterId);
 };
 
 #endif // QUERY_H

@@ -43,6 +43,8 @@ public:
     void setTypersNumber(unsigned int value);
     void setTypersLimit(unsigned int value);
 
+    static const int NUMBER_OF_FIELDS = 6;
+
     friend QVariantList & operator<<(QVariantList & list, const Tournament & tournament);
 
 signals:

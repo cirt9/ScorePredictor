@@ -145,6 +145,7 @@ Page {
         StackView {
            id: tournamentView
            initialItem: TournamentLeaderboardPage {}
+           popExit: Transition {}
 
            Layout.fillHeight: true
            Layout.fillWidth: true
@@ -157,7 +158,7 @@ Page {
            function showRound()
            {
                if(depth > 1)
-                   pop()
+                   var poppedItem = pop()
 
                push("qrc:/pages/RoundPage.qml")
            }

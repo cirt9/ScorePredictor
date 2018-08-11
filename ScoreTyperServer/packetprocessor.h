@@ -38,8 +38,11 @@ namespace Server
         void manageDeletingMatch(const QVariantList & matchData);
         void manageUpdatingMatchScore(const QVariantList & matchData);
 
+        void managePullingMatchesPredictions(const QVariantList & requestData);
+
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
         void sendMatches(QSqlQuery & matchesQuery);
+        void sendMatchesPredictions(QSqlQuery & query);
 
     public:
         explicit PacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);

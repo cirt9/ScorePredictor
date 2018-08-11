@@ -35,6 +35,7 @@ namespace Server
         case Packet::ID_CREATE_MATCH: manageCreatingNewMatch(data); break;
         case Packet::ID_DELETE_MATCH: manageDeletingMatch(data); break;
         case Packet::ID_UPDATE_MATCH_SCORE: manageUpdatingMatchScore(data); break;
+        case Packet::ID_PULL_MATCHES_PREDICTIONS: managePullingMatchesPredictions(data); break;
 
         default: break;
         }
@@ -495,13 +496,13 @@ namespace Server
             if(i == 0)
                 responseData << Packet::ID_PULL_MATCHES;
 
-            QStringList matchData;
-            matchData << matchesQuery.value("competitor_1").toString()
-                      << matchesQuery.value("competitor_2").toString()
-                      << QString::number(matchesQuery.value("competitor_1_score").toUInt())
-                      << QString::number(matchesQuery.value("competitor_2_score").toUInt())
+            QVariantList matchData;
+            matchData << matchesQuery.value("competitor_1")
+                      << matchesQuery.value("competitor_2")
+                      << matchesQuery.value("competitor_1_score")
+                      << matchesQuery.value("competitor_2_score")
                       << matchesQuery.value("predictions_end_time").toDateTime().toString("dd.MM.yyyy hh:mm");
-            responseData << matchData;
+            responseData << QVariant::fromValue(matchData);
 
             i++;
         } while(matchesQuery.next());
@@ -608,12 +609,12 @@ namespace Server
 
                     if(query.updateMatchScore(matchId, match.getFirstCompetitorScore(), match.getSecondCompetitorScore()))
                     {
-                        QStringList updatedMatchData;
+                        QVariantList updatedMatchData;
                         updatedMatchData << match.getFirstCompetitor() << match.getSecondCompetitor()
-                                         << QString::number(match.getFirstCompetitorScore())
-                                         << QString::number(match.getSecondCompetitorScore());
+                                         << match.getFirstCompetitorScore()
+                                         << match.getSecondCompetitorScore();
 
-                        responseData << Packet::ID_MATCH_SCORE_UPDATED << updatedMatchData;
+                        responseData << Packet::ID_MATCH_SCORE_UPDATED << QVariant::fromValue(updatedMatchData);
                     }
                     else
                         responseData << Packet::ID_MATCH_SCORE_UPDATE_ERROR
@@ -625,6 +626,78 @@ namespace Server
         }
         else
             responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::managePullingMatchesPredictions(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(!query.findUserId(requestData[0].toString()))
+        {
+            responseData << Packet::ID_ERROR << QString("User does not exist.");
+            emit response(responseData);
+            return;
+        }
+        unsigned int requesterId = query.value("id").toUInt();
+
+        if(query.findUserId(requestData[2].toString()) &&
+           query.findTournamentId(requestData[1].toString(), query.value("id").toUInt()))
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            if(query.findRoundId(requestData[3].toString(), tournamentId))
+            {
+                unsigned int roundId = query.value("id").toUInt();
+                query.findMatchesPredictions(tournamentId, roundId, requesterId);
+
+                if(query.next())
+                    sendMatchesPredictions(query);
+
+                responseData.clear();
+                responseData << Packet::ID_ALL_MATCHES_PREDICTIONS_PULLED;
+                emit response(responseData);
+            }
+            else
+                responseData << Packet::ID_ERROR << QString("This round does not exist.");
+        }
+        else
+        {
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+            emit response(responseData);
+        }
+    }
+
+    void PacketProcessor::sendMatchesPredictions(QSqlQuery & query)
+    {
+        QVariantList responseData;
+        int chunkSize = 40;
+        int i = 0;
+
+        do
+        {
+            if(i == chunkSize)
+            {
+                emit response(responseData);
+                responseData.clear();
+                i = 0;
+            }
+
+            if(i == 0)
+                responseData << Packet::ID_PULL_MATCHES_PREDICTIONS;
+
+            QVariantList predictionsData;
+            predictionsData << query.value("nickname")
+                            << query.value("competitor_1_score_prediction")
+                            << query.value("competitor_2_score_prediction")
+                            << query.value("competitor_1")
+                            << query.value("competitor_2");
+            responseData << QVariant::fromValue(predictionsData);
+
+            i++;
+        } while(query.next());
 
         emit response(responseData);
     }

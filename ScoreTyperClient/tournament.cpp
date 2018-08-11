@@ -12,7 +12,7 @@ Tournament::Tournament(QObject * parent) : QObject(parent)
 
 Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : QObject(parent)
 {
-    if(tournamentData.size() == 6)
+    if(tournamentData.size() == Tournament::NUMBER_OF_FIELDS)
     {
         name = tournamentData[0].toString();
         hostName = tournamentData[1].toString();
