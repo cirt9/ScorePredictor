@@ -27,39 +27,7 @@ Item {
         header: headerDelegate
         headerPositioning: ListView.OverlayHeader
         anchors.fill: parent
-
-        Item {
-            id: footer
-            width: parent.width
-            height: viewFooterHeight
-            visible: hostMode ? true : false
-            z: 3
-            anchors.bottom: parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            Rectangle {
-                id: footerBackground
-                width: parent.width
-                height: viewFooterHeight - 5
-                color: mainWindow.colorB
-                radius: 5
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-            }
-
-            TextButton {
-                id: createNewMatchButton
-                text: qsTr("Create New Match")
-                textColor: mainWindow.fontColor
-                fontSize: 18
-                bold: true
-                anchors.top: footerBackground.top
-                anchors.bottom: footerBackground.bottom
-                anchors.horizontalCenter: footerBackground.horizontalCenter
-
-                onClicked: root.creatingNewMatch()
-            }
-        }
+        anchors.bottomMargin: footer.visible ? viewFooterHeight : 0
 
         TextEdit {
             id: infoText
@@ -87,6 +55,39 @@ Item {
             fontSize: 22
             running: loadingState && matchesModel.count === 0 ? true : false
             anchors.centerIn: parent
+        }
+    }
+
+    Item {
+        id: footer
+        width: parent.width
+        height: viewFooterHeight
+        visible: hostMode ? true : false
+        z: 3
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        Rectangle {
+            id: footerBackground
+            width: parent.width
+            height: viewFooterHeight - 5
+            color: mainWindow.colorB
+            radius: 5
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+        }
+
+        TextButton {
+            id: createNewMatchButton
+            text: qsTr("Create New Match")
+            textColor: mainWindow.fontColor
+            fontSize: 18
+            bold: true
+            anchors.top: footerBackground.top
+            anchors.bottom: footerBackground.bottom
+            anchors.horizontalCenter: footerBackground.horizontalCenter
+
+            onClicked: root.creatingNewMatch()
         }
     }
 
@@ -160,7 +161,7 @@ Item {
             height: {
                 if(collapsed)
                     return matchHeaderHeight
-                else if(!currentUserMadePrediction)
+                else if(!currentUserMadePrediction && acceptingPredictions)
                     return matchHeaderHeight + predictions.count * predictionDelegateHeight +
                            (predictions.count - 1) * spacing + matchesSpacing + predictionDelegateHeight + matchesSpacing
                 else
@@ -175,8 +176,8 @@ Item {
             header: Item {
                 id: matchHeader
                 width: matchesView.width
-                height: currentUserMadePrediction ? matchHeaderHeight : matchHeaderHeight + predictionDelegateHeight +
-                                                    matchesSpacing
+                height: makePredictionArea.visible ? matchHeaderHeight + predictionDelegateHeight + matchesSpacing :
+                                                     matchHeaderHeight
                 z: 2
 
                 Rectangle {
@@ -265,7 +266,7 @@ Item {
                     color: mainWindow.colorB
                     opacity: 0.4
                     radius: 5
-                    visible: collapsed ? false : (currentUserMadePrediction ? false : true)
+                    visible: collapsed ? false : (currentUserMadePrediction ? false : (acceptingPredictions ? true : false))
                     anchors.top: matchHeaderBackground.bottom
                     anchors.left: matchHeaderBackground.left
                     anchors.topMargin: matchesSpacing
@@ -273,7 +274,7 @@ Item {
 
                 RowLayout {
                     id: makePredictionLayout
-                    visible: collapsed ? false : (currentUserMadePrediction ? false : true)
+                    visible: collapsed ? false : (currentUserMadePrediction ? false : (acceptingPredictions ? true : false))
                     anchors.fill: makePredictionArea
                     anchors.margins: 2
                     anchors.leftMargin: 5
@@ -551,95 +552,6 @@ Item {
             if(loadingState && count > 0)
                 stopLoading()
         }
-
-        /*ListElement {
-            firstCompetitor: "Croatia"
-            secondCompetitor: "France"
-            firstCompetitorScore: 2
-            secondCompetitorScore: 4
-            predictionsEndTime: "15-07-2018 17:00"
-            acceptingPredictions: true
-            predictions: [
-                ListElement {
-                    nickname: "John"
-                    firstCompetitorPredictedScore: 2
-                    secondCompetitorPredictedScore: 4
-                },
-
-                ListElement {
-                    nickname: "TournamentTester1"
-                    firstCompetitorPredictedScore: 2
-                    secondCompetitorPredictedScore: 1
-                },
-
-                ListElement {
-                    nickname: "TestUser"
-                    firstCompetitorPredictedScore: 1
-                    secondCompetitorPredictedScore: 1
-                }
-            ]
-            currentUserMadePrediction: true
-            collapsed: true
-        }
-
-        ListElement {
-            firstCompetitor: "Belgium"
-            secondCompetitor: "France"
-            firstCompetitorScore: 0
-            secondCompetitorScore: 1
-            predictionsEndTime: "11-07-2018 19:00"
-            acceptingPredictions: true
-            predictions: [
-                ListElement {
-                    nickname: "John"
-                    firstCompetitorPredictedScore: 2
-                    secondCompetitorPredictedScore: 2
-                },
-
-                ListElement {
-                    nickname: "TestUser"
-                    firstCompetitorPredictedScore: 1
-                    secondCompetitorPredictedScore: 0
-                }
-            ]
-            currentUserMadePrediction: true
-            collapsed: true
-        }
-
-        ListElement {
-            firstCompetitor: "Croatia"
-            secondCompetitor: "England"
-            firstCompetitorScore: 2
-            secondCompetitorScore: 2
-            predictionsEndTime: "12-07-2018 19:00"
-            acceptingPredictions: true
-            predictions: [
-                ListElement {
-                    nickname: "John"
-                    firstCompetitorPredictedScore: 2
-                    secondCompetitorPredictedScore: 2
-                },
-                ListElement {
-                    nickname: "TestUser"
-                    firstCompetitorPredictedScore: 0
-                    secondCompetitorPredictedScore: 0
-                }
-            ]
-            currentUserMadePrediction: true
-            collapsed: true
-        }
-
-        ListElement {
-            firstCompetitor: "Belgium"
-            secondCompetitor: "England"
-            firstCompetitorScore: 2
-            secondCompetitorScore: 0
-            predictionsEndTime: "14-07-2018 19:00"
-            acceptingPredictions: true
-            predictions: []
-            currentUserMadePrediction: true
-            collapsed: true
-        }*/
     }
 
     Timer {
@@ -652,32 +564,10 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        //this has to be done after downloading list of matches from server
-
-        for(var i=0; i<matchesModel.count; i++)
-        {
-            var match = matchesModel.get(i)
-            var currentUserMadePrediction = false
-
-            for(var j=0; j<match.predictions.count; j++)
-            {
-                var prediction = match.predictions.get(j)
-
-                if(prediction.nickname === currentUser.username)
-                {
-                    currentUserMadePrediction = true
-                    break
-                }
-            }
-            match.currentUserMadePrediction = currentUserMadePrediction
-        }
-    }
-
     function addMatch(match)
     {
         var predictionsEndDateTime = Date.fromLocaleString(locale, match.predictionsEndTime, "dd.MM.yyyy hh:mm")
-        var now = Date()
+        var now = new Date()
 
         match.acceptingPredictions = now < predictionsEndDateTime ? true : false
         match.collapsed = true
@@ -709,8 +599,48 @@ Item {
             {
                 match.firstCompetitorScore = firstCompetitorScore
                 match.secondCompetitorScore = secondCompetitorScore
-                break;
+                break
             }
+        }
+    }
+
+    function addPrediction(prediction, firstCompetitor, secondCompetitor)
+    {
+        for(var i=0; i<matchesModel.count; i++)
+        {
+            var match = matchesModel.get(i)
+
+            if(match.firstCompetitor === firstCompetitor && match.secondCompetitor === secondCompetitor)
+            {
+                var predictions = match.predictions
+
+                if(prediction.nickname === currentUser.username)
+                    predictions.insert(0, prediction)
+                else
+                    predictions.append(prediction)
+            }
+        }
+    }
+
+    function assignPredictingCapabilities()
+    {
+        for(var i=0; i<matchesModel.count; i++)
+        {
+            var match = matchesModel.get(i)
+            var currentUserMadePrediction = false
+
+            for(var j=0; j<match.predictions.count; j++)
+            {
+                var prediction = match.predictions.get(j)
+
+                if(prediction.nickname === currentUser.username)
+                {
+                    currentUserMadePrediction = true
+                    break
+                }
+            }
+
+            match.currentUserMadePrediction = currentUserMadePrediction
         }
     }
 
@@ -732,19 +662,6 @@ Item {
         tournamentsList.clear()
     }
 }
-
-/*
-adding predictions
-
-var test2 = matchesModel.get(0)
-var testPreds = test2.predictions
-
-var pred = {}
-pred.nickname = "JDJASJ"
-pred.firstCompetitorPredictedScore = 1
-pred.secondCompetitorPredictedScore = 2
-
-testPreds.append(pred)*/
 
 /*
 modifying predictions

@@ -60,6 +60,11 @@ namespace Client
                 this, &PacketProcessorWrapper::matchScoreUpdated);
         connect(packetProcessor, &Client::PacketProcessor::matchScoreUpdatingError,
                 this, &PacketProcessorWrapper::matchScoreUpdatingError);
+
+        connect(packetProcessor, &Client::PacketProcessor::matchPredictionItemArrived,
+                this, &PacketProcessorWrapper::matchPredictionItemArrived);
+        connect(packetProcessor, &Client::PacketProcessor::allMatchesPredictionsPulled,
+                this, &PacketProcessorWrapper::allMatchesPredictionsPulled);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

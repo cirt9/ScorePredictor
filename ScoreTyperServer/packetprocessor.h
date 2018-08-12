@@ -41,8 +41,8 @@ namespace Server
         void managePullingMatchesPredictions(const QVariantList & requestData);
 
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
-        void sendMatches(QSqlQuery & matchesQuery);
-        void sendMatchesPredictions(QSqlQuery & query);
+        void sendMatchesInChunks(QSqlQuery & query);
+        void sendMatchesPredictionsInChunks(QSqlQuery & query);
 
     public:
         explicit PacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent = nullptr);

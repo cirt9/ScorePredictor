@@ -322,6 +322,18 @@ Page {
             stopLoading()
             navigationPage.showDeniedResponse(message)
         }
+
+        onMatchPredictionItemArrived: {
+            var firstCompetitor = prediction.firstCompetitor
+            var secondCompetitor = prediction.secondCompetitor
+
+            delete prediction.firstCompetitor
+            delete prediction.secondCompetitor
+
+            listOfMatches.addPrediction(prediction, firstCompetitor, secondCompetitor)
+        }
+
+        onAllMatchesPredictionsPulled: listOfMatches.assignPredictingCapabilities()
     }
 
     Timer {

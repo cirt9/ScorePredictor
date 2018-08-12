@@ -158,7 +158,7 @@ Page {
            function showRound()
            {
                if(depth > 1)
-                   var poppedItem = pop()
+                   pop()
 
                push("qrc:/pages/RoundPage.qml")
            }

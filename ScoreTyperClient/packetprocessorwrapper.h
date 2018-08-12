@@ -49,6 +49,9 @@ namespace Client
         void matchDeletingError(const QString & message);
         void matchScoreUpdated(const QVariantMap & updatedMatch);
         void matchScoreUpdatingError(const QString & message);
+
+        void matchPredictionItemArrived(const QVariantMap & prediction);
+        void allMatchesPredictionsPulled();
     };
 }
 

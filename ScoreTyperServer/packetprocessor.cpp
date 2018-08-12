@@ -462,7 +462,7 @@ namespace Server
                 matchesFound = false;
             }
             else
-                sendMatches(query);
+                sendMatchesInChunks(query);
 
             if(matchesFound)
             {
@@ -478,7 +478,7 @@ namespace Server
         }
     }
 
-    void PacketProcessor::sendMatches(QSqlQuery & matchesQuery)
+    void PacketProcessor::sendMatchesInChunks(QSqlQuery & query)
     {
         QVariantList responseData;
         int chunkSize = 40;
@@ -497,15 +497,15 @@ namespace Server
                 responseData << Packet::ID_PULL_MATCHES;
 
             QVariantList matchData;
-            matchData << matchesQuery.value("competitor_1")
-                      << matchesQuery.value("competitor_2")
-                      << matchesQuery.value("competitor_1_score")
-                      << matchesQuery.value("competitor_2_score")
-                      << matchesQuery.value("predictions_end_time").toDateTime().toString("dd.MM.yyyy hh:mm");
+            matchData << query.value("competitor_1")
+                      << query.value("competitor_2")
+                      << query.value("competitor_1_score")
+                      << query.value("competitor_2_score")
+                      << query.value("predictions_end_time").toDateTime().toString("dd.MM.yyyy hh:mm");
             responseData << QVariant::fromValue(matchData);
 
             i++;
-        } while(matchesQuery.next());
+        } while(query.next());
 
         emit response(responseData);
     }
@@ -654,9 +654,8 @@ namespace Server
                 query.findMatchesPredictions(tournamentId, roundId, requesterId);
 
                 if(query.next())
-                    sendMatchesPredictions(query);
+                    sendMatchesPredictionsInChunks(query);
 
-                responseData.clear();
                 responseData << Packet::ID_ALL_MATCHES_PREDICTIONS_PULLED;
                 emit response(responseData);
             }
@@ -670,7 +669,7 @@ namespace Server
         }
     }
 
-    void PacketProcessor::sendMatchesPredictions(QSqlQuery & query)
+    void PacketProcessor::sendMatchesPredictionsInChunks(QSqlQuery & query)
     {
         QVariantList responseData;
         int chunkSize = 40;

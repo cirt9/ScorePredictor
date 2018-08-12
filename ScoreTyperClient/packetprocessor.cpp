@@ -29,12 +29,14 @@ namespace Client
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRoundReply(data); break;
         case Packet::ID_PULL_MATCHES: managePullingMatchesReply(data); break;
         case Packet::ID_ZERO_MATCHES_TO_PULL: managePullingZeroMatchesReply(); break;
-        case Packet::ID_ALL_MATCHES_PULLED: managePullingAllMatchesReply(); break;
+        case Packet::ID_ALL_MATCHES_PULLED: manageAllMatchesPulledReply(); break;
         case Packet::ID_CREATE_MATCH: manageMatchCreatingReply(data); break;
         case Packet::ID_MATCH_DELETED: manageMatchDeletedReply(data); break;
         case Packet::ID_MATCH_DELETING_ERROR: manageMatchDeletingErrorReply(data); break;
         case Packet::ID_MATCH_SCORE_UPDATED: manageMatchScoreUpdatedReply(data); break;
         case Packet::ID_MATCH_SCORE_UPDATE_ERROR: manageMatchScoreUpdatingErrorReply(data); break;
+        case Packet::ID_PULL_MATCHES_PREDICTIONS: managePullingMatchesPredictionsReply(data); break;
+        case Packet::ID_ALL_MATCHES_PREDICTIONS_PULLED: manageAllMatchesPredictionsPulledReply(); break;
 
         default: break;
         }
@@ -165,7 +167,7 @@ namespace Client
         emit zeroMatchesToPull();
     }
 
-    void PacketProcessor::managePullingAllMatchesReply()
+    void PacketProcessor::manageAllMatchesPulledReply()
     {
         emit allMatchesPulled();
     }
@@ -200,5 +202,26 @@ namespace Client
     void PacketProcessor::manageMatchScoreUpdatingErrorReply(const QVariantList & replyData)
     {
         emit matchScoreUpdatingError(replyData[0].toString());
+    }
+
+    void PacketProcessor::managePullingMatchesPredictionsReply(const QVariantList & replyData)
+    {
+        for(int i=0; i<replyData.size(); i++)
+        {
+            QVariantList predictionData = replyData[i].value<QVariantList>();
+            QVariantMap prediction;
+            prediction.insert("nickname", predictionData[0]);
+            prediction.insert("firstCompetitorPredictedScore", predictionData[1]);
+            prediction.insert("secondCompetitorPredictedScore", predictionData[2]);
+            prediction.insert("firstCompetitor", predictionData[3]);
+            prediction.insert("secondCompetitor", predictionData[4]);
+
+            emit matchPredictionItemArrived(prediction);
+        }
+    }
+
+    void PacketProcessor::manageAllMatchesPredictionsPulledReply()
+    {
+        emit allMatchesPredictionsPulled();
     }
 }

@@ -33,13 +33,16 @@ namespace Client
 
         void managePullingMatchesReply(const QVariantList & replyData);
         void managePullingZeroMatchesReply();
-        void managePullingAllMatchesReply();
+        void manageAllMatchesPulledReply();
 
         void manageMatchCreatingReply(const QVariantList & replyData);
         void manageMatchDeletedReply(const QVariantList & replyData);
         void manageMatchDeletingErrorReply(const QVariantList & replyData);
         void manageMatchScoreUpdatedReply(const QVariantList & replyData);
         void manageMatchScoreUpdatingErrorReply(const QVariantList & replyData);
+
+        void managePullingMatchesPredictionsReply(const QVariantList & replyData);
+        void manageAllMatchesPredictionsPulledReply();
 
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
@@ -79,6 +82,9 @@ namespace Client
         void matchDeletingError(const QString & message);
         void matchScoreUpdated(const QVariantMap & updatedMatch);
         void matchScoreUpdatingError(const QString & message);
+
+        void matchPredictionItemArrived(const QVariantMap & prediction);
+        void allMatchesPredictionsPulled();
     };
 }
 
