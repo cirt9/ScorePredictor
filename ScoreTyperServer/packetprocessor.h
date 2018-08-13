@@ -39,6 +39,7 @@ namespace Server
         void manageUpdatingMatchScore(const QVariantList & matchData);
 
         void managePullingMatchesPredictions(const QVariantList & requestData);
+        void manageMakingPrediction(const QVariantList & predictionData);
 
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
         void sendMatchesInChunks(QSqlQuery & query);

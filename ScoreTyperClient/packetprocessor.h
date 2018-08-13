@@ -44,6 +44,9 @@ namespace Client
         void managePullingMatchesPredictionsReply(const QVariantList & replyData);
         void manageAllMatchesPredictionsPulledReply();
 
+        void managePredictionMakingReply(const QVariantList & replyData);
+        void managePredictionMakingErrorReply(const QVariantList & replyData);
+
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
         ~PacketProcessor() {}
@@ -85,6 +88,9 @@ namespace Client
 
         void matchPredictionItemArrived(const QVariantMap & prediction);
         void allMatchesPredictionsPulled();
+
+        void predictionCreated(const QVariantMap & predictionData);
+        void predictionCreatingError(const QString & message);
     };
 }
 

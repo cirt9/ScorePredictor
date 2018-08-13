@@ -53,6 +53,11 @@ public:
     bool updateMatchScore(unsigned int matchId, unsigned int firstCompetitorScore, unsigned int secondCompetitorScore);
 
     void findMatchesPredictions(unsigned int tournamentId, unsigned int roundId, unsigned int requesterId);
+
+    bool findTournamentParticipantId(unsigned int userId, unsigned int tournamentId);
+    bool matchPredictionAlreadyExists(unsigned int matchId, unsigned int participantId);
+    bool createMatchPrediction(unsigned int matchId, unsigned int participantId, unsigned int firstCompetitorScore,
+                               unsigned int secondCompetitorScore);
 };
 
 #endif // QUERY_H

@@ -360,3 +360,38 @@ void Query::findMatchesPredictions(unsigned int tournamentId, unsigned int round
     bindValue(":requesterId", requesterId);
     exec();
 }
+
+bool Query::findTournamentParticipantId(unsigned int userId, unsigned int tournamentId)
+{
+    prepare("SELECT id FROM tournament_participant WHERE user_id = :userId AND tournament_id = :tournamentId");
+    bindValue(":userId", userId);
+    bindValue(":tournamentId", tournamentId);
+    exec();
+
+    return first();
+}
+
+bool Query::matchPredictionAlreadyExists(unsigned int matchId, unsigned int participantId)
+{
+    prepare("SELECT 1 FROM match_prediction WHERE match_id = :matchId AND tournament_participant_id = :participantId");
+    bindValue(":matchId", matchId);
+    bindValue(":participantId", participantId);
+    exec();
+
+    return first();
+}
+
+bool Query::createMatchPrediction(unsigned int matchId, unsigned int participantId,
+                                  unsigned int firstCompetitorScore, unsigned int secondCompetitorScore)
+{
+    prepare("INSERT INTO match_prediction (match_id, tournament_participant_id, competitor_1_score_prediction, "
+            "competitor_2_score_prediction) VALUES (:matchId, :participantId, :firstCompetitorScore, "
+            ":secondCompetitorScore)");
+    bindValue(":matchId", matchId);
+    bindValue(":participantId", participantId);
+    bindValue(":firstCompetitorScore", firstCompetitorScore);
+    bindValue(":secondCompetitorScore", secondCompetitorScore);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}

@@ -183,6 +183,18 @@ void BackEnd::pullMatchesPredictions(const QString & requesterName, const QStrin
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::makePrediction(const QVariantMap & predictionData)
+{
+    QVariantList data;
+    data << Packet::ID_MAKE_PREDICTION << predictionData.value("nickname") << predictionData.value("tournamentName")
+         << predictionData.value("tournamentHostName") << predictionData.value("roundName")
+         << predictionData.value("firstCompetitor") << predictionData.value("secondCompetitor")
+         << predictionData.value("firstCompetitorPredictedScore")
+         << predictionData.value("secondCompetitorPredictedScore");
+
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

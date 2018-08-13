@@ -37,6 +37,8 @@ namespace Client
         case Packet::ID_MATCH_SCORE_UPDATE_ERROR: manageMatchScoreUpdatingErrorReply(data); break;
         case Packet::ID_PULL_MATCHES_PREDICTIONS: managePullingMatchesPredictionsReply(data); break;
         case Packet::ID_ALL_MATCHES_PREDICTIONS_PULLED: manageAllMatchesPredictionsPulledReply(); break;
+        case Packet::ID_MAKE_PREDICTION: managePredictionMakingReply(data); break;
+        case Packet::ID_MAKE_PREDICTION_ERROR: managePredictionMakingErrorReply(data); break;
 
         default: break;
         }
@@ -223,5 +225,22 @@ namespace Client
     void PacketProcessor::manageAllMatchesPredictionsPulledReply()
     {
         emit allMatchesPredictionsPulled();
+    }
+
+    void PacketProcessor::managePredictionMakingReply(const QVariantList & replyData)
+    {
+        QVariantMap predictionData;
+        predictionData.insert("nickname", replyData[0]);
+        predictionData.insert("firstCompetitor", replyData[1]);
+        predictionData.insert("secondCompetitor", replyData[2]);
+        predictionData.insert("firstCompetitorPredictedScore", replyData[3]);
+        predictionData.insert("secondCompetitorPredictedScore", replyData[4]);
+
+        emit predictionCreated(predictionData);
+    }
+
+    void PacketProcessor::managePredictionMakingErrorReply(const QVariantList & replyData)
+    {
+        emit predictionCreatingError(replyData[0].toString());
     }
 }

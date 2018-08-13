@@ -59,6 +59,16 @@ Page {
 
                     startLoading()
                 }
+
+                onMakingPrediction: {
+                    predictionData.nickname = currentUser.username
+                    predictionData.tournamentName = currentTournament.name
+                    predictionData.tournamentHostName = currentTournament.hostName
+                    predictionData.roundName = roundPage.name
+
+                    backend.makePrediction(predictionData)
+                    startLoading()
+                }
             }
         }
 
@@ -335,6 +345,23 @@ Page {
         }
 
         onAllMatchesPredictionsPulled: listOfMatches.assignPredictingCapabilities()
+
+        onPredictionCreated: {
+            stopLoading()
+
+            var firstCompetitor = predictionData.firstCompetitor
+            var secondCompetitor = predictionData.secondCompetitor
+
+            delete predictionData.firstCompetitor
+            delete predictionData.secondCompetitor
+
+            listOfMatches.addPrediction(predictionData, firstCompetitor, secondCompetitor)
+        }
+
+        onPredictionCreatingError: {
+            stopLoading()
+            navigationPage.showDeniedResponse(message)
+        }
     }
 
     Timer {

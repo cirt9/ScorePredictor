@@ -65,6 +65,11 @@ namespace Client
                 this, &PacketProcessorWrapper::matchPredictionItemArrived);
         connect(packetProcessor, &Client::PacketProcessor::allMatchesPredictionsPulled,
                 this, &PacketProcessorWrapper::allMatchesPredictionsPulled);
+
+        connect(packetProcessor, &Client::PacketProcessor::predictionCreated,
+                this, &PacketProcessorWrapper::predictionCreated);
+        connect(packetProcessor, &Client::PacketProcessor::predictionCreatingError,
+                this, &PacketProcessorWrapper::predictionCreatingError);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()

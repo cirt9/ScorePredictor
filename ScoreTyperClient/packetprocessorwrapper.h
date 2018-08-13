@@ -52,6 +52,9 @@ namespace Client
 
         void matchPredictionItemArrived(const QVariantMap & prediction);
         void allMatchesPredictionsPulled();
+
+        void predictionCreated(const QVariantMap & predictionData);
+        void predictionCreatingError(const QString & message);
     };
 }
 

@@ -20,6 +20,7 @@ Item {
     signal removingMatch(var firstCompetitor, var secondCompetitor)
     signal updatingMatchScore(var firstCompetitor, var secondCompetitor, var firstScore, var secondScore)
     signal deniedRequest(var message)
+    signal makingPrediction(var predictionData)
 
     ListView {
         id: matchesView
@@ -318,6 +319,23 @@ Item {
                             fontSize: 10
                             bold: true
                             anchors.centerIn: parent
+
+                            onClicked: {
+                                if(initialPredictionScoreInput.enteredLeftScore.length > 0 &&
+                                   initialPredictionScoreInput.enteredRightScore.length > 0)
+                                {
+                                    var predictionData = {}
+                                    predictionData.firstCompetitor = firstCompetitor
+                                    predictionData.secondCompetitor = secondCompetitor
+                                    predictionData.firstCompetitorPredictedScore =
+                                            parseInt(initialPredictionScoreInput.enteredLeftScore)
+                                    predictionData.secondCompetitorPredictedScore =
+                                            parseInt(initialPredictionScoreInput.enteredRightScore)
+
+                                    initialPredictionScoreInput.reset()
+                                    root.makingPrediction(predictionData)
+                                }
+                            }
                         }
                     }
                 }
@@ -630,6 +648,8 @@ Item {
                     predictions.insert(0, prediction)
                 else
                     predictions.append(prediction)
+
+                match.currentUserMadePrediction = true
             }
         }
     }
