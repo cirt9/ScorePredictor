@@ -739,7 +739,11 @@ namespace Server
                     {
                         unsigned int matchId = query.value("id").toUInt();
 
-                        if(query.matchPredictionAlreadyExists(matchId, participantId))
+                        if(!query.matchAcceptsPredictions(matchId))
+                            responseData << Packet::ID_MAKE_PREDICTION_ERROR
+                                         << QString("The time to predict the result of this match has come to an end.");
+
+                        else if(query.matchPredictionAlreadyExists(matchId, participantId))
                             responseData << Packet::ID_MAKE_PREDICTION_ERROR
                                          << QString("You have already predicted the result of this match.");
 

@@ -381,6 +381,17 @@ bool Query::matchPredictionAlreadyExists(unsigned int matchId, unsigned int part
     return first();
 }
 
+bool Query::matchAcceptsPredictions(unsigned int matchId)
+{
+    prepare("SELECT CASE WHEN datetime(predictions_end_time) > datetime('now', 'localtime') THEN 1 ELSE 0 END "
+            "AS accepting_predictions FROM match WHERE id = :matchId");
+    bindValue(":matchId", matchId);
+    exec();
+    next();
+
+    return value("accepting_predictions").toBool();
+}
+
 bool Query::createMatchPrediction(unsigned int matchId, unsigned int participantId,
                                   unsigned int firstCompetitorScore, unsigned int secondCompetitorScore)
 {

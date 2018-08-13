@@ -56,6 +56,7 @@ public:
 
     bool findTournamentParticipantId(unsigned int userId, unsigned int tournamentId);
     bool matchPredictionAlreadyExists(unsigned int matchId, unsigned int participantId);
+    bool matchAcceptsPredictions(unsigned int matchId);
     bool createMatchPrediction(unsigned int matchId, unsigned int participantId, unsigned int firstCompetitorScore,
                                unsigned int secondCompetitorScore);
 };
