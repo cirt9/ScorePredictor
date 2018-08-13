@@ -19,6 +19,7 @@ Item {
     signal creatingNewMatch()
     signal removingMatch(var firstCompetitor, var secondCompetitor)
     signal updatingMatchScore(var firstCompetitor, var secondCompetitor, var firstScore, var secondScore)
+    signal deniedRequest(var message)
 
     ListView {
         id: matchesView
@@ -339,12 +340,23 @@ Item {
                             if(scoreInput.leftScore !== scoreInput.enteredLeftScore ||
                                scoreInput.rightScore !== scoreInput.enteredRightScore)
                             {
-                                var updatedLeftScore = scoreInput.enteredLeftScore.length === 0 ?
-                                                       parseInt(scoreInput.leftScore) : parseInt(scoreInput.enteredLeftScore)
-                                var updatedRightScore = scoreInput.enteredRightScore.length === 0 ?
-                                                        parseInt(scoreInput.rightScore) : parseInt(scoreInput.enteredRightScore)
+                                var now = new Date()
+                                var predictionsEndDateTime = Date.fromLocaleString(locale, predictionsEndTime,
+                                                                                   "dd.MM.yyyy hh:mm")
+                                if(now < predictionsEndDateTime)
+                                    root.deniedRequest(qsTr("You can't set match score before the match starts."))
+                                else
+                                {
+                                    var updatedLeftScore = scoreInput.enteredLeftScore.length === 0 ?
+                                                           parseInt(scoreInput.leftScore) :
+                                                           parseInt(scoreInput.enteredLeftScore)
+                                    var updatedRightScore = scoreInput.enteredRightScore.length === 0 ?
+                                                            parseInt(scoreInput.rightScore) :
+                                                            parseInt(scoreInput.enteredRightScore)
 
-                                updatingMatchScore(firstCompetitor, secondCompetitor, updatedLeftScore, updatedRightScore)
+                                    updatingMatchScore(firstCompetitor, secondCompetitor,
+                                                       updatedLeftScore, updatedRightScore)
+                                }
                             }
 
                             scoreInput.reset()

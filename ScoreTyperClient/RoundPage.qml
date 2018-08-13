@@ -28,6 +28,7 @@ Page {
                 anchors.fill: parent
                 anchors.margins: 5
 
+                onDeniedRequest: navigationPage.showDeniedResponse(message)
                 onCreatingNewMatch: createNewMatchPopup.open()
                 onRemovingMatch: {
                     var match = Qt.createQmlObject('import QtQuick 2.0;import DataStorage 1.0; Match {}', roundPage);
