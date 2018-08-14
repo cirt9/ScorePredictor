@@ -37,6 +37,7 @@ namespace Server
         case Packet::ID_UPDATE_MATCH_SCORE: manageUpdatingMatchScore(data); break;
         case Packet::ID_PULL_MATCHES_PREDICTIONS: managePullingMatchesPredictions(data); break;
         case Packet::ID_MAKE_PREDICTION: manageMakingPrediction(data); break;
+        case Packet::ID_UPDATE_PREDICTION: manageUpdatingPrediction(data); break;
 
         default: break;
         }
@@ -766,6 +767,73 @@ namespace Server
         }
         else
             responseData << Packet::ID_MAKE_PREDICTION_ERROR << QString("This tournament does not exist.");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageUpdatingPrediction(const QVariantList & predictionData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(!query.findUserId(predictionData[0].toString()))
+        {
+            responseData << Packet::ID_ERROR << QString("User does not exist.");
+            emit response(responseData);
+            return;
+        }
+
+        unsigned int predictorId = query.value("id").toUInt();
+
+        if(query.findUserId(predictionData[2].toString()) &&
+           query.findTournamentId(predictionData[1].toString(), query.value("id").toUInt()))
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+
+            if(!query.tournamentIsOpened(tournamentId))
+                responseData << Packet::ID_UPDATE_PREDICTION_ERROR << QString("This tournament is closed.");
+
+            else if(!query.findTournamentParticipantId(predictorId, tournamentId))
+                responseData << Packet::ID_UPDATE_PREDICTION_ERROR << QString("You are not taking part in this tournament.");
+            else
+            {
+                unsigned int participantId = query.value("id").toUInt();
+
+                if(query.findRoundId(predictionData[3].toString(), tournamentId))
+                {
+                    unsigned int roundId = query.value("id").toUInt();
+
+                    if(query.findMatchId(predictionData[4].toString(), predictionData[5].toString(), roundId))
+                    {
+                        unsigned int matchId = query.value("id").toUInt();
+
+                        if(!query.matchAcceptsPredictions(matchId))
+                            responseData << Packet::ID_UPDATE_PREDICTION_ERROR
+                                         << QString("The time to predict the result of this match has come to an end.");
+
+                        else if(!query.matchPredictionAlreadyExists(matchId, participantId))
+                            responseData << Packet::ID_UPDATE_PREDICTION_ERROR
+                                         << QString("You have not made a result prediction for this match yet.");
+
+                        else if(query.updateMatchPrediction(matchId, participantId, predictionData[6].toUInt(),
+                                                            predictionData[7].toUInt()))
+                        {
+                            responseData << Packet::ID_UPDATE_PREDICTION << predictionData[0] << predictionData[4]
+                                         << predictionData[5] << predictionData[6].toUInt() << predictionData[7].toUInt();
+                        }
+                        else
+                            responseData << Packet::ID_UPDATE_PREDICTION_ERROR <<
+                                            QString("The prediction could not have been updated.");
+                    }
+                    else
+                        responseData << Packet::ID_UPDATE_PREDICTION_ERROR << QString("This match does not exist.");
+                }
+                else
+                    responseData << Packet::ID_UPDATE_PREDICTION_ERROR << QString("This round does not exist.");
+            }
+        }
+        else
+            responseData << Packet::ID_UPDATE_PREDICTION_ERROR << QString("This tournament does not exist.");
 
         emit response(responseData);
     }

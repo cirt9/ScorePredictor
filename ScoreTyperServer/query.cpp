@@ -406,3 +406,18 @@ bool Query::createMatchPrediction(unsigned int matchId, unsigned int participant
 
     return numRowsAffected() > 0 ? true : false;
 }
+
+bool Query::updateMatchPrediction(unsigned int matchId, unsigned int participantId,
+                                  unsigned int firstCompetitorScore, unsigned int secondCompetitorScore)
+{
+    prepare("UPDATE match_prediction SET competitor_1_score_prediction = :firstCompetitorScore, "
+            "competitor_2_score_prediction = :secondCompetitorScore "
+            "WHERE tournament_participant_id = :participantId AND match_id = :matchId");
+    bindValue(":matchId", matchId);
+    bindValue(":participantId", participantId);
+    bindValue(":firstCompetitorScore", firstCompetitorScore);
+    bindValue(":secondCompetitorScore", secondCompetitorScore);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}

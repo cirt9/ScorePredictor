@@ -40,6 +40,7 @@ namespace Server
 
         void managePullingMatchesPredictions(const QVariantList & requestData);
         void manageMakingPrediction(const QVariantList & predictionData);
+        void manageUpdatingPrediction(const QVariantList & predictionData);
 
         QString validateTournamentJoining(unsigned int tournamentId, unsigned int userId);
         void sendMatchesInChunks(QSqlQuery & query);

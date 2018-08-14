@@ -195,6 +195,19 @@ void BackEnd::makePrediction(const QVariantMap & predictionData)
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::updatePrediction(const QVariantMap & updatedPrediction)
+{
+    QVariantList data;
+    data << Packet::ID_UPDATE_PREDICTION << updatedPrediction.value("nickname")
+         << updatedPrediction.value("tournamentName")
+         << updatedPrediction.value("tournamentHostName") << updatedPrediction.value("roundName")
+         << updatedPrediction.value("firstCompetitor") << updatedPrediction.value("secondCompetitor")
+         << updatedPrediction.value("firstCompetitorPredictedScore")
+         << updatedPrediction.value("secondCompetitorPredictedScore");
+
+    emit clientWrapper->sendData(data);
+}
+
 TcpClientWrapper * BackEnd::getClientWrapper() const
 {
     return clientWrapper;

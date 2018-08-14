@@ -59,6 +59,8 @@ public:
     bool matchAcceptsPredictions(unsigned int matchId);
     bool createMatchPrediction(unsigned int matchId, unsigned int participantId, unsigned int firstCompetitorScore,
                                unsigned int secondCompetitorScore);
+    bool updateMatchPrediction(unsigned int matchId, unsigned int participantId, unsigned int firstCompetitorScore,
+                               unsigned int secondCompetitorScore);
 };
 
 #endif // QUERY_H

@@ -18,7 +18,7 @@ private:
     static const QVariant START_OF_PACKET;
     static const QVariant END_OF_PACKET;
     static const int PACKET_ID_MIN = 0;
-    static const int PACKET_ID_MAX = 27;
+    static const int PACKET_ID_MAX = 29;
 
     void serialize();
     void unserialize(QDataStream & in);
@@ -68,6 +68,8 @@ public:
     static const int ID_ALL_MATCHES_PREDICTIONS_PULLED = 25;
     static const int ID_MAKE_PREDICTION = 26;
     static const int ID_MAKE_PREDICTION_ERROR = 27;
+    static const int ID_UPDATE_PREDICTION = 28;
+    static const int ID_UPDATE_PREDICTION_ERROR = 29;
 };
 
 #endif // PACKET_H

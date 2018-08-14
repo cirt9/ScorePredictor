@@ -55,6 +55,8 @@ namespace Client
 
         void predictionCreated(const QVariantMap & predictionData);
         void predictionCreatingError(const QString & message);
+        void predictionUpdated(const QVariantMap & updatedPrediction);
+        void predictionUpdatingError(const QString & message);
     };
 }
 

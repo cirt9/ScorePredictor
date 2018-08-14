@@ -69,6 +69,16 @@ Page {
                     backend.makePrediction(predictionData)
                     startLoading()
                 }
+
+                onUpdatingMatchPrediction: {
+                    updatedPrediction.nickname = currentUser.username
+                    updatedPrediction.tournamentName = currentTournament.name
+                    updatedPrediction.tournamentHostName = currentTournament.hostName
+                    updatedPrediction.roundName = roundPage.name
+
+                    backend.updatePrediction(updatedPrediction)
+                    startLoading()
+                }
             }
         }
 
@@ -359,6 +369,23 @@ Page {
         }
 
         onPredictionCreatingError: {
+            stopLoading()
+            navigationPage.showDeniedResponse(message)
+        }
+
+        onPredictionUpdated: {
+            stopLoading()
+
+            var firstCompetitor = updatedPrediction.firstCompetitor
+            var secondCompetitor = updatedPrediction.secondCompetitor
+
+            delete updatedPrediction.firstCompetitor
+            delete updatedPrediction.secondCompetitor
+
+            listOfMatches.updatePrediction(updatedPrediction, firstCompetitor, secondCompetitor)
+        }
+
+        onPredictionUpdatingError: {
             stopLoading()
             navigationPage.showDeniedResponse(message)
         }

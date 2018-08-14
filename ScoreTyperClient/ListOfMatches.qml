@@ -21,6 +21,7 @@ Item {
     signal updatingMatchScore(var firstCompetitor, var secondCompetitor, var firstScore, var secondScore)
     signal deniedRequest(var message)
     signal makingPrediction(var predictionData)
+    signal updatingMatchPrediction(var updatedPrediction)
 
     ListView {
         id: matchesView
@@ -529,7 +530,33 @@ Item {
                     anchors.bottom: predictionDelegateBackground.bottom
                     anchors.right: earnedPointsData.left
 
-                    onClicked: console.log(firstCompetitor, predictedScoreInput.enteredLeftScore, secondCompetitor, predictedScoreInput.enteredRightScore)
+                    onClicked: {
+                        if(predictedScoreInput.enteredLeftScore.length > 0 ||
+                           predictedScoreInput.enteredRightScore.length > 0)
+                        {
+                            if(predictedScoreInput.leftScore !== predictedScoreInput.enteredLeftScore ||
+                               predictedScoreInput.rightScore !== predictedScoreInput.enteredRightScore)
+                            {
+                                var updatedPrediction = {}
+                                updatedPrediction.firstCompetitor = firstCompetitor
+                                updatedPrediction.secondCompetitor = secondCompetitor
+
+                                updatedPrediction.firstCompetitorPredictedScore =
+                                                  predictedScoreInput.enteredLeftScore.length === 0 ?
+                                                  parseInt(predictedScoreInput.leftScore) :
+                                                  parseInt(predictedScoreInput.enteredLeftScore)
+
+                                updatedPrediction.secondCompetitorPredictedScore =
+                                                  predictedScoreInput.enteredRightScore.length === 0 ?
+                                                  parseInt(predictedScoreInput.rightScore) :
+                                                  parseInt(predictedScoreInput.enteredRightScore)
+
+                                updatingMatchPrediction(updatedPrediction)
+                            }
+
+                            predictedScoreInput.reset()
+                        }
+                    }
                 }
 
                 Text {
@@ -614,7 +641,7 @@ Item {
             if(match.firstCompetitor === firstCompetitor && match.secondCompetitor === secondCompetitor)
             {
                 matchesModel.remove(i)
-                break;
+                break
             }
         }
     }
@@ -650,6 +677,34 @@ Item {
                     predictions.append(prediction)
 
                 match.currentUserMadePrediction = true
+                break
+            }
+        }
+    }
+
+    function updatePrediction(updatedPrediction, firstCompetitor, secondCompetitor)
+    {
+        for(var i=0; i<matchesModel.count; i++)
+        {
+            var match = matchesModel.get(i)
+
+            if(match.firstCompetitor === firstCompetitor && match.secondCompetitor === secondCompetitor)
+            {
+                var predictions = match.predictions
+
+                for(var j=0; j<predictions.count; j++)
+                {
+                    var prediction = predictions.get(j)
+
+                    if(prediction.nickname === updatedPrediction.nickname)
+                    {
+                        prediction.firstCompetitorPredictedScore = updatedPrediction.firstCompetitorPredictedScore
+                        prediction.secondCompetitorPredictedScore = updatedPrediction.secondCompetitorPredictedScore
+                        break
+                    }
+                }
+
+                break
             }
         }
     }
@@ -694,12 +749,3 @@ Item {
         tournamentsList.clear()
     }
 }
-
-/*
-modifying predictions
-
-var test2 = matchesModel.get(0)
-var testPreds = test2.predictions
-var testPred = testPreds.get(0)
-
-testPred.nickname = "TEST"*/

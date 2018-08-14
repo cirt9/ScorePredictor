@@ -46,6 +46,8 @@ namespace Client
 
         void managePredictionMakingReply(const QVariantList & replyData);
         void managePredictionMakingErrorReply(const QVariantList & replyData);
+        void managePredictionUpdatingReply(const QVariantList & replyData);
+        void managePredictionUpdatingErrorReply(const QVariantList & replyData);
 
     public:
         explicit PacketProcessor(QObject * parent = nullptr);
@@ -91,6 +93,8 @@ namespace Client
 
         void predictionCreated(const QVariantMap & predictionData);
         void predictionCreatingError(const QString & message);
+        void predictionUpdated(const QVariantMap & updatedPrediction);
+        void predictionUpdatingError(const QString & message);
     };
 }
 

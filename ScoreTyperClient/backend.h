@@ -57,6 +57,7 @@ public:
     Q_INVOKABLE void pullMatchesPredictions(const QString & requesterName, const QString & tournamentName,
                                             const QString & hostName, const QString & roundName);
     Q_INVOKABLE void makePrediction(const QVariantMap & predictionData);
+    Q_INVOKABLE void updatePrediction(const QVariantMap & updatedPrediction);
 
     TcpClientWrapper * getClientWrapper() const;
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;

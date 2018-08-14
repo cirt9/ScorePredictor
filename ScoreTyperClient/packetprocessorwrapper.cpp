@@ -70,6 +70,10 @@ namespace Client
                 this, &PacketProcessorWrapper::predictionCreated);
         connect(packetProcessor, &Client::PacketProcessor::predictionCreatingError,
                 this, &PacketProcessorWrapper::predictionCreatingError);
+        connect(packetProcessor, &Client::PacketProcessor::predictionUpdated,
+                this, &PacketProcessorWrapper::predictionUpdated);
+        connect(packetProcessor, &Client::PacketProcessor::predictionUpdatingError,
+                this, &PacketProcessorWrapper::predictionUpdatingError);
     }
 
     PacketProcessorWrapper::~PacketProcessorWrapper()
