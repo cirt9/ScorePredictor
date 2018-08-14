@@ -275,6 +275,18 @@ bool Query::findRoundId(const QString & roundName, unsigned int tournamentId)
     return first();
 }
 
+bool Query::matchStartsAfterEntriesEndTime(unsigned int tournamentId, const QDateTime & predictionsEndTime)
+{
+    prepare("SELECT CASE WHEN datetime(:predictionsEndTime) >= datetime(entries_end_time) THEN 1 ELSE 0 END AS "
+            "match_starts_after_entries_end_time FROM tournament WHERE id = :tournamentId");
+    bindValue(":tournamentId", tournamentId);
+    bindValue(":predictionsEndTime", predictionsEndTime);
+    exec();
+    next();
+
+    return value("match_starts_after_entries_end_time").toBool();
+}
+
 void Query::findMatches(unsigned int roundId)
 {
     prepare("SELECT competitor_1, competitor_1_score, competitor_2, competitor_2_score, "

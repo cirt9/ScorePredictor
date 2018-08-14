@@ -527,6 +527,9 @@ namespace Server
             if(!query.tournamentIsOpened(tournamentId))
                 responseData << false << QString("This tournament is closed.");
 
+            else if(!query.matchStartsAfterEntriesEndTime(tournamentId, match.getPredictionsEndTime()))
+                responseData << false << QString("The match can't start before the entries end.");
+
             else if(!query.findRoundId(match.getRoundName(), tournamentId))
                 responseData << false << QString("This round does not exist.");
             else

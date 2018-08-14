@@ -234,7 +234,14 @@ Page {
 
                 CustomCalendar {
                     id: calendar
-                    minimumDate: new Date()
+                    minimumDate: {
+                        var now = new Date()
+
+                        if(now < currentTournament.entriesEndTime)
+                            return currentTournament.entriesEndTime
+                        else
+                            return now
+                    }
                     mainColor: "#626167"
                     sideColor: mainWindow.backgroundColor
                     fontColor: fontColor
