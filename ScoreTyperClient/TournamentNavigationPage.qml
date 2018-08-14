@@ -7,6 +7,7 @@ Page {
     id: tournamentNavigationPage
     readonly property alias currentPage: pagesList.currentItemText
     readonly property int headerHeight: 50
+    property bool tournamentOpened: true
 
     ColumnLayout {
         id: pageLayout
@@ -366,6 +367,8 @@ Page {
 
     function manageTournamentInfoReply(tournamentInfo, opened)
     {
+        tournamentNavigationPage.tournamentOpened = opened
+
         tournamentInfoToolTip.text = "Password Required: " + tournamentInfo[0] + "\n" +
                                      "Entries End Time: " + tournamentInfo[1] + "\n" +
                                      "Typers: " + tournamentInfo[2] + "/" + tournamentInfo[3]

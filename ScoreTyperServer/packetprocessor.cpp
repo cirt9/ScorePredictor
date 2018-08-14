@@ -415,7 +415,7 @@ namespace Server
                     responseData << false << QString("Adding new round is not possible right now. Try again later.");
             }
             else
-                responseData << Packet::ID_ADD_NEW_ROUND << false << QString("This tournament is closed.");
+                responseData << false << QString("This tournament is closed.");
         }
         else
             responseData << Packet::ID_ERROR << QString("This tournament does not exist.");

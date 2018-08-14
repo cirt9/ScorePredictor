@@ -8,6 +8,7 @@ Item {
     clip: true
 
     readonly property bool hostMode: currentTournament.hostName === currentUser.username ? true : false
+    property bool openedMode: true
     readonly property int viewHeaderHeight: 45
     readonly property int viewFooterHeight: 45
     readonly property int matchHeaderHeight: 40
@@ -65,7 +66,7 @@ Item {
         id: footer
         width: parent.width
         height: viewFooterHeight
-        visible: hostMode ? true : false
+        visible: hostMode && openedMode ? true : false
         z: 3
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -164,7 +165,7 @@ Item {
             height: {
                 if(collapsed)
                     return matchHeaderHeight
-                else if(!currentUserMadePrediction && acceptingPredictions)
+                else if(!currentUserMadePrediction && acceptingPredictions && openedMode)
                     return matchHeaderHeight + predictions.count * predictionDelegateHeight +
                            (predictions.count - 1) * spacing + matchesSpacing + predictionDelegateHeight + matchesSpacing
                 else
@@ -226,7 +227,7 @@ Item {
                         font.pointSize: 12
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
-                        visible: hostMode ? false : true
+                        visible: hostMode ? (openedMode ? false : true) : true
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: matchHeaderLayout.width * 0.15
@@ -243,7 +244,7 @@ Item {
                         selectByMouse: true
                         selectedTextColor: mainWindow.fontColor
                         selectionColor: mainWindow.accentColor
-                        visible: hostMode ? true : false
+                        visible: hostMode && openedMode ? true : false
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: matchHeaderLayout.width * 0.15
@@ -269,7 +270,8 @@ Item {
                     color: mainWindow.colorB
                     opacity: 0.4
                     radius: 5
-                    visible: collapsed ? false : (currentUserMadePrediction ? false : (acceptingPredictions ? true : false))
+                    visible: collapsed || !openedMode ? false :
+                             (currentUserMadePrediction ? false : (acceptingPredictions ? true : false))
                     anchors.top: matchHeaderBackground.bottom
                     anchors.left: matchHeaderBackground.left
                     anchors.topMargin: matchesSpacing
@@ -277,7 +279,8 @@ Item {
 
                 RowLayout {
                     id: makePredictionLayout
-                    visible: collapsed ? false : (currentUserMadePrediction ? false : (acceptingPredictions ? true : false))
+                    visible: collapsed || !openedMode ? false :
+                             (currentUserMadePrediction ? false : (acceptingPredictions ? true : false))
                     anchors.fill: makePredictionArea
                     anchors.margins: 2
                     anchors.leftMargin: 5
@@ -347,7 +350,7 @@ Item {
                     iconSource: "qrc://assets/icons/icons/icons8_Save.png"
                     margins: 10
                     marginsOnPressed: 11
-                    visible: hostMode ? true : false
+                    visible: hostMode && openedMode ? true : false
                     anchors.top: matchHeaderBackground.top
                     anchors.bottom: matchHeaderBackground.bottom
                     anchors.right: deleteMatchButton.left
@@ -389,7 +392,7 @@ Item {
                     iconSource: "qrc://assets/icons/icons/icons8_Delete_Accent.png"
                     margins: 7
                     marginsOnPressed: 8
-                    visible: hostMode ? true : false
+                    visible: hostMode && openedMode ? true : false
                     anchors.top: matchHeaderBackground.top
                     anchors.bottom: matchHeaderBackground.bottom
                     anchors.right: matchHeaderBackground.right
@@ -495,7 +498,7 @@ Item {
                         font.pointSize: 10
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
-                        visible: nickname === currentUser.username && acceptingPredictions ? false : true
+                        visible: nickname === currentUser.username && acceptingPredictions && openedMode ? false : true
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: predictionDelegateLayout.width * 0.5
@@ -512,7 +515,7 @@ Item {
                         selectByMouse: true
                         selectedTextColor: mainWindow.fontColor
                         selectionColor: mainWindow.accentColor
-                        visible: nickname === currentUser.username && acceptingPredictions ? true : false
+                        visible: nickname === currentUser.username && acceptingPredictions && openedMode ? true : false
 
                         Layout.fillHeight: true
                         Layout.preferredWidth: predictionDelegateLayout.width * 0.5
@@ -525,7 +528,7 @@ Item {
                     iconSource: "qrc://assets/icons/icons/icons8_Save.png"
                     margins: 6
                     marginsOnPressed: 7
-                    visible: nickname === currentUser.username && acceptingPredictions ? true : false
+                    visible: nickname === currentUser.username && acceptingPredictions && openedMode ? true : false
                     anchors.top: predictionDelegateBackground.top
                     anchors.bottom: predictionDelegateBackground.bottom
                     anchors.right: earnedPointsData.left

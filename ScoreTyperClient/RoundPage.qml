@@ -25,6 +25,7 @@ Page {
                 id: listOfMatches
                 errorText: qsTr("Couldn't load matches list")
                 matchesNotFoundText: qsTr("There are no matches yet")
+                openedMode: tournamentNavigationPage.tournamentOpened
                 anchors.fill: parent
                 anchors.margins: 5
 
