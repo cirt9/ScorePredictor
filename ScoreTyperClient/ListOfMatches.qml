@@ -165,7 +165,7 @@ Item {
             height: {
                 if(collapsed)
                     return matchHeaderHeight
-                else if(!currentUserMadePrediction && acceptingPredictions && openedMode)
+                else if(!currentUserMadePrediction && acceptingPredictions)
                     return matchHeaderHeight + predictions.count * predictionDelegateHeight +
                            (predictions.count - 1) * spacing + matchesSpacing + predictionDelegateHeight + matchesSpacing
                 else
@@ -342,6 +342,28 @@ Item {
                             }
                         }
                     }
+                }
+
+                Rectangle {
+                    id: matchInformationArea
+                    width: parent.width
+                    height: predictionDelegateHeight
+                    color: mainWindow.colorB
+                    opacity: 0.4
+                    radius: 5
+                    visible: !collapsed && !openedMode && predictions.count === 0 ? true : false
+                    anchors.top: matchHeaderBackground.bottom
+                    anchors.left: matchHeaderBackground.left
+                    anchors.topMargin: matchesSpacing
+                }
+
+                Text {
+                    id: matchInformationText
+                    text: qsTr("Nobody tried to predict the result of this match.")
+                    color: mainWindow.fontColor
+                    font.pointSize: 12
+                    visible: !collapsed && !openedMode && predictions.count === 0 ? true : false
+                    anchors.centerIn: matchInformationArea
                 }
 
                 IconButton {

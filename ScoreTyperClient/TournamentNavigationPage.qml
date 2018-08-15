@@ -333,6 +333,7 @@ Page {
             {
                 userProfilePage.refreshFinishedTournamentsList()
                 userProfilePage.refreshOngoingTournamentsList()
+                tournamentNavigationPage.tournamentOpened = false
                 finishTournamentButton.visible = false
                 tournamentClosedToolTip.visible = true
             }
