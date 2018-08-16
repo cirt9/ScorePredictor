@@ -379,6 +379,10 @@ namespace Server
                 if(!query.tournamentEntriesExpired(tournamentId))
                     responseData << false << QString("You cannot close this tournament because it did not start yet.");
 
+                else if(!query.allMatchesFinished(tournamentId))
+                    responseData << false << QString("You cannot close this tournament because there are still "
+                                                     "unfinished matches.");
+
                 else if(query.finishTournament(tournamentId))
                     responseData << true << QString("Tournament finished");
                 else

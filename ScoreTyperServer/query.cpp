@@ -229,6 +229,20 @@ void Query::findTournamentRounds(unsigned int tournamentId)
     exec();
 }
 
+bool Query::allMatchesFinished(unsigned int tournamentId)
+{
+    prepare("SELECT CASE WHEN datetime( (SELECT predictions_end_time FROM match "
+            "INNER JOIN round ON round.id = match.round_id INNER JOIN tournament "
+            "ON tournament.id = round.tournament_id WHERE tournament_id = :tournamentId "
+            "ORDER BY predictions_end_time DESC LIMIT 1) ) >= datetime('now', 'localtime') "
+            "THEN 0 ELSE 1 END AS all_matches_finished");
+    bindValue(":tournamentId", tournamentId);
+    exec();
+    next();
+
+    return value("all_matches_finished").toBool();
+}
+
 bool Query::finishTournament(unsigned int tournamentId)
 {
     prepare("UPDATE tournament SET opened = 0 WHERE id = :tournamentId");
