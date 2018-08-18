@@ -56,25 +56,25 @@ Item {
                     }
 
                     Text {
-                        id: exactScoresHeader
-                        text: qsTr("Exact Scores")
+                        id: exactScoreHeader
+                        text: qsTr("Exact Score")
                         color: mainWindow.fontColor
                         font.pointSize: 12
                         verticalAlignment: Text.AlignVCenter
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: 120
+                        Layout.preferredWidth: 100
                     }
 
                     Text {
-                        id: winnerOnlyHeader
-                        text: qsTr("Winner only")
+                        id: predictedResultHeader
+                        text: qsTr("Predicted Result")
                         color: mainWindow.fontColor
                         font.pointSize: 12
                         verticalAlignment: Text.AlignVCenter
 
                         Layout.fillHeight: true
-                        Layout.preferredWidth: 120
+                        Layout.preferredWidth: 140
                     }
 
                     Text {
@@ -124,7 +124,7 @@ Item {
 
                 Text {
                     id: nameData
-                    text: name
+                    text: nickname
                     color: mainWindow.fontColor
                     font.pointSize: 10
                     verticalAlignment: Text.AlignVCenter
@@ -135,27 +135,27 @@ Item {
                 }
 
                 Text {
-                    id: exactScoresData
-                    text: exactScores
+                    id: exactScoreData
+                    text: exactScore
                     color: mainWindow.fontColor
                     font.pointSize: 10
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: 120
+                    Layout.preferredWidth: 100
                 }
 
                 Text {
-                    id: winnerOnlyData
-                    text: winnerOnly
+                    id: predictedResultData
+                    text: predictedResult
                     color: mainWindow.fontColor
                     font.pointSize: 10
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
                     Layout.fillHeight: true
-                    Layout.preferredWidth: 120
+                    Layout.preferredWidth: 140
                 }
 
                 Text {
@@ -163,6 +163,7 @@ Item {
                     text: points
                     color: mainWindow.fontColor
                     font.pointSize: 10
+                    font.bold: true
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
@@ -170,6 +171,24 @@ Item {
                     Layout.preferredWidth: 70
                 }
             }
+        }
+
+        TextEdit {
+            id: infoText
+            text: qsTr("Couldn't load leaderboard")
+            font.pointSize: 22
+            font.bold: true
+            color: mainWindow.fontColor
+            readOnly: true
+            wrapMode: TextEdit.WordWrap
+            visible: !loadingState && participantsList.count === 0 ? true : false
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.margins: 10
         }
 
         SearchIndicator {
@@ -186,29 +205,34 @@ Item {
     ListModel {
         id: participantsList
 
-        ListElement {
-            position: "1"
-            name: "IAmTheBest"
-            exactScores: "4"
-            winnerOnly: "15"
-            points: "27"
+        onCountChanged: {
+            if(root.loadingState && count > 0)
+                stopLoading()
+        }
+
+        /*ListElement {
+            position: 1
+            nickname: "IAmTheBest"
+            exactScore: 4
+            predictedResult: 15
+            points: 23
         }
 
         ListElement {
-            position: "2"
-            name: "SecondToNone"
-            exactScores: "3"
-            winnerOnly: "14"
-            points: "23"
+            position: 2
+            nickname: "SecondToNone"
+            exactScore: 3
+            predictedResult: 14
+            points: 20
         }
 
         ListElement {
-            position: "3"
-            name: "ThirdBird"
-            exactScores: "1"
-            winnerOnly: "17"
-            points: "20"
-        }
+            position: 3
+            nickname: "ThirdBird"
+            exactScore: 1
+            predictedResult: 17
+            points: 19
+        }*/
     }
 
     Timer {
@@ -218,9 +242,10 @@ Item {
         onTriggered: loadingState = false
     }
 
-    function addItem(item)
+    function addParticipant(participant)
     {
-        participantsList.append(item)
+        participant.position = 1
+        participantsList.append(participant)
     }
 
     function startLoading()

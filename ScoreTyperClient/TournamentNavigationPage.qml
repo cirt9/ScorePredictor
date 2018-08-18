@@ -139,7 +139,10 @@ Page {
                 anchors.right: parent.right
                 anchors.margins: 5
 
-                onClicked: navigationPage.popTournament()
+                onClicked: {
+                    navigationPage.popTournament()
+                    currentTournament.reset()
+                }
             }
         }
 

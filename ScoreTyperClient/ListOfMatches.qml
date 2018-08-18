@@ -631,7 +631,7 @@ Item {
         id: matchesModel
 
         onCountChanged: {
-            if(loadingState && count > 0)
+            if(root.loadingState && count > 0)
                 stopLoading()
         }
     }

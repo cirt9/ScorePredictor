@@ -19,5 +19,14 @@ Page {
         }
     }
 
-    Component.onCompleted: backend.downloadTournamentLeaderboard(currentTournament.name, currentTournament.hostName)
+    Connections {
+        target: packetProcessor
+
+        onTournamentParticipantArrived: tournamentLeaderboard.addParticipant(tournamentParticipant)
+    }
+
+    Component.onCompleted: {
+        backend.downloadTournamentLeaderboard(currentTournament.name, currentTournament.hostName)
+        tournamentLeaderboard.startLoading()
+    }
 }

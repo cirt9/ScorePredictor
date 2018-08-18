@@ -276,7 +276,30 @@ bool Query::addNewRound(const QString & roundName, unsigned int tournamentId)
 
 void Query::findTournamentLeaderboard(unsigned int tournamentId)
 {
-    //TO BE DONE
+    prepare("SELECT nickname, exact_score, predicted_result, (exact_score * 3 + predicted_result - exact_score) "
+            "AS points FROM (SELECT DISTINCT user.nickname, (SELECT count(match_prediction.id) FROM match_prediction "
+            "INNER JOIN match ON match.id = match_prediction.match_id INNER JOIN tournament_participant ON "
+            "tournament_participant.id = match_prediction.tournament_participant_id INNER JOIN user u ON "
+            "u.id = tournament_participant.user_id WHERE tournament_participant.tournament_id = :tournamentId "
+            "AND u.id = user.id AND datetime(match.predictions_end_time) <= datetime('now', 'localtime') "
+            "AND (match_prediction.competitor_1_score_prediction = match.competitor_1_score AND "
+            "match_prediction.competitor_2_score_prediction = match.competitor_2_score) ) AS exact_score, "
+            "(SELECT count(match_prediction.id) FROM match_prediction INNER JOIN match ON "
+            "match.id = match_prediction.match_id INNER JOIN tournament_participant ON "
+            "tournament_participant.id = match_prediction.tournament_participant_id INNER JOIN user u ON "
+            "u.id = tournament_participant.user_id WHERE tournament_participant.tournament_id = :tournamentId "
+            "AND u.id = user.id AND datetime(match.predictions_end_time) <= datetime('now', 'localtime') AND "
+            "( (match.competitor_1_score > match.competitor_2_score AND "
+            "match_prediction.competitor_1_score_prediction > match_prediction.competitor_2_score_prediction) OR "
+            "(match.competitor_1_score < match.competitor_2_score AND "
+            "match_prediction.competitor_1_score_prediction < match_prediction.competitor_2_score_prediction) OR "
+            "(match.competitor_1_score = match.competitor_2_score AND "
+            "match_prediction.competitor_1_score_prediction = match_prediction.competitor_2_score_prediction) ) ) "
+            "as predicted_result FROM user INNER JOIN tournament_participant ON "
+            "tournament_participant.user_id = user.id WHERE tournament_participant.tournament_id = :tournamentId) "
+            "ORDER BY points DESC, exact_score DESC, predicted_result DESC, nickname DESC");
+    bindValue(":tournamentId", tournamentId);
+    exec();
 }
 
 bool Query::findRoundId(const QString & roundName, unsigned int tournamentId)

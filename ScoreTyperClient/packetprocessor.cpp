@@ -27,6 +27,7 @@ namespace Client
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageTournamentInfoReply(data); break;
         case Packet::ID_FINISH_TOURNAMENT: manageFinishingTournamentReply(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRoundReply(data); break;
+        case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingLeaderboardReply(data); break;
         case Packet::ID_PULL_MATCHES: managePullingMatchesReply(data); break;
         case Packet::ID_ZERO_MATCHES_TO_PULL: managePullingZeroMatchesReply(); break;
         case Packet::ID_ALL_MATCHES_PULLED: manageAllMatchesPulledReply(); break;
@@ -148,6 +149,21 @@ namespace Client
     void PacketProcessor::manageAddingNewRoundReply(const QVariantList & replyData)
     {
         emit addingNewRoundReply(replyData[0].toBool(), replyData[1].toString());
+    }
+
+    void PacketProcessor::manageDownloadingLeaderboardReply(const QVariantList & replyData)
+    {
+        for(int i=0; i<replyData.size(); i++)
+        {
+            QVariantList tournamentParticipantData = replyData[i].value<QVariantList>();
+            QVariantMap tournamentParticipant;
+            tournamentParticipant.insert("nickname", tournamentParticipantData[0]);
+            tournamentParticipant.insert("exactScore", tournamentParticipantData[1]);
+            tournamentParticipant.insert("predictedResult", tournamentParticipantData[2]);
+            tournamentParticipant.insert("points", tournamentParticipantData[3]);
+
+            tournamentParticipantArrived(tournamentParticipant);
+        }
     }
 
     void PacketProcessor::managePullingMatchesReply(const QVariantList & replyData)

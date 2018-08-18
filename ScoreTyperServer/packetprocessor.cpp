@@ -435,17 +435,53 @@ namespace Server
         if(query.findUserId(tournamentData[1].toString()) &&
            query.findTournamentId(tournamentData[0].toString(), query.value("id").toUInt()) )
         {
-            responseData << Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD;
             unsigned int tournamentId = query.value("id").toUInt();
-
             query.findTournamentLeaderboard(tournamentId);
+
+            if(query.next())
+                sendParticipantsInChunks(query, Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD);
+            else
+            {
+                responseData << Packet::ID_ERROR << QString("This tournament has no participants.");
+                emit response(responseData);
+            }
         }
         else
+        {
             responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+            emit response(responseData);
+        }
+    }
 
-        //emit response(responseData);
-        //TO BE DONE
-        qDebug() << "TO BE DONE";
+    void PacketProcessor::sendParticipantsInChunks(QSqlQuery & query, const int packetId)
+    {
+        QVariantList responseData;
+        int chunkSize = 50;
+        int i = 0;
+
+        do
+        {
+            if(i == chunkSize)
+            {
+                emit response(responseData);
+                responseData.clear();
+                i = 0;
+            }
+
+            if(i == 0)
+                responseData << packetId;
+
+            QVariantList leaderboardData;
+            leaderboardData << query.value("nickname")
+                            << query.value("exact_score")
+                            << query.value("predicted_result")
+                            << query.value("points");
+            responseData << QVariant::fromValue(leaderboardData);
+
+            i++;
+        } while(query.next());
+
+        emit response(responseData);
     }
 
     void PacketProcessor::managePullingMatches(const QVariantList & requestData)

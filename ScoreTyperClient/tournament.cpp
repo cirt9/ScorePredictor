@@ -26,7 +26,7 @@ Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : 
 void Tournament::reset()
 {
     setName(QString("Tournament"));
-    setHostName(QString("Host"));
+    setHostName(QString(""));
     setPasswordRequired(false);
     setEntriesEndTime(QDateTime::currentDateTime());
     setTypersNumber(0);

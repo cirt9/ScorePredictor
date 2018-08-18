@@ -43,6 +43,9 @@ namespace Client
         connect(packetProcessor, &Client::PacketProcessor::addingNewRoundReply,
                 this, &PacketProcessorWrapper::addingNewRoundReply);
 
+        connect(packetProcessor, &Client::PacketProcessor::tournamentParticipantArrived,
+                this, &PacketProcessorWrapper::tournamentParticipantArrived);
+
         connect(packetProcessor, &Client::PacketProcessor::matchItemArrived,
                 this, &PacketProcessorWrapper::matchItemArrived);
         connect(packetProcessor, &Client::PacketProcessor::zeroMatchesToPull,

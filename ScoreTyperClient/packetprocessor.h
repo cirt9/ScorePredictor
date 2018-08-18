@@ -31,6 +31,8 @@ namespace Client
         void manageFinishingTournamentReply(const QVariantList & replyData);
         void manageAddingNewRoundReply(const QVariantList & replyData);
 
+        void manageDownloadingLeaderboardReply(const QVariantList & replyData);
+
         void managePullingMatchesReply(const QVariantList & replyData);
         void managePullingZeroMatchesReply();
         void manageAllMatchesPulledReply();
@@ -77,6 +79,8 @@ namespace Client
         void tournamentRoundNameArrived(const QString & name);
         void finishingTournamentReply(bool replyState, const QString & message);
         void addingNewRoundReply(bool replyState, const QString & message);
+
+        void tournamentParticipantArrived(const QVariantMap & tournamentParticipant);
 
         void matchItemArrived(const QVariantMap & match);
         void zeroMatchesToPull();
