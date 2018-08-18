@@ -18,7 +18,7 @@ private:
     static const QVariant START_OF_PACKET;
     static const QVariant END_OF_PACKET;
     static const int PACKET_ID_MIN = 0;
-    static const int PACKET_ID_MAX = 29;
+    static const int PACKET_ID_MAX = 30;
 
     void serialize();
     void unserialize(QDataStream & in);
@@ -54,22 +54,23 @@ public:
     static const int ID_FINISH_TOURNAMENT = 11;
     static const int ID_ADD_NEW_ROUND = 12;
     static const int ID_DOWNLOAD_TOURNAMENT_LEADERBOARD = 13;
-    static const int ID_PULL_MATCHES = 14;
-    static const int ID_ZERO_MATCHES_TO_PULL = 15;
-    static const int ID_ALL_MATCHES_PULLED = 16;
-    static const int ID_CREATE_MATCH = 17;
-    static const int ID_DELETE_MATCH = 18;
-    static const int ID_MATCH_DELETED = 19;
-    static const int ID_MATCH_DELETING_ERROR = 20;
-    static const int ID_UPDATE_MATCH_SCORE = 21;
-    static const int ID_MATCH_SCORE_UPDATED = 22;
-    static const int ID_MATCH_SCORE_UPDATE_ERROR = 23;
-    static const int ID_PULL_MATCHES_PREDICTIONS = 24;
-    static const int ID_ALL_MATCHES_PREDICTIONS_PULLED = 25;
-    static const int ID_MAKE_PREDICTION = 26;
-    static const int ID_MAKE_PREDICTION_ERROR = 27;
-    static const int ID_UPDATE_PREDICTION = 28;
-    static const int ID_UPDATE_PREDICTION_ERROR = 29;
+    static const int ID_DOWNLOAD_ROUND_LEADERBOARD = 14;
+    static const int ID_PULL_MATCHES = 15;
+    static const int ID_ZERO_MATCHES_TO_PULL = 16;
+    static const int ID_ALL_MATCHES_PULLED = 17;
+    static const int ID_CREATE_MATCH = 18;
+    static const int ID_DELETE_MATCH = 19;
+    static const int ID_MATCH_DELETED = 20;
+    static const int ID_MATCH_DELETING_ERROR = 21;
+    static const int ID_UPDATE_MATCH_SCORE = 22;
+    static const int ID_MATCH_SCORE_UPDATED = 23;
+    static const int ID_MATCH_SCORE_UPDATE_ERROR = 24;
+    static const int ID_PULL_MATCHES_PREDICTIONS = 25;
+    static const int ID_ALL_MATCHES_PREDICTIONS_PULLED = 26;
+    static const int ID_MAKE_PREDICTION = 27;
+    static const int ID_MAKE_PREDICTION_ERROR = 28;
+    static const int ID_UPDATE_PREDICTION = 29;
+    static const int ID_UPDATE_PREDICTION_ERROR = 30;
 };
 
 #endif // PACKET_H

@@ -297,6 +297,7 @@ Page {
     Connections {
         target: packetProcessor
 
+        onRoundParticipantArrived: roundLeaderboard.addParticipant(roundParticipant)
         onZeroMatchesToPull: listOfMatches.stopLoading()
         onMatchItemArrived: {
             match.predictions = []
@@ -413,8 +414,12 @@ Page {
 
     Component.onCompleted: {
         name = tournamentNavigationPage.currentPage
+
         backend.pullMatches(currentTournament.name, currentTournament.hostName, roundPage.name)
         listOfMatches.startLoading()
+
+        backend.downloadRoundLeaderboard(currentTournament.name, currentTournament.hostName, roundPage.name)
+        roundLeaderboard.startLoading()
     }
 
     function startLoading()

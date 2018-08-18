@@ -31,7 +31,9 @@ namespace Server
         void manageDownloadingTournamentInfo(const QVariantList & tournamentData);
         void manageTournamentFinishing(const QVariantList & tournamentData);
         void manageAddingNewRound(const QVariantList & tournamentData);
+
         void manageDownloadingTournamentLeaderboard(const QVariantList & tournamentData);
+        void manageDownloadingRoundLeaderboard(const QVariantList & roundData);
 
         void managePullingMatches(const QVariantList & requestData);
         void manageCreatingNewMatch(const QVariantList & matchData);

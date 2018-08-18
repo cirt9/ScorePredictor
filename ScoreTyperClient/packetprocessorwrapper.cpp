@@ -45,6 +45,8 @@ namespace Client
 
         connect(packetProcessor, &Client::PacketProcessor::tournamentParticipantArrived,
                 this, &PacketProcessorWrapper::tournamentParticipantArrived);
+        connect(packetProcessor, &Client::PacketProcessor::roundParticipantArrived,
+                this, &PacketProcessorWrapper::roundParticipantArrived);
 
         connect(packetProcessor, &Client::PacketProcessor::matchItemArrived,
                 this, &PacketProcessorWrapper::matchItemArrived);

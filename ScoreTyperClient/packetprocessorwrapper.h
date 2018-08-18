@@ -41,6 +41,7 @@ namespace Client
         void addingNewRoundReply(bool replyState, const QString & message);
 
         void tournamentParticipantArrived(const QVariantMap & tournamentParticipant);
+        void roundParticipantArrived(const QVariantMap & roundParticipant);
 
         void matchItemArrived(const QVariantMap & match);
         void zeroMatchesToPull();

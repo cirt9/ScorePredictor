@@ -31,6 +31,7 @@ namespace Server
         case Packet::ID_FINISH_TOURNAMENT: manageTournamentFinishing(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRound(data); break;
         case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingTournamentLeaderboard(data); break;
+        case Packet::ID_DOWNLOAD_ROUND_LEADERBOARD: manageDownloadingRoundLeaderboard(data); break;
         case Packet::ID_PULL_MATCHES: managePullingMatches(data); break;
         case Packet::ID_CREATE_MATCH: manageCreatingNewMatch(data); break;
         case Packet::ID_DELETE_MATCH: manageDeletingMatch(data); break;
@@ -443,6 +444,43 @@ namespace Server
             else
             {
                 responseData << Packet::ID_ERROR << QString("This tournament has no participants.");
+                emit response(responseData);
+            }
+        }
+        else
+        {
+            responseData << Packet::ID_ERROR << QString("This tournament does not exist.");
+            emit response(responseData);
+        }
+    }
+
+    void PacketProcessor::manageDownloadingRoundLeaderboard(const QVariantList & roundData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(roundData[1].toString()) &&
+           query.findTournamentId(roundData[0].toString(), query.value("id").toUInt()) )
+        {
+            unsigned int tournamentId = query.value("id").toUInt();
+            query.findTournamentLeaderboard(tournamentId);
+
+            if(query.findRoundId(roundData[2].toString(), tournamentId))
+            {
+                unsigned int roundId = query.value("id").toUInt();
+                query.findRoundLeaderboard(tournamentId, roundId);
+
+                if(query.next())
+                    sendParticipantsInChunks(query, Packet::ID_DOWNLOAD_ROUND_LEADERBOARD);
+                else
+                {
+                    responseData << Packet::ID_ERROR << QString("This tournament has no participants.");
+                    emit response(responseData);
+                }
+            }
+            else
+            {
+                responseData << Packet::ID_ERROR << QString("This round does not exist.");
                 emit response(responseData);
             }
         }

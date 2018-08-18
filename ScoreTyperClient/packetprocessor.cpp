@@ -27,7 +27,8 @@ namespace Client
         case Packet::ID_DOWNLOAD_TOURNAMENT_INFO: manageTournamentInfoReply(data); break;
         case Packet::ID_FINISH_TOURNAMENT: manageFinishingTournamentReply(data); break;
         case Packet::ID_ADD_NEW_ROUND: manageAddingNewRoundReply(data); break;
-        case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingLeaderboardReply(data); break;
+        case Packet::ID_DOWNLOAD_TOURNAMENT_LEADERBOARD: manageDownloadingTournamentLeaderboardReply(data); break;
+        case Packet::ID_DOWNLOAD_ROUND_LEADERBOARD: manageDownloadingRoundLeaderboardReply(data); break;
         case Packet::ID_PULL_MATCHES: managePullingMatchesReply(data); break;
         case Packet::ID_ZERO_MATCHES_TO_PULL: managePullingZeroMatchesReply(); break;
         case Packet::ID_ALL_MATCHES_PULLED: manageAllMatchesPulledReply(); break;
@@ -151,7 +152,7 @@ namespace Client
         emit addingNewRoundReply(replyData[0].toBool(), replyData[1].toString());
     }
 
-    void PacketProcessor::manageDownloadingLeaderboardReply(const QVariantList & replyData)
+    void PacketProcessor::manageDownloadingTournamentLeaderboardReply(const QVariantList & replyData)
     {
         for(int i=0; i<replyData.size(); i++)
         {
@@ -163,6 +164,21 @@ namespace Client
             tournamentParticipant.insert("points", tournamentParticipantData[3]);
 
             tournamentParticipantArrived(tournamentParticipant);
+        }
+    }
+
+    void PacketProcessor::manageDownloadingRoundLeaderboardReply(const QVariantList & replyData)
+    {
+        for(int i=0; i<replyData.size(); i++)
+        {
+            QVariantList roundParticipantData = replyData[i].value<QVariantList>();
+            QVariantMap roundParticipant;
+            roundParticipant.insert("nickname", roundParticipantData[0]);
+            roundParticipant.insert("exactScore", roundParticipantData[1]);
+            roundParticipant.insert("predictedResult", roundParticipantData[2]);
+            roundParticipant.insert("points", roundParticipantData[3]);
+
+            roundParticipantArrived(roundParticipant);
         }
     }
 

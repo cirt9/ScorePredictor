@@ -44,6 +44,7 @@ public:
     bool addNewRound(const QString & roundName, unsigned int tournamentId);
     void findTournamentLeaderboard(unsigned int tournamentId);
     bool findRoundId(const QString & roundName, unsigned int tournamentId);
+    void findRoundLeaderboard(unsigned int tournamentId, unsigned int roundId);
 
     bool matchStartsAfterEntriesEndTime(unsigned int tournamentId, const QDateTime & predictionsEndTime);
     void findMatches(unsigned int roundId);

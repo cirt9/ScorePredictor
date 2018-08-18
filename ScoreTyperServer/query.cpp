@@ -295,7 +295,7 @@ void Query::findTournamentLeaderboard(unsigned int tournamentId)
             "match_prediction.competitor_1_score_prediction < match_prediction.competitor_2_score_prediction) OR "
             "(match.competitor_1_score = match.competitor_2_score AND "
             "match_prediction.competitor_1_score_prediction = match_prediction.competitor_2_score_prediction) ) ) "
-            "as predicted_result FROM user INNER JOIN tournament_participant ON "
+            "AS predicted_result FROM user INNER JOIN tournament_participant ON "
             "tournament_participant.user_id = user.id WHERE tournament_participant.tournament_id = :tournamentId) "
             "ORDER BY points DESC, exact_score DESC, predicted_result DESC, nickname DESC");
     bindValue(":tournamentId", tournamentId);
@@ -310,6 +310,36 @@ bool Query::findRoundId(const QString & roundName, unsigned int tournamentId)
     exec();
 
     return first();
+}
+
+void Query::findRoundLeaderboard(unsigned int tournamentId, unsigned int roundId)
+{
+    prepare("SELECT nickname, exact_score, predicted_result, (exact_score * 3 + predicted_result - exact_score) "
+            "AS points FROM ( SELECT DISTINCT user.nickname, (SELECT count(match_prediction.id) FROM match_prediction "
+            "INNER JOIN match ON match.id = match_prediction.match_id INNER JOIN round ON round.id = match.round_id "
+            "INNER JOIN tournament_participant ON tournament_participant.id = match_prediction.tournament_participant_id "
+            "INNER JOIN user u ON u.id = tournament_participant.user_id WHERE round.id = :roundId1 AND u.id = user.id "
+            "AND datetime(match.predictions_end_time) <= datetime('now', 'localtime') AND "
+            "(match_prediction.competitor_1_score_prediction = match.competitor_1_score AND "
+            "match_prediction.competitor_2_score_prediction = match.competitor_2_score) ) AS exact_score, "
+            "(SELECT count(match_prediction.id) FROM match_prediction INNER JOIN match ON "
+            "match.id = match_prediction.match_id INNER JOIN round ON round.id = match.round_id INNER JOIN "
+            "tournament_participant ON tournament_participant.id = match_prediction.tournament_participant_id INNER JOIN "
+            "user u ON u.id = tournament_participant.user_id WHERE round.id = :roundId2 AND u.id = user.id AND "
+            "datetime(match.predictions_end_time) <= datetime('now', 'localtime') AND "
+            "( (match.competitor_1_score > match.competitor_2_score AND "
+            "match_prediction.competitor_1_score_prediction > match_prediction.competitor_2_score_prediction) OR "
+            "(match.competitor_1_score < match.competitor_2_score AND "
+            "match_prediction.competitor_1_score_prediction < match_prediction.competitor_2_score_prediction) OR "
+            "(match.competitor_1_score = match.competitor_2_score AND "
+            "match_prediction.competitor_1_score_prediction = match_prediction.competitor_2_score_prediction) )) "
+            "AS predicted_result FROM user INNER JOIN tournament_participant ON "
+            "tournament_participant.user_id = user.id WHERE tournament_participant.tournament_id = :tournamentId) "
+            "ORDER BY points DESC, exact_score DESC, predicted_result DESC, nickname DESC");
+    bindValue(":tournamentId", tournamentId);
+    bindValue(":roundId1", roundId);
+    bindValue(":roundId2", roundId);
+    exec();
 }
 
 bool Query::matchStartsAfterEntriesEndTime(unsigned int tournamentId, const QDateTime & predictionsEndTime)

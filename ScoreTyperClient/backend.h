@@ -47,7 +47,10 @@ public:
     Q_INVOKABLE void downloadTournamentInfo(const QString & tournamentName, const QString & hostName);
     Q_INVOKABLE void finishTournament(const QString & tournamentName, const QString & hostName);
     Q_INVOKABLE void addNewRound(const QString & tournamentName, const QString & hostName, const QString & roundName);
+
     Q_INVOKABLE void downloadTournamentLeaderboard(const QString & tournamentName, const QString & hostName);
+    Q_INVOKABLE void downloadRoundLeaderboard(const QString & tournamentName, const QString & hostName,
+                                              const QString & roundName);
 
     Q_INVOKABLE void pullMatches(const QString & tournamentName, const QString & hostName, const QString & roundName);
     Q_INVOKABLE void createNewMatch(Match * newMatch);
