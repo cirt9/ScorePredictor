@@ -49,6 +49,7 @@ Item {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.margins: 10
+            anchors.topMargin: viewFooterHeight
         }
 
         SearchIndicator {
@@ -58,7 +59,8 @@ Item {
             fontBold: true
             fontSize: 22
             running: loadingState && matchesModel.count === 0 ? true : false
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: parent.height / 2
         }
     }
 
@@ -586,10 +588,12 @@ Item {
 
                 Text {
                     id: earnedPointsData
-                    text: earnedPoints + " " + qsTr("Points")
+                    text: earnedPoints === 1 ? earnedPoints + " " + qsTr("Point") : earnedPoints + " " + qsTr("Points")
+                    width: 50
                     color: mainWindow.fontColor
                     font.pointSize: 10
                     verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
                     elide: Text.ElideRight
                     anchors.top: predictionDelegateBackground.top
                     anchors.bottom: predictionDelegateBackground.bottom
@@ -632,7 +636,7 @@ Item {
 
         onCountChanged: {
             if(root.loadingState && count > 0)
-                stopLoading()
+                hideLoadingText()
         }
     }
 
@@ -756,13 +760,13 @@ Item {
         }
     }
 
-    function startLoading()
+    function showLoadingText()
     {
         loadingState = true
         timeoutTimer.restart()
     }
 
-    function stopLoading()
+    function hideLoadingText()
     {
         loadingState = false
         timeoutTimer.stop()
@@ -771,6 +775,6 @@ Item {
 
     function clear()
     {
-        tournamentsList.clear()
+        matchesModel.clear()
     }
 }

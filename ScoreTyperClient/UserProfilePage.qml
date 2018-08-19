@@ -196,8 +196,8 @@ Page {
 
     Component.onCompleted: {
         downloadProfile()
-        finishedTournamentsList.startLoading()
-        ongoingTournamentsList.startLoading()
+        finishedTournamentsList.showLoadingText()
+        ongoingTournamentsList.showLoadingText()
     }
 
     Connections {
@@ -214,7 +214,7 @@ Page {
                 finishedTournamentsList.notLoadedResponseText =
                 qsTr("You weren't participating in any finished tournaments yet")
             }
-            finishedTournamentsList.stopLoading()
+            finishedTournamentsList.hideLoadingText()
         }
 
         onOngoingTournamentsListArrived: {
@@ -223,7 +223,7 @@ Page {
                 ongoingTournamentsList.notLoadedResponseText =
                 qsTr("There aren't any ongoing tournaments that you participate in")
             }
-            ongoingTournamentsList.stopLoading()
+            ongoingTournamentsList.hideLoadingText()
         }
 
         onFinishedTournamentsListItemArrived: finishedTournamentsList.addItem(tournamentName, hostName)
@@ -241,14 +241,14 @@ Page {
     {
         finishedTournamentsList.clear()
         backend.pullFinishedTournaments(currentUser.username)
-        finishedTournamentsList.startLoading()
+        finishedTournamentsList.showLoadingText()
     }
 
     function refreshOngoingTournamentsList()
     {
         ongoingTournamentsList.clear()
         backend.pullOngoingTournaments(currentUser.username)
-        ongoingTournamentsList.startLoading()
+        ongoingTournamentsList.showLoadingText()
     }
 
     function showTournament(tournamentName, hostName)
@@ -265,7 +265,7 @@ Page {
         finishedTournamentsList.clear()
         ongoingTournamentsList.clear()
         downloadProfile()
-        finishedTournamentsList.startLoading()
-        ongoingTournamentsList.startLoading()
+        finishedTournamentsList.showLoadingText()
+        ongoingTournamentsList.showLoadingText()
     }
 }

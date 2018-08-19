@@ -10,6 +10,7 @@ Rectangle {
     property alias textColor: listItemText.color
     property alias fontSize: listItemText.font.pointSize
     readonly property alias currentIndex: list.currentIndex
+    readonly property alias count: list.count
     signal itemChanged()
 
     Text {
@@ -59,5 +60,16 @@ Rectangle {
 
         if(list.count === 1)
             listItemText.text = text
+    }
+
+    function remove(index, count)
+    {
+        var itemsToRemove = []
+
+        for(var i=index; i<index+count; i++)
+            itemsToRemove.push(list.itemAt(i))
+
+        for(var j=0; j<itemsToRemove.length; j++)
+            list.removeItem(itemsToRemove[j])
     }
 }

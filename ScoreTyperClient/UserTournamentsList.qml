@@ -200,13 +200,13 @@ Item {
         tournamentsList.append(item)
     }
 
-    function startLoading()
+    function showLoadingText()
     {
         loadingState = true
         timeoutTimer.restart()
     }
 
-    function stopLoading()
+    function hideLoadingText()
     {
         loadingState = false
         timeoutTimer.stop()

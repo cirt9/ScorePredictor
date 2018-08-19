@@ -265,8 +265,8 @@ Page {
 
         PopupBox {
             id: addRoundPopup
-            width: 500
-            height: 300
+            width: 450
+            height: 250
 
             Text {
                 text: qsTr("Adding New Round")
@@ -406,5 +406,16 @@ Page {
 
         pagesList.anchors.right = showAddRoundPopupButton.left
         pagesList.anchors.rightMargin = 0
+    }
+
+    function refresh()
+    {
+        if(currentPage === pagesList.mainPageName)
+        {
+            pagesList.remove(1, pagesList.count - 1)
+            backend.downloadTournamentInfo(currentTournament.name, currentTournament.hostName)
+        }
+
+        tournamentView.currentItem.refresh()
     }
 }

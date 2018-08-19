@@ -42,7 +42,7 @@ Page {
                     backend.deleteMatch(match)
                     match.destroy()
 
-                    startLoading()
+                    showLoadingText()
                 }
 
                 onUpdatingMatchScore: {
@@ -58,7 +58,7 @@ Page {
                     backend.updateMatchScore(match)
                     match.destroy()
 
-                    startLoading()
+                    showLoadingText()
                 }
 
                 onMakingPrediction: {
@@ -68,7 +68,7 @@ Page {
                     predictionData.roundName = roundPage.name
 
                     backend.makePrediction(predictionData)
-                    startLoading()
+                    showLoadingText()
                 }
 
                 onUpdatingMatchPrediction: {
@@ -78,7 +78,7 @@ Page {
                     updatedPrediction.roundName = roundPage.name
 
                     backend.updatePrediction(updatedPrediction)
-                    startLoading()
+                    showLoadingText()
                 }
             }
         }
@@ -298,7 +298,7 @@ Page {
         target: packetProcessor
 
         onRoundParticipantArrived: roundLeaderboard.addParticipant(roundParticipant)
-        onZeroMatchesToPull: listOfMatches.stopLoading()
+        onZeroMatchesToPull: listOfMatches.hideLoadingText()
         onMatchItemArrived: {
             match.predictions = []
             match.currentUserMadePrediction = true
@@ -416,10 +416,10 @@ Page {
         name = tournamentNavigationPage.currentPage
 
         backend.pullMatches(currentTournament.name, currentTournament.hostName, roundPage.name)
-        listOfMatches.startLoading()
+        listOfMatches.showLoadingText()
 
         backend.downloadRoundLeaderboard(currentTournament.name, currentTournament.hostName, roundPage.name)
-        roundLeaderboard.startLoading()
+        roundLeaderboard.showLoadingText()
     }
 
     function startLoading()
@@ -434,5 +434,16 @@ Page {
         busyTimer.stop()
         navigationPage.enabled = true
         mainWindow.stopBusyIndicator()
+    }
+
+    function refresh()
+    {
+        listOfMatches.clear()
+        backend.pullMatches(currentTournament.name, currentTournament.hostName, roundPage.name)
+        listOfMatches.showLoadingText()
+
+        roundLeaderboard.clear()
+        backend.downloadRoundLeaderboard(currentTournament.name, currentTournament.hostName, roundPage.name)
+        roundLeaderboard.showLoadingText()
     }
 }

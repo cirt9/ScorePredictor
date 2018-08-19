@@ -27,6 +27,13 @@ Page {
 
     Component.onCompleted: {
         backend.downloadTournamentLeaderboard(currentTournament.name, currentTournament.hostName)
-        tournamentLeaderboard.startLoading()
+        tournamentLeaderboard.showLoadingText()
+    }
+
+    function refresh()
+    {
+        tournamentLeaderboard.clear()
+        backend.downloadTournamentLeaderboard(currentTournament.name, currentTournament.hostName)
+        tournamentLeaderboard.showLoadingText()
     }
 }

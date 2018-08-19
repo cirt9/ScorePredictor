@@ -98,9 +98,26 @@ Item {
 
             Rectangle {
                 id: delegateBackground
-                color: mainWindow.colorB
+                property color goldColor: "#ffd700"
+                property color silverColor: "#C0C0C0"
+                property color bronzeColor: "#cd7f32"
+
+                color: {
+                    if(position === 1)
+                        return goldColor
+
+                    if(position === 2)
+                        return silverColor
+
+                    if(position === 3)
+                        return bronzeColor
+
+                    return mainWindow.colorB
+                }
+
                 radius: 5
-                opacity: 0.4
+                opacity: 0.3
+
                 anchors.fill: parent
             }
 
@@ -115,6 +132,7 @@ Item {
                     text: position
                     color: mainWindow.fontColor
                     font.pointSize: 10
+                    font.bold: nickname === currentUser.username ? true : false
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
@@ -127,6 +145,7 @@ Item {
                     text: nickname
                     color: mainWindow.fontColor
                     font.pointSize: 10
+                    font.bold: nickname === currentUser.username ? true : false
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
@@ -139,6 +158,7 @@ Item {
                     text: exactScore
                     color: mainWindow.fontColor
                     font.pointSize: 10
+                    font.bold: nickname === currentUser.username ? true : false
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
@@ -151,6 +171,7 @@ Item {
                     text: predictedResult
                     color: mainWindow.fontColor
                     font.pointSize: 10
+                    font.bold: nickname === currentUser.username ? true : false
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
 
@@ -196,7 +217,7 @@ Item {
             color: mainWindow.fontColor
             opacityOnRunning: 0.75
             fontBold: true
-            fontSize: 16
+            fontSize: 22
             running: loadingState && participantsList.count === 0 ? true : false
             anchors.centerIn: parent
         }
@@ -207,32 +228,8 @@ Item {
 
         onCountChanged: {
             if(root.loadingState && count > 0)
-                stopLoading()
+                hideLoadingText()
         }
-
-        /*ListElement {
-            position: 1
-            nickname: "IAmTheBest"
-            exactScore: 4
-            predictedResult: 15
-            points: 23
-        }
-
-        ListElement {
-            position: 2
-            nickname: "SecondToNone"
-            exactScore: 3
-            predictedResult: 14
-            points: 20
-        }
-
-        ListElement {
-            position: 3
-            nickname: "ThirdBird"
-            exactScore: 1
-            predictedResult: 17
-            points: 19
-        }*/
     }
 
     Timer {
@@ -244,17 +241,42 @@ Item {
 
     function addParticipant(participant)
     {
-        participant.position = 1
+        if(participantsList.count === 0)
+            participant.position = 1
+        else
+        {
+            var lastParticipant = participantsList.get(participantsList.count - 1)
+
+            if(equalParticipants(participant, lastParticipant))
+                participant.position = lastParticipant.position
+            else
+                participant.position = participantsList.count + 1
+        }
+
         participantsList.append(participant)
     }
 
-    function startLoading()
+    function equalParticipants(participant1, participant2)
+    {
+        if(participant1.points !== participant2.points)
+            return false
+
+        if(participant1.exactScore !== participant2.exactScore)
+            return false
+
+        if(participant1.predictedResult !== participant2.predictedResult)
+            return false
+
+        return true
+    }
+
+    function showLoadingText()
     {
         loadingState = true
         timeoutTimer.restart()
     }
 
-    function stopLoading()
+    function hideLoadingText()
     {
         loadingState = false
         timeoutTimer.stop()
