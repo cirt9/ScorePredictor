@@ -212,7 +212,7 @@ Item {
             anchors.margins: 10
         }
 
-        SearchIndicator {
+        LoadingIndicator {
             text: qsTr("Loading")
             color: mainWindow.fontColor
             opacityOnRunning: 0.75

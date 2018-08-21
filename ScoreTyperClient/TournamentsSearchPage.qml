@@ -252,7 +252,7 @@ Page {
                     anchors.centerIn: parent
                 }
 
-                SearchIndicator {
+                LoadingIndicator {
                     text: qsTr("Searching")
                     color: mainWindow.fontColor
                     opacityOnRunning: 0.5

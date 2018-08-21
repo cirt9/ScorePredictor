@@ -5,7 +5,7 @@ Item {
     width: textMetrics.width
     height: textMetrics.height
 
-    property string text: "Searching"
+    property string text: qsTr("Loading")
     property bool running: false
     property alias color: indicatorText.color
     property alias fontSize: indicatorText.font.pointSize
