@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQMLContext>
 #include <backend.h>
+#include <filestream.h>
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Packet>("Packet");
     qmlRegisterType<Tournament>("DataStorage", 1, 0, "Tournament");
     qmlRegisterType<Match>("DataStorage", 1, 0, "Match");
+    qmlRegisterType<FileStream>("FileStream", 1, 0, "FileStream");
 
     QScopedPointer<BackEnd> backend(new BackEnd);
     engine.rootContext()->setContextProperty("backend", backend.data());

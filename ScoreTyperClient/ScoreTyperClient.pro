@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     tournament.cpp \
     packetprocessor.cpp \
     packetprocessorwrapper.cpp \
-    match.cpp
+    match.cpp \
+    filestream.cpp
 
 RESOURCES += qml.qrc \
     assets.qrc
@@ -46,4 +47,8 @@ HEADERS += \
     tournament.h \
     packetprocessor.h \
     packetprocessorwrapper.h \
-    match.h
+    match.h \
+    filestream.h
+
+DISTFILES += \
+    about.txt
