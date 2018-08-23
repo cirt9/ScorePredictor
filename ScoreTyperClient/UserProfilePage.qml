@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.3
 import "../components"
 import "../reusableWidgets"
 
@@ -32,16 +33,17 @@ Page {
                     Layout.margins: 17
 
                     Rectangle {
-                        id: userAvatar
-                        color: "white"
+                        id: userAvatarBackground
+                        color: mainWindow.backgroundColor
                         width: 120
                         height: 120
+                        radius: 20
 
-                        Text {
-                            text: ".jpg"
-                            color: "black"
+                        /*Image {
+                            id: userAvatar
+                            fillMode: Image.PreserveAspectFit
                             anchors.centerIn: parent
-                        }
+                        }*/
                     }
 
                     TextButton {
@@ -51,7 +53,7 @@ Page {
                         textColorHovered: mainWindow.accentColor
                         fontSize: 10
                         bold: true
-                        anchors.horizontalCenter: userAvatar.horizontalCenter
+                        anchors.horizontalCenter: userAvatarBackground.horizontalCenter
 
                         onClicked: editProfilePopup.open()
                     }
@@ -207,6 +209,7 @@ Page {
             height: 500
 
             Text {
+                id: editProfilePopupTitle
                 text: qsTr("Editing Profile")
                 color: mainWindow.fontColor
                 font.bold: true
@@ -216,16 +219,75 @@ Page {
                 anchors.topMargin: 15
             }
 
-            TextArea {
-                id: newDescription
+            Text {
+                id: descriptionTitle
+                text: qsTr("Description")
                 color: mainWindow.fontColor
-                width: 600
+                font.pointSize: 18
+                anchors.left: parent.left
+                anchors.top: editProfilePopupTitle.bottom
+                anchors.leftMargin: 15
+                anchors.topMargin: 15
+            }
+
+            Rectangle {
+                id: descriptionTitleUnderline
+                width: parent.width
+                height: 2
+                color: mainWindow.fontColor
+                radius: 5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: descriptionTitle.bottom
+                anchors.leftMargin: 15
+                anchors.rightMargin: 15
+                anchors.topMargin: 5
+            }
+
+            TextInputArea {
+                id: newDescription
+                width: 650
                 height: 150
                 placeholderText: qsTr("New Description...")
-                font.pointSize: 12
-                wrapMode: Text.Wrap
-                anchors.centerIn: parent
+                backgroundColor: "black"
+                fontColor: mainWindow.fontColor
+                fontSize: 12
+                counterFontSize: 10
+                backgroundRadius: 5
+                maximumLength: 250
+                selectByMouse: true
+                selectedTextColor: mainWindow.fontColor
+                selectionColor: mainWindow.accentColor
+                charactersCounterVisible: true
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: descriptionTitleUnderline.bottom
+                anchors.topMargin: 15
             }
+
+            Button {
+                id: updateDescriptionButton
+                text: qsTr("Update Description")
+                height: 35
+                font.pointSize: 10
+                enabled: newDescription.text ? true : false
+                anchors.top: newDescription.bottom
+                anchors.right: newDescription.right
+            }
+
+            /*Button {
+                text: "FileDialog"
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                onClicked: dialog.open()
+            }
+
+            FileDialog {
+                id: dialog
+                title: qsTr("Choose Your Avatar")
+                folder: shortcuts.desktop
+                nameFilters: ["Image files (*.jpg *.png)"]
+            }*/
         }
     }
 

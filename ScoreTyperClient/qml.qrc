@@ -25,6 +25,7 @@
         <file>ScoreInput.qml</file>
         <file>InputWithBorder.qml</file>
         <file>CustomCalendar.qml</file>
+        <file>TextInputArea.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
