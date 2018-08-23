@@ -142,9 +142,7 @@ Page {
             mainWindow.popToInitialPage()
             enableButtons()
             connectingIndicator.running = false
-
-            if(stateMessage.hidden)
-                displayStateMessage(qsTr("An Error Occured"), mainWindow.deniedColor)
+            displayStateMessage(qsTr("An Error Occured"), mainWindow.deniedColor)
         }
 
         onDisconnected: {

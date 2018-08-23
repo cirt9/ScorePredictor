@@ -127,6 +127,7 @@ void TcpClient::error(QAbstractSocket::SocketError error)
 
     else if(error == QAbstractSocket::NetworkError)
         emit networkError();
-    else
+
+    else if(error != QAbstractSocket::SocketTimeoutError)
         emit unidentifiedError();
 }

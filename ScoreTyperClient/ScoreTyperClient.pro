@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     filestream.cpp
 
 RESOURCES += qml.qrc \
-    assets.qrc
+    assets.qrc \
+    resources.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -50,5 +51,4 @@ HEADERS += \
     match.h \
     filestream.h
 
-DISTFILES += \
-    about.txt
+DISTFILES +=

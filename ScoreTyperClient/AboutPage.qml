@@ -7,7 +7,7 @@ Page {
 
     FileStream {
         id: aboutFile
-        source: "about.txt"
+        source: ":/txt/about.txt"
     }
 
     Text {

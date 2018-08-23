@@ -52,6 +52,8 @@ Page {
                         fontSize: 10
                         bold: true
                         anchors.horizontalCenter: userAvatar.horizontalCenter
+
+                        onClicked: editProfilePopup.open()
                     }
                 }
 
@@ -190,6 +192,39 @@ Page {
 
                     onTournamentChosen: showTournament(tournamentName, hostName)
                 }
+            }
+        }
+    }
+
+    Item {
+        width: editProfilePopup.width
+        height: editProfilePopup.height
+        anchors.centerIn: parent
+
+        PopupBox {
+            id: editProfilePopup
+            width: 700
+            height: 500
+
+            Text {
+                text: qsTr("Editing Profile")
+                color: mainWindow.fontColor
+                font.bold: true
+                font.pointSize: 25
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 15
+            }
+
+            TextArea {
+                id: newDescription
+                color: mainWindow.fontColor
+                width: 600
+                height: 150
+                placeholderText: qsTr("New Description...")
+                font.pointSize: 12
+                wrapMode: Text.Wrap
+                anchors.centerIn: parent
             }
         }
     }
