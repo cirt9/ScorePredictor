@@ -66,6 +66,16 @@ void Query::findUserTournaments(unsigned int userId, bool opened)
     exec();
 }
 
+bool Query::updateUserProfileDescription(unsigned int userId, const QString & description)
+{
+    prepare("UPDATE user_profile SET description = :description WHERE user_id = :userId");
+    bindValue(":description", description);
+    bindValue(":userId", userId);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}
+
 bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId)
 {
     prepare("SELECT 1 FROM tournament WHERE name=:tournamentName AND host_user_id=:hostId");

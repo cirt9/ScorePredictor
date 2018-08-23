@@ -23,6 +23,8 @@ public:
     bool getUserInfo(const QString & nickname);
     void findUserTournaments(unsigned int userId, bool opened);
 
+    bool updateUserProfileDescription(unsigned int userId, const QString & description);
+
     bool tournamentExists(const QString & tournamentName, unsigned int hostId);
     bool createTournament(const Tournament & tournament, unsigned int hostId, const QString & password);
     void findTournaments(unsigned int hostId, const QDateTime & dateTime, int itemsLimit, const QString & tournamentName);

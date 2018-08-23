@@ -32,9 +32,11 @@ public:
     Q_INVOKABLE void login(const QString & nickname, const QString & password);
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
 
-    Q_INVOKABLE void downloadUserInfo(const QString & nickname);
+    Q_INVOKABLE void downloadUserProfileInfo(const QString & nickname);
     Q_INVOKABLE void pullFinishedTournaments(const QString & nickname);
     Q_INVOKABLE void pullOngoingTournaments(const QString & nickname);
+
+    Q_INVOKABLE void updateUserProfileDescription(const QString & nickname, const QString & description);
 
     Q_INVOKABLE void createTournament(Tournament * tournament, const QString & password);
     Q_INVOKABLE void pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName);

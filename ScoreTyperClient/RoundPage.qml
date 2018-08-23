@@ -42,7 +42,7 @@ Page {
                     backend.deleteMatch(match)
                     match.destroy()
 
-                    showLoadingText()
+                    roundPage.startLoading()
                 }
 
                 onUpdatingMatchScore: {
@@ -58,7 +58,7 @@ Page {
                     backend.updateMatchScore(match)
                     match.destroy()
 
-                    showLoadingText()
+                    roundPage.startLoading()
                 }
 
                 onMakingPrediction: {
@@ -68,7 +68,7 @@ Page {
                     predictionData.roundName = roundPage.name
 
                     backend.makePrediction(predictionData)
-                    showLoadingText()
+                    roundPage.startLoading()
                 }
 
                 onUpdatingMatchPrediction: {
@@ -78,7 +78,7 @@ Page {
                     updatedPrediction.roundName = roundPage.name
 
                     backend.updatePrediction(updatedPrediction)
-                    showLoadingText()
+                    roundPage.startLoading()
                 }
             }
         }
@@ -279,7 +279,7 @@ Page {
                         match.destroy()
 
                         createNewMatchPopup.close()
-                        startLoading()
+                        roundPage.startLoading()
                     }
                 }
             }
@@ -311,7 +311,7 @@ Page {
         }
 
         onCreatingNewMatchReply: {
-            stopLoading()
+            roundPage.stopLoading()
 
             if(replyState)
             {
@@ -333,23 +333,23 @@ Page {
         }
 
         onMatchDeleted: {
-            stopLoading()
+            roundPage.stopLoading()
             listOfMatches.deleteMatch(firstCompetitor, secondCompetitor)
         }
 
         onMatchDeletingError: {
-            stopLoading()
+            roundPage.stopLoading()
             navigationPage.showDeniedResponse(message)
         }
 
         onMatchScoreUpdated: {
-            stopLoading()
+            roundPage.stopLoading()
             listOfMatches.updateMatchScore(updatedMatch.firstCompetitor, updatedMatch.secondCompetitor,
                                            updatedMatch.firstCompetitorScore, updatedMatch.secondCompetitorScore)
         }
 
         onMatchScoreUpdatingError: {
-            stopLoading()
+            roundPage.stopLoading()
             navigationPage.showDeniedResponse(message)
         }
 
@@ -366,7 +366,7 @@ Page {
         onAllMatchesPredictionsPulled: listOfMatches.assignPredictingCapabilities()
 
         onPredictionCreated: {
-            stopLoading()
+            roundPage.stopLoading()
 
             var firstCompetitor = predictionData.firstCompetitor
             var secondCompetitor = predictionData.secondCompetitor
@@ -378,12 +378,12 @@ Page {
         }
 
         onPredictionCreatingError: {
-            stopLoading()
+            roundPage.stopLoading()
             navigationPage.showDeniedResponse(message)
         }
 
         onPredictionUpdated: {
-            stopLoading()
+            roundPage.stopLoading()
 
             var firstCompetitor = updatedPrediction.firstCompetitor
             var secondCompetitor = updatedPrediction.secondCompetitor
@@ -395,7 +395,7 @@ Page {
         }
 
         onPredictionUpdatingError: {
-            stopLoading()
+            roundPage.stopLoading()
             navigationPage.showDeniedResponse(message)
         }
     }
@@ -422,6 +422,17 @@ Page {
         roundLeaderboard.showLoadingText()
     }
 
+    function refresh()
+    {
+        listOfMatches.clear()
+        backend.pullMatches(currentTournament.name, currentTournament.hostName, roundPage.name)
+        listOfMatches.showLoadingText()
+
+        roundLeaderboard.clear()
+        backend.downloadRoundLeaderboard(currentTournament.name, currentTournament.hostName, roundPage.name)
+        roundLeaderboard.showLoadingText()
+    }
+
     function startLoading()
     {
         navigationPage.enabled = false
@@ -434,16 +445,5 @@ Page {
         busyTimer.stop()
         navigationPage.enabled = true
         mainWindow.stopBusyIndicator()
-    }
-
-    function refresh()
-    {
-        listOfMatches.clear()
-        backend.pullMatches(currentTournament.name, currentTournament.hostName, roundPage.name)
-        listOfMatches.showLoadingText()
-
-        roundLeaderboard.clear()
-        backend.downloadRoundLeaderboard(currentTournament.name, currentTournament.hostName, roundPage.name)
-        roundLeaderboard.showLoadingText()
     }
 }

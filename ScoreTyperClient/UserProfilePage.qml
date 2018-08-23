@@ -272,6 +272,53 @@ Page {
                 enabled: newDescription.text ? true : false
                 anchors.top: newDescription.bottom
                 anchors.right: newDescription.right
+
+                onClicked: {
+                    backend.updateUserProfileDescription(currentUser.username, newDescription.text)
+
+                    editProfilePopup.enabled = false
+                    navigationPage.enabled = false
+                    mainWindow.startBusyIndicator()
+                    busyTimer.restart()
+                }
+            }
+
+            Text {
+                id: updatingDescriptionResponseText
+                color: mainWindow.acceptedColor
+                font.pointSize: 8
+                font.bold: true
+                opacity: 0
+                anchors.top: newDescription.bottom
+                anchors.left: newDescription.left
+                anchors.margins: 2
+            }
+
+            Timer {
+                id: updatingDescriptionResponseTimer
+                interval: 5000
+
+                onTriggered: animateHidingUpdatingDescriptionResponseText.start()
+            }
+
+            NumberAnimation {
+               id: animateShowingUpdatingDescriptionResponseText
+               target: updatingDescriptionResponseText
+               properties: "opacity"
+               from: updatingDescriptionResponseText.opacity
+               to: 1.0
+               duration: 150
+               easing {type: Easing.Linear}
+            }
+
+            NumberAnimation {
+               id: animateHidingUpdatingDescriptionResponseText
+               target: updatingDescriptionResponseText
+               properties: "opacity"
+               from: updatingDescriptionResponseText.opacity
+               to: 0.0
+               duration: 500
+               easing {type: Easing.Linear}
             }
 
             /*Button {
@@ -289,12 +336,6 @@ Page {
                 nameFilters: ["Image files (*.jpg *.png)"]
             }*/
         }
-    }
-
-    Component.onCompleted: {
-        downloadProfile()
-        finishedTournamentsList.showLoadingText()
-        ongoingTournamentsList.showLoadingText()
     }
 
     Connections {
@@ -325,11 +366,54 @@ Page {
 
         onFinishedTournamentsListItemArrived: finishedTournamentsList.addItem(tournamentName, hostName)
         onOngoingTournamentsListItemArrived: ongoingTournamentsList.addItem(tournamentName, hostName)
+
+        onUserProfileDescriptionUpdated: {
+            editProfilePopup.enabled = true
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            updatingDescriptionResponseText.text = message
+            updatingDescriptionResponseText.color = mainWindow.acceptedColor
+            animateShowingUpdatingDescriptionResponseText.start()
+            updatingDescriptionResponseTimer.restart()
+            newDescription.text = ""
+        }
+
+        onUserProfileDescriptionUpdatingError: {
+            editProfilePopup.enabled = true
+            busyTimer.stop()
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+
+            updatingDescriptionResponseText.text = message
+            updatingDescriptionResponseText.color = mainWindow.deniedColor
+            animateShowingUpdatingDescriptionResponseText.start()
+            updatingDescriptionResponseTimer.restart()
+        }
+    }
+
+    Timer {
+        id: busyTimer
+        interval: mainWindow.serverResponseWaitingTimeMsec
+
+        onTriggered: {
+            navigationPage.enabled = true
+            mainWindow.stopBusyIndicator()
+            backend.disconnectFromServer()
+            mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
+        }
+    }
+
+    Component.onCompleted: {
+        downloadProfile()
+        finishedTournamentsList.showLoadingText()
+        ongoingTournamentsList.showLoadingText()
     }
 
     function downloadProfile()
     {
-        backend.downloadUserInfo(currentUser.username)
+        backend.downloadUserProfileInfo(currentUser.username)
         backend.pullFinishedTournaments(currentUser.username)
         backend.pullOngoingTournaments(currentUser.username)
     }

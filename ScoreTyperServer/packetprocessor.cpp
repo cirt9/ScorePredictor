@@ -20,9 +20,10 @@ namespace Server
         {
         case Packet::ID_REGISTER: registerUser(data); break;
         case Packet::ID_LOGIN: loginUser(data); break;
-        case Packet::ID_DOWNLOAD_USER_INFO: manageDownloadingUserInfo(data); break;
+        case Packet::ID_DOWNLOAD_USER_PROFILE_INFO: manageDownloadingUserInfo(data); break;
         case Packet::ID_PULL_FINISHED_TOURNAMENTS: managePullingUserTournaments(data, false); break;
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: managePullingUserTournaments(data, true); break;
+        case Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION: manageUpdatingUserProfileDescription(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS: managePullingTournaments(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageJoiningTournament(data); break;
@@ -109,7 +110,7 @@ namespace Server
 
         if(query.getUserInfo(userData[0].toString()))
         {
-            responseData << Packet::ID_DOWNLOAD_USER_INFO << query.value("description");
+            responseData << Packet::ID_DOWNLOAD_USER_PROFILE_INFO << query.value("description");
 
             qDebug() << "Description for user: " << userData[0].toString();
             qDebug() << query.value("description");
@@ -146,6 +147,32 @@ namespace Server
                 QVariantList tournamentData;
                 tournamentData << query.value("name") << query.value("host_name");
                 responseData << QVariant::fromValue(tournamentData);
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("User does not exist");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageUpdatingUserProfileDescription(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(requestData[0].toString()))
+        {
+            unsigned int userId = query.value("id").toUInt();
+
+            if(query.updateUserProfileDescription(userId, requestData[1].toString()))
+            {
+                responseData << Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION
+                             << QString("Description successfully updated.");
+            }
+            else
+            {
+                responseData << Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION_ERROR
+                             << QString("Description couldn't be updated. Try again later.");
             }
         }
         else

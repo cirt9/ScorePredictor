@@ -24,6 +24,11 @@ namespace Client
         connect(packetProcessor, &Client::PacketProcessor::ongoingTournamentsListItemArrived,
                 this, &PacketProcessorWrapper::ongoingTournamentsListItemArrived);
 
+        connect(packetProcessor, &Client::PacketProcessor::userProfileDescriptionUpdated,
+                this, &PacketProcessorWrapper::userProfileDescriptionUpdated);
+        connect(packetProcessor, &Client::PacketProcessor::userProfileDescriptionUpdatingError,
+                this, &PacketProcessorWrapper::userProfileDescriptionUpdatingError);
+
         connect(packetProcessor, &Client::PacketProcessor::tournamentCreationReply,
                 this, &PacketProcessorWrapper::tournamentCreationReply);
         connect(packetProcessor, &Client::PacketProcessor::tournamentsListArrived,

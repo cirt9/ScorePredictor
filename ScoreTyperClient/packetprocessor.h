@@ -22,6 +22,9 @@ namespace Client
         void manageFinishedTournamentsPullReply(const QVariantList & replyData);
         void manageOngoingTournamentsPullReply(const QVariantList & replyData);
 
+        void manageUpdatingProfileDescriptionReply(const QVariantList & replyData);
+        void manageUpdatingProfileDescriptionErrorReply(const QVariantList & replyData);
+
         void manageTournamentCreationReply(const QVariantList & replyData);
         void manageTournamentsPullReply(const QVariantList & replyData);
 
@@ -69,6 +72,9 @@ namespace Client
         void finishedTournamentsListItemArrived(const QString & tournamentName, const QString & hostName);
         void ongoingTournamentsListArrived(int numberOfItems);
         void ongoingTournamentsListItemArrived(const QString & tournamentName, const QString & hostName);
+
+        void userProfileDescriptionUpdated(const QString & message);
+        void userProfileDescriptionUpdatingError(const QString & message);
 
         void tournamentCreationReply(bool replyState, const QString & message);
         void tournamentsListArrived();

@@ -23,6 +23,8 @@ namespace Server
         void manageDownloadingUserInfo(const QVariantList & userData);
         void managePullingUserTournaments(const QVariantList & userData, bool opened);
 
+        void manageUpdatingUserProfileDescription(const QVariantList & requestData);
+
         void manageTournamentCreationRequest(QVariantList & tournamentData);
         void managePullingTournaments(const QVariantList & requestData);
         void manageJoiningTournament(const QVariantList & requestData);

@@ -29,6 +29,9 @@ namespace Client
         void ongoingTournamentsListArrived(int numberOfItems);
         void ongoingTournamentsListItemArrived(const QString & tournamentName, const QString & hostName);
 
+        void userProfileDescriptionUpdated(const QString & message);
+        void userProfileDescriptionUpdatingError(const QString & message);
+
         void tournamentCreationReply(bool replyState, const QString & message);
         void tournamentsListArrived();
         void tournamentsListItemArrived(const QStringList & tournamentData);

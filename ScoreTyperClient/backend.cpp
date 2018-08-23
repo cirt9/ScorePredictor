@@ -53,10 +53,10 @@ void BackEnd::registerAccount(const QString & nickname, const QString & password
     emit clientWrapper->sendData(data);
 }
 
-void BackEnd::downloadUserInfo(const QString & nickname)
+void BackEnd::downloadUserProfileInfo(const QString & nickname)
 {
     QVariantList data;
-    data << Packet::ID_DOWNLOAD_USER_INFO << nickname;
+    data << Packet::ID_DOWNLOAD_USER_PROFILE_INFO << nickname;
     emit clientWrapper->sendData(data);
 }
 
@@ -71,6 +71,13 @@ void BackEnd::pullOngoingTournaments(const QString & nickname)
 {
     QVariantList data;
     data << Packet::ID_PULL_ONGOING_TOURNAMENTS << nickname;
+    emit clientWrapper->sendData(data);
+}
+
+void BackEnd::updateUserProfileDescription(const QString & nickname, const QString & description)
+{
+    QVariantList data;
+    data << Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION << nickname << description;
     emit clientWrapper->sendData(data);
 }
 

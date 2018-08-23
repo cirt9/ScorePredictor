@@ -18,9 +18,11 @@ namespace Client
         case Packet::ID_ERROR: manageReplyError(data); break;
         case Packet::ID_REGISTER: manageRegistrationReply(data); break;
         case Packet::ID_LOGIN: manageLoggingReply(data); break;
-        case Packet::ID_DOWNLOAD_USER_INFO: manageUserInfoReply(data); break;
+        case Packet::ID_DOWNLOAD_USER_PROFILE_INFO: manageUserInfoReply(data); break;
         case Packet::ID_PULL_FINISHED_TOURNAMENTS: manageFinishedTournamentsPullReply(data); break;
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: manageOngoingTournamentsPullReply(data); break;
+        case Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION: manageUpdatingProfileDescriptionReply(data); break;
+        case Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION_ERROR: manageUpdatingProfileDescriptionErrorReply(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
         case Packet::ID_PULL_TOURNAMENTS: manageTournamentsPullReply(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningReply(data); break;
@@ -94,6 +96,16 @@ namespace Client
 
             emit ongoingTournamentsListItemArrived(tournamentName, hostName);
         }
+    }
+
+    void PacketProcessor::manageUpdatingProfileDescriptionReply(const QVariantList & replyData)
+    {
+        emit userProfileDescriptionUpdated(replyData[0].toString());
+    }
+
+    void PacketProcessor::manageUpdatingProfileDescriptionErrorReply(const QVariantList & replyData)
+    {
+        emit userProfileDescriptionUpdatingError(replyData[0].toString());
     }
 
     void PacketProcessor::manageTournamentCreationReply(const QVariantList & replyData)
