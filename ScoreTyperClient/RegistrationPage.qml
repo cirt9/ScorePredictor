@@ -111,40 +111,19 @@ Page {
             }
         }
 
-        Text {
+        ResponseText {
             id: registeringResponseText
-            color: mainWindow.acceptedColor
-            font.pointSize: 8
-            font.bold: true
-            opacity: 0
+            acceptedColor: mainWindow.acceptedColor
+            deniedColor: mainWindow.deniedColor
+            fontSize: 8
+            bold: true
+            visibilityTime: 7000
+            showingDuration: 150
+            hidingDuration: 500
             anchors.horizontalCenter: parent.horizontalCenter
-        }
 
-        Timer {
-            id: registeringResponseTextTimer
-            interval: 5000
-
-            onTriggered: animateHidingRegisteringResponseText.start()
-        }
-
-        NumberAnimation {
-           id: animateShowingRegisteringResponseText
-           target: registeringResponseText
-           properties: "opacity"
-           from: registeringResponseText.opacity
-           to: 1.0
-           duration: 150
-           easing {type: Easing.Linear;}
-        }
-
-        NumberAnimation {
-           id: animateHidingRegisteringResponseText
-           target: registeringResponseText
-           properties: "opacity"
-           from: registeringResponseText.opacity
-           to: 0.0
-           duration: 500
-           easing {type: Easing.Linear;}
+            Layout.preferredWidth: 300
+            Layout.preferredHeight: 30
         }
 
         Button {
@@ -206,9 +185,7 @@ Page {
             if(replyState)
             {
                 clear()
-                registeringResponseText.text = message
-                animateShowingRegisteringResponseText.start()
-                registeringResponseTextTimer.restart()
+                registeringResponseText.showAcceptedResponse(message)
             }
             else
             {

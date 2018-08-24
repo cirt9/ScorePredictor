@@ -274,51 +274,38 @@ Page {
                 anchors.right: newDescription.right
 
                 onClicked: {
-                    backend.updateUserProfileDescription(currentUser.username, newDescription.text)
+                    updatingDescriptionResponseText.hide()
 
-                    editProfilePopup.enabled = false
-                    navigationPage.enabled = false
-                    mainWindow.startBusyIndicator()
-                    busyTimer.restart()
+                    if(newDescription.text === profileDescription.text)
+                    {
+                        updatingDescriptionResponseText.showDeniedResponse(
+                            qsTr("You have given the same description you already have.") )
+                    }
+                    else
+                    {
+                        backend.updateUserProfileDescription(currentUser.username, newDescription.text)
+
+                        editProfilePopup.enabled = false
+                        navigationPage.enabled = false
+                        mainWindow.startBusyIndicator()
+                        busyTimer.restart()
+                    }
                 }
             }
 
-            Text {
+            ResponseText {
                 id: updatingDescriptionResponseText
-                color: mainWindow.acceptedColor
-                font.pointSize: 8
-                font.bold: true
-                opacity: 0
+                acceptedColor: mainWindow.acceptedColor
+                deniedColor: mainWindow.deniedColor
+                fontSize: 10
+                bold: true
+                visibilityTime: 7000
+                showingDuration: 250
+                hidingDuration: 500
                 anchors.top: newDescription.bottom
                 anchors.left: newDescription.left
-                anchors.margins: 2
-            }
-
-            Timer {
-                id: updatingDescriptionResponseTimer
-                interval: 5000
-
-                onTriggered: animateHidingUpdatingDescriptionResponseText.start()
-            }
-
-            NumberAnimation {
-               id: animateShowingUpdatingDescriptionResponseText
-               target: updatingDescriptionResponseText
-               properties: "opacity"
-               from: updatingDescriptionResponseText.opacity
-               to: 1.0
-               duration: 150
-               easing {type: Easing.Linear}
-            }
-
-            NumberAnimation {
-               id: animateHidingUpdatingDescriptionResponseText
-               target: updatingDescriptionResponseText
-               properties: "opacity"
-               from: updatingDescriptionResponseText.opacity
-               to: 0.0
-               duration: 500
-               easing {type: Easing.Linear}
+                anchors.topMargin: 3
+                anchors.leftMargin: 5
             }
 
             /*Button {
@@ -373,10 +360,8 @@ Page {
             navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
 
-            updatingDescriptionResponseText.text = message
-            updatingDescriptionResponseText.color = mainWindow.acceptedColor
-            animateShowingUpdatingDescriptionResponseText.start()
-            updatingDescriptionResponseTimer.restart()
+            updatingDescriptionResponseText.showAcceptedResponse(message)
+            profileDescription.text = newDescription.text
             newDescription.text = ""
         }
 
@@ -386,10 +371,7 @@ Page {
             navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
 
-            updatingDescriptionResponseText.text = message
-            updatingDescriptionResponseText.color = mainWindow.deniedColor
-            animateShowingUpdatingDescriptionResponseText.start()
-            updatingDescriptionResponseTimer.restart()
+            updatingDescriptionResponseText.showDeniedResponse(message)
         }
     }
 

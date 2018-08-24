@@ -26,6 +26,7 @@
         <file>InputWithBorder.qml</file>
         <file>CustomCalendar.qml</file>
         <file>TextInputArea.qml</file>
+        <file>ResponseText.qml</file>
     </qresource>
     <qresource prefix="/pages">
         <file>LoggingPage.qml</file>
