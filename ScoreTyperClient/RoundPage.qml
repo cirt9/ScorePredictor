@@ -42,7 +42,7 @@ Page {
                     backend.deleteMatch(match)
                     match.destroy()
 
-                    roundPage.startLoading()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
 
                 onUpdatingMatchScore: {
@@ -58,7 +58,7 @@ Page {
                     backend.updateMatchScore(match)
                     match.destroy()
 
-                    roundPage.startLoading()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
 
                 onMakingPrediction: {
@@ -68,7 +68,7 @@ Page {
                     predictionData.roundName = roundPage.name
 
                     backend.makePrediction(predictionData)
-                    roundPage.startLoading()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
 
                 onUpdatingMatchPrediction: {
@@ -78,7 +78,7 @@ Page {
                     updatedPrediction.roundName = roundPage.name
 
                     backend.updatePrediction(updatedPrediction)
-                    roundPage.startLoading()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
             }
         }
@@ -279,7 +279,7 @@ Page {
                         match.destroy()
 
                         createNewMatchPopup.close()
-                        roundPage.startLoading()
+                        mainWindow.startLoading(busyTimer, navigationPage)
                     }
                 }
             }
@@ -311,7 +311,7 @@ Page {
         }
 
         onCreatingNewMatchReply: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             if(replyState)
             {
@@ -333,23 +333,23 @@ Page {
         }
 
         onMatchDeleted: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
             listOfMatches.deleteMatch(firstCompetitor, secondCompetitor)
         }
 
         onMatchDeletingError: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
             navigationPage.showDeniedResponse(message)
         }
 
         onMatchScoreUpdated: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
             listOfMatches.updateMatchScore(updatedMatch.firstCompetitor, updatedMatch.secondCompetitor,
                                            updatedMatch.firstCompetitorScore, updatedMatch.secondCompetitorScore)
         }
 
         onMatchScoreUpdatingError: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
             navigationPage.showDeniedResponse(message)
         }
 
@@ -366,7 +366,7 @@ Page {
         onAllMatchesPredictionsPulled: listOfMatches.assignPredictingCapabilities()
 
         onPredictionCreated: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             var firstCompetitor = predictionData.firstCompetitor
             var secondCompetitor = predictionData.secondCompetitor
@@ -378,12 +378,12 @@ Page {
         }
 
         onPredictionCreatingError: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
             navigationPage.showDeniedResponse(message)
         }
 
         onPredictionUpdated: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             var firstCompetitor = updatedPrediction.firstCompetitor
             var secondCompetitor = updatedPrediction.secondCompetitor
@@ -395,7 +395,7 @@ Page {
         }
 
         onPredictionUpdatingError: {
-            roundPage.stopLoading()
+            mainWindow.stopLoading(busyTimer, navigationPage)
             navigationPage.showDeniedResponse(message)
         }
     }
@@ -431,19 +431,5 @@ Page {
         roundLeaderboard.clear()
         backend.downloadRoundLeaderboard(currentTournament.name, currentTournament.hostName, roundPage.name)
         roundLeaderboard.showLoadingText()
-    }
-
-    function startLoading()
-    {
-        navigationPage.enabled = false
-        mainWindow.startBusyIndicator()
-        busyTimer.restart()
-    }
-
-    function stopLoading()
-    {
-        busyTimer.stop()
-        navigationPage.enabled = true
-        mainWindow.stopBusyIndicator()
     }
 }

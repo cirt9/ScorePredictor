@@ -206,7 +206,7 @@ Page {
         PopupBox {
             id: editProfilePopup
             width: 700
-            height: 500
+            height: 550
 
             Text {
                 id: editProfilePopupTitle
@@ -227,7 +227,7 @@ Page {
                 anchors.left: parent.left
                 anchors.top: editProfilePopupTitle.bottom
                 anchors.leftMargin: 15
-                anchors.topMargin: 15
+                anchors.topMargin: 10
             }
 
             Rectangle {
@@ -246,6 +246,7 @@ Page {
 
             TextInputArea {
                 id: newDescription
+                text: profileDescription.text
                 width: 650
                 height: 150
                 placeholderText: qsTr("New Description...")
@@ -283,12 +284,10 @@ Page {
                     }
                     else
                     {
-                        backend.updateUserProfileDescription(currentUser.username, newDescription.text)
+                        mainWindow.startLoading(busyTimer, navigationPage, editProfilePopup)
+                        editProfilePopup.closePolicy = Popup.NoAutoClose
 
-                        editProfilePopup.enabled = false
-                        navigationPage.enabled = false
-                        mainWindow.startBusyIndicator()
-                        busyTimer.restart()
+                        backend.updateUserProfileDescription(currentUser.username, newDescription.text)
                     }
                 }
             }
@@ -305,23 +304,33 @@ Page {
                 anchors.top: newDescription.bottom
                 anchors.left: newDescription.left
                 anchors.topMargin: 3
-                anchors.leftMargin: 5
             }
 
-            /*Button {
-                text: "FileDialog"
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                onClicked: dialog.open()
+            Text {
+                id: avatarTitle
+                text: qsTr("Avatar")
+                color: mainWindow.fontColor
+                font.pointSize: 18
+                anchors.left: parent.left
+                anchors.top: updateDescriptionButton.bottom
+                anchors.leftMargin: 15
             }
 
-            FileDialog {
-                id: dialog
-                title: qsTr("Choose Your Avatar")
-                folder: shortcuts.desktop
-                nameFilters: ["Image files (*.jpg *.png)"]
-            }*/
+            Rectangle {
+                id: avatarTitleUnderline
+                width: parent.width
+                height: 2
+                color: mainWindow.fontColor
+                radius: 5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: avatarTitle.bottom
+                anchors.leftMargin: 15
+                anchors.rightMargin: 15
+                anchors.topMargin: 5
+            }
+
+
         }
     }
 
@@ -355,21 +364,16 @@ Page {
         onOngoingTournamentsListItemArrived: ongoingTournamentsList.addItem(tournamentName, hostName)
 
         onUserProfileDescriptionUpdated: {
-            editProfilePopup.enabled = true
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, navigationPage, editProfilePopup)
+            editProfilePopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             updatingDescriptionResponseText.showAcceptedResponse(message)
             profileDescription.text = newDescription.text
-            newDescription.text = ""
         }
 
         onUserProfileDescriptionUpdatingError: {
-            editProfilePopup.enabled = true
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, navigationPage, editProfilePopup)
+            editProfilePopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             updatingDescriptionResponseText.showDeniedResponse(message)
         }
@@ -380,8 +384,10 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
+            navigationPage.enabled = true
+            editProfilePopup.enabled = true
+            editProfilePopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
             backend.disconnectFromServer()
             mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }

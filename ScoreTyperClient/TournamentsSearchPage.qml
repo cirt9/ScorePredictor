@@ -298,9 +298,7 @@ Page {
                 else
                 {
                     backend.joinTournament(currentUser.username, chosenTournament.tournamentName, chosenTournament.hostName)
-                    navigationPage.enabled = false
-                    mainWindow.startBusyIndicator()
-                    busyTimer.restart()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
             }
         }
@@ -388,11 +386,9 @@ Page {
 
                     backend.joinTournament(currentUser.username, chosenTournament.tournamentName,
                                            chosenTournament.hostName, passwordRequiredInput.text)
-                    navigationPage.enabled = false
                     passwordRequiredInput.text = ""
                     passwordRequiredPopup.close()
-                    mainWindow.startBusyIndicator()
-                    busyTimer.restart()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
             }
         }
@@ -421,9 +417,7 @@ Page {
         }
 
         onTournamentJoiningReply: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             if(replyState)
             {
@@ -453,8 +447,8 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            navigationPage.enabled = true
             mainWindow.stopBusyIndicator()
+            navigationPage.enabled = true
             backend.disconnectFromServer()
             mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }

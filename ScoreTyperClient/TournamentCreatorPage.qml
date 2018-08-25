@@ -122,11 +122,13 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             property bool hidden: true
 
-            Text {
+            ResponseText {
                 id: replyText
-                color: mainWindow.deniedColor
-                font.pointSize: 10
-                opacity: 0
+                deniedColor: mainWindow.deniedColor
+                fontSize: 10
+                visibilityTime: replyTimer.interval
+                showingDuration: 250
+                hidingDuration: 200
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -137,35 +139,17 @@ Page {
                 property: "height"
                 from: replyArea.height
                 to: 20
-                duration: 150
-                easing.type: Easing.InOutQuad
-            }
-            NumberAnimation {
-                id: animateReplyTextShowing
-                target: replyText
-                property: "opacity"
-                from: replyText.opacity
-                to: 1
-                duration: 100
+                duration: 200
                 easing.type: Easing.InOutQuad
             }
 
             NumberAnimation {
                 id: animateReplyAreaHiding
-                target: replyText
-                property: "opacity"
-                from: replyText.opacity
-                to: 0
-                duration: 100
-                easing.type: Easing.OutInQuad
-            }
-            NumberAnimation {
-                id: animateReplyTextHiding
                 target: replyArea
                 property: "height"
                 from: replyArea.height
                 to: 0
-                duration: 150
+                duration: 250
                 easing.type: Easing.OutInQuad
             }
 
@@ -173,7 +157,11 @@ Page {
                 id: replyTimer
                 interval: 10000
 
-                onTriggered: hideReplyArea()
+                onTriggered: {
+                    animateReplyAreaHiding.start()
+                    replyText.hide()
+                    replyArea.hidden = true
+                }
             }
         }
 
@@ -278,10 +266,7 @@ Page {
                     hideReplyArea()
 
                 if(tournamentNameInput.text.length === 0)
-                {
-                    replyText.text = qsTr("Tournament name is required")
-                    showReplyArea()
-                }
+                    showReplyArea(qsTr("Tournament name is required"))
                 else
                 {
                     entriesEndTimePicker.defocus()
@@ -299,9 +284,7 @@ Page {
                     backend.createTournament(tournament, tournamentPasswordInput.text)
                     tournament.destroy()
 
-                    navigationPage.enabled = false
-                    mainWindow.startBusyIndicator()
-                    busyTimer.restart()
+                    mainWindow.startLoading(busyTimer, navigationPage)
                 }
             }
         }
@@ -311,9 +294,7 @@ Page {
         target: packetProcessor
 
         onTournamentCreationReply: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             if(replyState)
             {
@@ -325,10 +306,8 @@ Page {
                 navigationPage.changePage(1)
             }
             else
-            {
-                replyText.text = message
-                showReplyArea()
-            }
+                showReplyArea(message)
+
             refresh()
         }
     }
@@ -346,10 +325,10 @@ Page {
         }
     }
 
-    function showReplyArea()
+    function showReplyArea(message)
     {
         animateReplyAreaShowing.start()
-        animateReplyTextShowing.start()
+        replyText.showDeniedResponse(message)
         replyArea.hidden = false
         replyTimer.restart()
     }
@@ -357,7 +336,7 @@ Page {
     function hideReplyArea()
     {
         animateReplyAreaHiding.start()
-        animateReplyTextHiding.start()
+        replyText.hide()
         replyArea.hidden = true
         replyTimer.stop()
     }

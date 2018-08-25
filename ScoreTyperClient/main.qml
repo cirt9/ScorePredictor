@@ -8,7 +8,6 @@ ApplicationWindow {
     id: mainWindow
     visible: true
     title: "Score Typer"
-
     width: Screen.desktopAvailableWidth / 1.5
     height: Screen.desktopAvailableHeight / 1.5
     minimumWidth: 1150
@@ -111,5 +110,23 @@ ApplicationWindow {
     {
         popupText.text = message
         errorPopup.open()
+    }
+
+    function startLoading(busyTimer)
+    {
+        mainWindow.startBusyIndicator()
+        busyTimer.restart()
+
+        for(var i=1; i<arguments.length; i++)
+            arguments[i].enabled = false
+    }
+
+    function stopLoading(busyTimer)
+    {
+        for(var i=1; i<arguments.length; i++)
+            arguments[i].enabled = true
+
+        busyTimer.stop()
+        mainWindow.stopBusyIndicator()
     }
 }

@@ -94,45 +94,22 @@ Page {
                     id: loggingReplyArea
                     color: mainWindow.backgroundColor
                     width: parent.width
-                    height: loggingReplyText.font.pointSize * 3
+                    height: loggingReplyText.fontSize * 3
                     radius: 3
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: inputArea.bottom
                     anchors.topMargin: height
 
-                    Text {
+                    ResponseText {
                         id: loggingReplyText
-                        color: mainWindow.deniedColor
-                        font.pointSize: 10
-                        opacity: 0
+                        acceptedColor: mainWindow.acceptedColor
+                        deniedColor: mainWindow.deniedColor
+                        fontSize: 10
+                        bold: true
+                        visibilityTime: 10000
+                        showingDuration: 250
+                        hidingDuration: 500
                         anchors.centerIn: parent
-                    }
-
-                    Timer {
-                        id: replyTextTimer
-                        interval: 10000
-
-                        onTriggered: animateHidingLoggingReply.start()
-                    }
-
-                    NumberAnimation {
-                       id: animateShowingLoggingReply
-                       target: loggingReplyText
-                       properties: "opacity"
-                       from: loggingReplyText.opacity
-                       to: 1.0
-                       duration: 150
-                       easing {type: Easing.Linear;}
-                    }
-
-                    NumberAnimation {
-                       id: animateHidingLoggingReply
-                       target: loggingReplyText
-                       properties: "opacity"
-                       from: loggingReplyText.opacity
-                       to: 0.0
-                       duration: 500
-                       easing {type: Easing.Linear;}
                     }
                 }
 
@@ -149,32 +126,24 @@ Page {
                     onClicked: {
                         if(nicknameInput.text.length === 0 && passwordInput.text.length === 0)
                         {
-                            loggingReplyText.text = qsTr("Enter a nickname and a password")
+                            loggingReplyText.showDeniedResponse(qsTr("Enter a nickname and a password"))
                             nicknameInput.markBadData()
                             passwordInput.markBadData()
-                            animateShowingLoggingReply.start()
-                            replyTextTimer.restart()
                         }
                         else if(nicknameInput.text.length === 0)
                         {
-                            loggingReplyText.text = qsTr("Enter a nickname")
+                            loggingReplyText.showDeniedResponse(qsTr("Enter a nickname"))
                             nicknameInput.markBadData()
-                            animateShowingLoggingReply.start()
-                            replyTextTimer.restart()
                         }
                         else if(passwordInput.text.length === 0)
                         {
-                            loggingReplyText.text = qsTr("Enter a password")
+                            loggingReplyText.showDeniedResponse(qsTr("Enter a password"))
                             passwordInput.markBadData()
-                            animateShowingLoggingReply.start()
-                            replyTextTimer.restart()
                         }
                         else
                         {
-                            loggingReplyText.opacity = 0
-                            busyTimer.restart()
-                            blockLoggingPage()
-                            mainWindow.startBusyIndicator()
+                            loggingReplyText.hide()
+                            mainWindow.startLoading(busyTimer, loggingPage)
                             backend.login(nicknameInput.text, passwordInput.text)
                         }
                     }
@@ -268,7 +237,7 @@ Page {
             height: loggingPage.height - 50
 
             RegistrationPage {
-                id: test
+                id: registrationPage
                 anchors.fill: parent
             }
         }
@@ -276,10 +245,9 @@ Page {
 
     Connections {
         target: packetProcessor
+
         onLoggingReply: {
-            busyTimer.stop()
-            unblockLoggingPage()
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, loggingPage)
 
             if(nicknameState && passwordState)
             {
@@ -291,12 +259,11 @@ Page {
             else
             {
                 passwordInput.text = ""
-                loggingReplyText.text = message;
-                animateShowingLoggingReply.start()
-                replyTextTimer.restart()
+                loggingReplyText.showDeniedResponse(message)
 
                 if(!nicknameState)
                     nicknameInput.markBadData()
+
                 if(!passwordState)
                     passwordInput.markBadData()
             }
@@ -308,32 +275,22 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            unblockLoggingPage()
             mainWindow.stopBusyIndicator()
+            loggingPage.enabled = true
             backend.disconnectFromServer()
             mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
     }
 
-    function blockLoggingPage()
+    function enableClosingRegistrationPopup()
     {
-        loggingPage.enabled = false
-    }
-
-    function unblockLoggingPage()
-    {
-        loggingPage.enabled = true
-    }
-
-    function blockRegistrationPopup()
-    {
-        registrationPopup.enabled = false
-        registrationPopup.closePolicy = Popup.NoAutoClose
-    }
-
-    function unblockRegistrationPopup()
-    {
-        registrationPopup.enabled = true
         registrationPopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        registrationPopup.enableCloseButton()
+    }
+
+    function disableClosingRegistrationPopup()
+    {
+        registrationPopup.closePolicy = Popup.NoAutoClose
+        registrationPopup.disableCloseButton()
     }
 }

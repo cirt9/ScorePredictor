@@ -47,7 +47,7 @@ Page {
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.leftMargin: 10
-                anchors.bottomMargin: 2
+                anchors.bottomMargin: 1
             }
 
             ToolTipIcon {
@@ -236,9 +236,7 @@ Page {
                         if(currentUser.username === currentTournament.hostName)
                         {
                             backend.finishTournament(currentTournament.name, currentTournament.hostName)
-                            navigationPage.enabled = false
-                            mainWindow.startBusyIndicator()
-                            busyTimer.restart()
+                            mainWindow.startLoading(busyTimer, navigationPage)
                         }
                         else
                             navigationPage.showDeniedResponse(qsTr("You are not the host of this tournament!"))
@@ -311,9 +309,7 @@ Page {
                     {
                         backend.addNewRound(currentTournament.name, currentTournament.hostName, newRoundNameInput.text.trim())
                         newRoundNameInput.reset()
-                        navigationPage.enabled = false
-                        mainWindow.startBusyIndicator()
-                        busyTimer.restart()
+                        mainWindow.startLoading(busyTimer, navigationPage)
                     }
                     else
                         navigationPage.showDeniedResponse(qsTr("You are not the host of this tournament!"))
@@ -328,9 +324,7 @@ Page {
         onTournamentInfoDownloadReply: manageTournamentInfoReply(tournamentInfo, opened)
         onTournamentRoundNameArrived: pagesList.addItem(name)
         onFinishingTournamentReply: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             if(replyState)
             {
@@ -344,9 +338,7 @@ Page {
                 navigationPage.showDeniedResponse(message)
         }
         onAddingNewRoundReply: {
-            busyTimer.stop()
-            navigationPage.enabled = true
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, navigationPage)
 
             if(replyState)
                 pagesList.addItem(message)

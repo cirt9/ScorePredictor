@@ -19,4 +19,14 @@ Popup {
 
         onClicked: root.close()
     }
+
+    function enableCloseButton()
+    {
+        closeButton.enabled = true
+    }
+
+    function disableCloseButton()
+    {
+        closeButton.enabled = false
+    }
 }

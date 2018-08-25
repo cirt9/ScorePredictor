@@ -166,9 +166,8 @@ Page {
                 }
                 if(formFilledCorrectly)
                 {
-                    busyTimer.restart()
-                    mainWindow.startBusyIndicator()
-                    loggingPage.blockRegistrationPopup()
+                    mainWindow.startLoading(busyTimer, registrationPage)
+                    loggingPage.disableClosingRegistrationPopup()
                     backend.registerAccount(nicknameInput.text, passwordInput.text)
                 }
             }
@@ -178,9 +177,8 @@ Page {
     Connections {
         target: packetProcessor
         onRegistrationReply: {
-            busyTimer.stop()
-            loggingPage.unblockRegistrationPopup()
-            mainWindow.stopBusyIndicator()
+            mainWindow.stopLoading(busyTimer, registrationPage)
+            loggingPage.enableClosingRegistrationPopup()
 
             if(replyState)
             {
@@ -200,8 +198,9 @@ Page {
         interval: mainWindow.serverResponseWaitingTimeMsec
 
         onTriggered: {
-            loggingPage.unblockRegistrationPopup()
             mainWindow.stopBusyIndicator()
+            registrationPage.enabled = true
+            loggingPage.enableClosingRegistrationPopup()
             backend.disconnectFromServer()
             mainWindow.showErrorPopup(qsTr("Connection lost. Try again later."))
         }
