@@ -2,7 +2,7 @@ import QtQuick 2.9
 
 Item {
     id: root
-    width: textMetrics.width * 1.10
+    width: textMetrics.width
     height: textMetrics.height * 1.10
 
     property alias text: responseText.text

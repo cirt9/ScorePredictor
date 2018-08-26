@@ -39,11 +39,13 @@ Page {
                         height: 120
                         radius: 20
 
-                        /*Image {
+                        Image {
                             id: userAvatar
+                            width: 100
+                            height: 100
                             fillMode: Image.PreserveAspectFit
                             anchors.centerIn: parent
-                        }*/
+                        }
                     }
 
                     TextButton {
@@ -220,14 +222,145 @@ Page {
             }
 
             Text {
-                id: descriptionTitle
-                text: qsTr("Description")
+                id: avatarTitle
+                text: qsTr("Avatar")
                 color: mainWindow.fontColor
                 font.pointSize: 18
                 anchors.left: parent.left
                 anchors.top: editProfilePopupTitle.bottom
                 anchors.leftMargin: 15
                 anchors.topMargin: 10
+            }
+
+            Rectangle {
+                id: avatarTitleUnderline
+                width: parent.width
+                height: 2
+                color: mainWindow.fontColor
+                radius: 5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: avatarTitle.bottom
+                anchors.leftMargin: 15
+                anchors.rightMargin: 15
+                anchors.topMargin: 5
+            }
+
+            Rectangle {
+                id: newAvatarArea
+                width: 120 + border.width
+                height: 120 + border.width
+                color: "transparent"
+                border.color: mainWindow.fontColor
+                border.width: 2
+                radius: 20
+                anchors.left: parent.left
+                anchors.top: avatarTitleUnderline.bottom
+                anchors.leftMargin: 15
+                anchors.topMargin: 10
+
+                Image {
+                    id: newAvatar
+                    width: 100
+                    height: 100
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+
+                Text {
+                    id: avatarMaxSizeText
+                    text: qsTr("100x100 MAX")
+                    color: mainWindow.fontColor
+                    font.pointSize: 8
+                    style: Text.Outline
+                    styleColor: mainWindow.backgroundColor
+                    anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottomMargin: 1
+                }
+            }
+
+            Button {
+                id: chooseAvatarButton
+                text: qsTr("Choose An Avatar")
+                width: newAvatarArea.width
+                height: 35
+                font.pointSize: 8
+                anchors.top: newAvatarArea.bottom
+                anchors.horizontalCenter: newAvatarArea.horizontalCenter
+
+                onClicked: avatarDialog.open()
+            }
+
+            Image {
+                id: newAvatarSourceSize
+                visible: false
+                anchors.centerIn: newAvatarArea
+            }
+
+            FileDialog {
+                id: avatarDialog
+                title: qsTr("Choose Your Avatar")
+                folder: shortcuts.desktop
+                nameFilters: ["Image files (*.jpg *.png)"]
+
+                onSelectionAccepted: {
+                    newAvatarSourceSize.source = fileUrl
+                    var sourceWidth = newAvatarSourceSize.sourceSize.width
+                    var sourceHeight = newAvatarSourceSize.sourceSize.height
+
+                    if(sourceWidth <= 100 && sourceHeight <= 100)
+                    {
+                        updatingAvatarResponseText.hide()
+                        newAvatar.source = fileUrl
+                        updateAvatarButton.enabled = true
+                    }
+                    else
+                    {
+                        updatingAvatarResponseText.showDeniedResponse(qsTr("The chosen avatar is too big."))
+
+                        if(!newAvatar.source)
+                            updateAvatarButton.enabled = false
+                    }
+
+                    newAvatarSourceSize.source = ""
+                }
+            }
+
+            Button {
+                id: updateAvatarButton
+                text: qsTr("Update Avatar")
+                height: 35
+                font.pointSize: 10
+                enabled: false
+                anchors.top: chooseAvatarButton.top
+                anchors.right: avatarTitleUnderline.right
+
+                onClicked: console.log("Send Image")
+            }
+
+            ResponseText {
+                id: updatingAvatarResponseText
+                acceptedColor: mainWindow.acceptedColor
+                deniedColor: mainWindow.deniedColor
+                fontSize: 10
+                bold: true
+                visibilityTime: 7000
+                showingDuration: 250
+                hidingDuration: 500
+                anchors.top: chooseAvatarButton.bottom
+                anchors.left: avatarTitleUnderline.left
+            }
+
+            Text {
+                id: descriptionTitle
+                text: qsTr("Description")
+                color: mainWindow.fontColor
+                font.pointSize: 18
+                anchors.left: parent.left
+                anchors.top: updateAvatarButton.bottom
+                anchors.leftMargin: 15
+                anchors.topMargin: 20
             }
 
             Rectangle {
@@ -302,35 +435,9 @@ Page {
                 showingDuration: 250
                 hidingDuration: 500
                 anchors.top: newDescription.bottom
-                anchors.left: newDescription.left
+                anchors.left: descriptionTitleUnderline.left
                 anchors.topMargin: 3
             }
-
-            Text {
-                id: avatarTitle
-                text: qsTr("Avatar")
-                color: mainWindow.fontColor
-                font.pointSize: 18
-                anchors.left: parent.left
-                anchors.top: updateDescriptionButton.bottom
-                anchors.leftMargin: 15
-            }
-
-            Rectangle {
-                id: avatarTitleUnderline
-                width: parent.width
-                height: 2
-                color: mainWindow.fontColor
-                radius: 5
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: avatarTitle.bottom
-                anchors.leftMargin: 15
-                anchors.rightMargin: 15
-                anchors.topMargin: 5
-            }
-
-
         }
     }
 
