@@ -31,6 +31,8 @@ namespace Client
 
         void userProfileDescriptionUpdated(const QString & message);
         void userProfileDescriptionUpdatingError(const QString & message);
+        void userProfileAvatarUpdated(const QString & message);
+        void userProfileAvatarUpdatingError(const QString & message);
 
         void tournamentCreationReply(bool replyState, const QString & message);
         void tournamentsListArrived();

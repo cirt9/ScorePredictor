@@ -23,6 +23,8 @@ namespace Client
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: manageOngoingTournamentsPullReply(data); break;
         case Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION: manageUpdatingProfileDescriptionReply(data); break;
         case Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION_ERROR: manageUpdatingProfileDescriptionErrorReply(data); break;
+        case Packet::ID_UPDATE_USER_PROFILE_AVATAR: manageUpdatingProfileAvatarReply(data); break;
+        case Packet::ID_UPDATE_USER_PROFILE_AVATAR_ERROR: manageUpdatingProfileAvatarErrorReply(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationReply(data); break;
         case Packet::ID_PULL_TOURNAMENTS: manageTournamentsPullReply(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageTournamentJoiningReply(data); break;
@@ -106,6 +108,16 @@ namespace Client
     void PacketProcessor::manageUpdatingProfileDescriptionErrorReply(const QVariantList & replyData)
     {
         emit userProfileDescriptionUpdatingError(replyData[0].toString());
+    }
+
+    void PacketProcessor::manageUpdatingProfileAvatarReply(const QVariantList & replyData)
+    {
+        emit userProfileAvatarUpdated(replyData[0].toString());
+    }
+
+    void PacketProcessor::manageUpdatingProfileAvatarErrorReply(const QVariantList & replyData)
+    {
+        emit userProfileAvatarUpdatingError(replyData[0].toString());
     }
 
     void PacketProcessor::manageTournamentCreationReply(const QVariantList & replyData)

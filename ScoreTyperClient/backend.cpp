@@ -81,6 +81,24 @@ void BackEnd::updateUserProfileDescription(const QString & nickname, const QStri
     emit clientWrapper->sendData(data);
 }
 
+void BackEnd::updateUserProfileAvatar(const QString & nickname, const QUrl & avatarPath)
+{
+    QImage avatar;
+    QByteArray avatarData;
+    QBuffer avatarBuffer(&avatarData);
+    QFileInfo avatarInfo(avatarPath.toLocalFile());
+
+    if(!avatarInfo.exists())
+        return;
+
+    avatar.load(avatarPath.toLocalFile());
+    avatar.save(&avatarBuffer, avatarInfo.suffix().toLocal8Bit().constData());
+
+    QVariantList data;
+    data << Packet::ID_UPDATE_USER_PROFILE_AVATAR << nickname << avatarData << avatarInfo.suffix();
+    emit clientWrapper->sendData(data);
+}
+
 void BackEnd::createTournament(Tournament * tournament, const QString & password)
 {
     QVariantList data;

@@ -265,6 +265,7 @@ Page {
                     height: 100
                     fillMode: Image.PreserveAspectFit
                     anchors.centerIn: parent
+                    property url path: newAvatar.source
                 }
 
                 Text {
@@ -336,7 +337,12 @@ Page {
                 anchors.top: chooseAvatarButton.top
                 anchors.right: avatarTitleUnderline.right
 
-                onClicked: console.log("Send Image")
+                onClicked: {
+                    mainWindow.startLoading(busyTimer, navigationPage, editProfilePopup)
+                    editProfilePopup.closePolicy = Popup.NoAutoClose
+
+                    backend.updateUserProfileAvatar(currentUser.username, newAvatar.path)
+                }
             }
 
             ResponseText {
@@ -483,6 +489,23 @@ Page {
             editProfilePopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             updatingDescriptionResponseText.showDeniedResponse(message)
+        }
+
+        onUserProfileAvatarUpdated: {
+            mainWindow.stopLoading(busyTimer, navigationPage, editProfilePopup)
+            editProfilePopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+            updatingAvatarResponseText.showAcceptedResponse(message)
+            userAvatar.source = newAvatar.source
+            newAvatar.source = ""
+            updateAvatarButton.enabled = false
+        }
+
+        onUserProfileAvatarUpdatingError: {
+            mainWindow.stopLoading(busyTimer, navigationPage, editProfilePopup)
+            editProfilePopup.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+            updatingAvatarResponseText.showDeniedResponse(message)
         }
     }
 

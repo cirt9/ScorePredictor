@@ -7,6 +7,9 @@
 #include <QSharedPointer>
 #include <../ScoreTyperClient/tournament.h>
 #include <../ScoreTyperClient/match.h>
+#include <QBuffer>
+#include <QImage>
+#include <QFile>
 
 namespace Server
 {
@@ -24,6 +27,7 @@ namespace Server
         void managePullingUserTournaments(const QVariantList & userData, bool opened);
 
         void manageUpdatingUserProfileDescription(const QVariantList & requestData);
+        void manageUpdatingUserProfileAvatar(const QVariantList & requestData);
 
         void manageTournamentCreationRequest(QVariantList & tournamentData);
         void managePullingTournaments(const QVariantList & requestData);

@@ -28,6 +28,10 @@ namespace Client
                 this, &PacketProcessorWrapper::userProfileDescriptionUpdated);
         connect(packetProcessor, &Client::PacketProcessor::userProfileDescriptionUpdatingError,
                 this, &PacketProcessorWrapper::userProfileDescriptionUpdatingError);
+        connect(packetProcessor, &Client::PacketProcessor::userProfileAvatarUpdated,
+                this, &PacketProcessorWrapper::userProfileAvatarUpdated);
+        connect(packetProcessor, &Client::PacketProcessor::userProfileAvatarUpdatingError,
+                this, &PacketProcessorWrapper::userProfileAvatarUpdatingError);
 
         connect(packetProcessor, &Client::PacketProcessor::tournamentCreationReply,
                 this, &PacketProcessorWrapper::tournamentCreationReply);

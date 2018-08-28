@@ -76,6 +76,25 @@ bool Query::updateUserProfileDescription(unsigned int userId, const QString & de
     return numRowsAffected() > 0 ? true : false;
 }
 
+bool Query::findUserProfileAvatarPath(unsigned int userId)
+{
+    prepare("SELECT avatar_path FROM user_profile WHERE user_id = :userId");
+    bindValue(":userId", userId);
+    exec();
+
+    return first();
+}
+
+bool Query::updateUserProfileAvatarPath(unsigned int userId, const QString & avatarPath)
+{
+    prepare("UPDATE user_profile SET avatar_path = :avatarPath WHERE user_id = :userId");
+    bindValue(":avatarPath", avatarPath);
+    bindValue(":userId", userId);
+    exec();
+
+    return numRowsAffected() > 0 ? true : false;
+}
+
 bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId)
 {
     prepare("SELECT 1 FROM tournament WHERE name=:tournamentName AND host_user_id=:hostId");

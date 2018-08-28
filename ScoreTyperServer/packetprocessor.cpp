@@ -24,6 +24,7 @@ namespace Server
         case Packet::ID_PULL_FINISHED_TOURNAMENTS: managePullingUserTournaments(data, false); break;
         case Packet::ID_PULL_ONGOING_TOURNAMENTS: managePullingUserTournaments(data, true); break;
         case Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION: manageUpdatingUserProfileDescription(data); break;
+        case Packet::ID_UPDATE_USER_PROFILE_AVATAR: manageUpdatingUserProfileAvatar(data); break;
         case Packet::ID_CREATE_TOURNAMENT: manageTournamentCreationRequest(data); break;
         case Packet::ID_PULL_TOURNAMENTS: managePullingTournaments(data); break;
         case Packet::ID_JOIN_TOURNAMENT: manageJoiningTournament(data); break;
@@ -173,6 +174,58 @@ namespace Server
             {
                 responseData << Packet::ID_UPDATE_USER_PROFILE_DESCRIPTION_ERROR
                              << QString("Description couldn't be updated. Try again later.");
+            }
+        }
+        else
+            responseData << Packet::ID_ERROR << QString("User does not exist");
+
+        emit response(responseData);
+    }
+
+    void PacketProcessor::manageUpdatingUserProfileAvatar(const QVariantList & requestData)
+    {
+        Query query(dbConnection->getConnection());
+        QVariantList responseData;
+
+        if(query.findUserId(requestData[0].toString()))
+        {
+            unsigned int userId = query.value("id").toUInt();
+
+            query.findUserProfileAvatarPath(userId);
+            QString defaultAvatarPath = "avatars/default_avatar.png";
+            QString oldAvatarPath = query.value("avatar_path").toString();
+            QString newAvatarPath = defaultAvatarPath.left(defaultAvatarPath.lastIndexOf('/')) + "/" +
+                                    requestData[0].toString() + "." + requestData[2].toString();
+
+            QImage avatar;
+            avatar.loadFromData(requestData[1].toByteArray());
+
+            if(!avatar.isNull())
+            {
+                if(oldAvatarPath != defaultAvatarPath)
+                {
+                    QFile oldAvatar(oldAvatarPath);
+                    oldAvatar.remove();
+                }
+
+                if(avatar.save(newAvatarPath))
+                {
+                    if(oldAvatarPath != newAvatarPath)
+                        query.updateUserProfileAvatarPath(userId, newAvatarPath);
+
+                    responseData << Packet::ID_UPDATE_USER_PROFILE_AVATAR
+                                 << QString("Avatar successfully updated.");
+                }
+                else
+                {
+                    responseData << Packet::ID_UPDATE_USER_PROFILE_AVATAR_ERROR
+                                 << QString("Avatar couldn't be updated. Try again later.");
+                }
+            }
+            else
+            {
+                responseData << Packet::ID_UPDATE_USER_PROFILE_AVATAR_ERROR
+                             << QString("Avatar couldn't be updated. Try again later.");
             }
         }
         else

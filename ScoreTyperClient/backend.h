@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QHostAddress>
 #include <QThread>
+#include <QBuffer>
+#include <QImage>
+#include <QUrl>
+#include <QFileInfo>
 #include <tcpclientwrapper.h>
 #include <packetprocessorwrapper.h>
 #include <user.h>
@@ -37,6 +41,7 @@ public:
     Q_INVOKABLE void pullOngoingTournaments(const QString & nickname);
 
     Q_INVOKABLE void updateUserProfileDescription(const QString & nickname, const QString & description);
+    Q_INVOKABLE void updateUserProfileAvatar(const QString & nickname, const QUrl & avatarPath);
 
     Q_INVOKABLE void createTournament(Tournament * tournament, const QString & password);
     Q_INVOKABLE void pullTournaments(const QString & requesterName, int itemsLimit, const QString & tournamentName);

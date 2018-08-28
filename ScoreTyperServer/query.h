@@ -24,6 +24,8 @@ public:
     void findUserTournaments(unsigned int userId, bool opened);
 
     bool updateUserProfileDescription(unsigned int userId, const QString & description);
+    bool findUserProfileAvatarPath(unsigned int userId);
+    bool updateUserProfileAvatarPath(unsigned int userId, const QString & avatarPath);
 
     bool tournamentExists(const QString & tournamentName, unsigned int hostId);
     bool createTournament(const Tournament & tournament, unsigned int hostId, const QString & password);
