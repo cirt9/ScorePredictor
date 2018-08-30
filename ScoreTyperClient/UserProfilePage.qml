@@ -77,7 +77,7 @@ Page {
                         width: parent.width
                         height: parent.height
                         color: "transparent"
-                        border.color: mainWindow.backgroundColor
+                        border.color: mainWindow.colorB
                         border.width: 2
                         radius: 3
                     }
@@ -94,8 +94,8 @@ Page {
 
                         Text {
                             id: nicknameText
-                            text: "Nickname"
-                            color: mainWindow.backgroundColor
+                            text: qsTr("Nickname")
+                            color: mainWindow.fontColor
                             font.pixelSize: 22
                             font.bold: true
                             anchors.centerIn: parent
@@ -111,14 +111,18 @@ Page {
                         }
                     }
 
-                    Text {
+                    TextDisplayArea {
                         id: profileDescription
-                        text: "Description..."
-                        font.pointSize: 12
-                        color: mainWindow.fontColor
-                        wrapMode: Text.Wrap
+                        text: qsTr("Description...")
+                        fontSize: 12
+                        textColor: mainWindow.fontColor
+                        scrollBarColor: mainWindow.colorB
+                        scrollBarWidth: 8
+                        textRightMargin: 9
                         anchors.fill: parent
-                        anchors.margins: 8
+                        anchors.leftMargin: 9
+                        anchors.rightMargin: 2
+                        anchors.bottomMargin: 9
                         anchors.topMargin: 15
                     }
                 }
