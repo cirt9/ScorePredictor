@@ -24,6 +24,7 @@ namespace Client
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
 
         void userInfoDownloadReply(const QString & description);
+        void avatarDataReceived(const QByteArray & avatarData);
         void finishedTournamentsListArrived(int numberOfItems);
         void finishedTournamentsListItemArrived(const QString & tournamentName, const QString & hostName);
         void ongoingTournamentsListArrived(int numberOfItems);

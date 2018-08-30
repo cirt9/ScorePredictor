@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("packetProcessor", backend->getPacketProcessorWrapper());
     engine.rootContext()->setContextProperty("currentUser", backend->getCurrentUser());
     engine.rootContext()->setContextProperty("currentTournament", backend->getCurrentTournament());
+    engine.addImageProvider("images", backend->getImageProvider());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

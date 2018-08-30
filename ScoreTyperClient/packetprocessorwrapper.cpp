@@ -15,6 +15,8 @@ namespace Client
 
         connect(packetProcessor, &Client::PacketProcessor::userInfoDownloadReply,
                 this, &PacketProcessorWrapper::userInfoDownloadReply);
+        connect(packetProcessor, &Client::PacketProcessor::avatarDataReceived,
+                this, &PacketProcessorWrapper::avatarDataReceived);
         connect(packetProcessor, &Client::PacketProcessor::finishedTournamentsListArrived,
                 this, &PacketProcessorWrapper::finishedTournamentsListArrived);
         connect(packetProcessor, &Client::PacketProcessor::finishedTournamentsListItemArrived,

@@ -45,7 +45,7 @@ bool Query::isPasswordCorrect(const QString & nickname, const QString & password
 
 bool Query::getUserInfo(const QString & nickname)
 {
-    prepare("SELECT description FROM user "
+    prepare("SELECT description, avatar_path FROM user "
             "INNER JOIN user_profile on user.id = user_profile.user_id "
             "WHERE user.nickname=:nickname");
     bindValue(":nickname", nickname);

@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     packetprocessor.cpp \
     packetprocessorwrapper.cpp \
     match.cpp \
-    filestream.cpp
+    filestream.cpp \
+    imageprovider.cpp
 
 RESOURCES += qml.qrc \
     assets.qrc \
@@ -49,6 +50,7 @@ HEADERS += \
     packetprocessor.h \
     packetprocessorwrapper.h \
     match.h \
-    filestream.h
+    filestream.h \
+    imageprovider.h
 
 DISTFILES +=

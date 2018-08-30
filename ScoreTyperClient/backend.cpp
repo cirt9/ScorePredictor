@@ -4,6 +4,8 @@ BackEnd::BackEnd(QObject * parent) : QObject(parent)
 {
     currentUser = new User(this);
     currentTournament = new Tournament(this);
+    imageProvider = new ImageProvider();
+
     workerThread = new QThread(this);
     clientWrapper = new TcpClientWrapper(this);
     connect(workerThread, &QThread::finished, clientWrapper->getClient(), &TcpClient::disconnectFromServer);
@@ -11,6 +13,8 @@ BackEnd::BackEnd(QObject * parent) : QObject(parent)
     packetProcessorWrapper = new Client::PacketProcessorWrapper(this);
     connect(clientWrapper->getClient(), &TcpClient::packetArrived, packetProcessorWrapper->getPacketProcessor(),
             &Client::PacketProcessor::processPacket, Qt::QueuedConnection);
+    connect(packetProcessorWrapper, &Client::PacketProcessorWrapper::avatarDataReceived,
+            imageProvider, &ImageProvider::setImageData);
 
     workerThread->start();
     clientWrapper->getClient()->moveToThread(workerThread);
@@ -259,4 +263,9 @@ User * BackEnd::getCurrentUser() const
 Tournament * BackEnd::getCurrentTournament() const
 {
     return currentTournament;
+}
+
+ImageProvider * BackEnd::getImageProvider() const
+{
+    return imageProvider;
 }

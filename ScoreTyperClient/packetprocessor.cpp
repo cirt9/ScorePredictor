@@ -69,6 +69,7 @@ namespace Client
 
     void PacketProcessor::manageUserInfoReply(const QVariantList & replyData)
     {
+        emit avatarDataReceived(replyData[1].toByteArray());
         emit userInfoDownloadReply(replyData[0].toString());
     }
 

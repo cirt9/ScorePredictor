@@ -10,6 +10,7 @@
 #include <QBuffer>
 #include <QImage>
 #include <QFile>
+#include <QFileInfo>
 
 namespace Server
 {

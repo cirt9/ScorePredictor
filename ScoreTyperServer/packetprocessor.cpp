@@ -111,16 +111,26 @@ namespace Server
 
         if(query.getUserInfo(userData[0].toString()))
         {
-            responseData << Packet::ID_DOWNLOAD_USER_PROFILE_INFO << query.value("description");
+            QString avatarPath = query.value("avatar_path").toString();
+            QImage avatar;
+            QByteArray avatarData;
+            QBuffer avatarBuffer(&avatarData);
+            QFileInfo avatarInfo(avatarPath);
 
-            qDebug() << "Description for user: " << userData[0].toString();
-            qDebug() << query.value("description");
+            if(!avatarInfo.exists())
+                responseData << Packet::ID_ERROR << QString("Couldn't load user data");
+            else
+            {
+                avatar.load(avatarPath);
+                avatar.save(&avatarBuffer, avatarInfo.suffix().toLocal8Bit().constData());
+
+                responseData << Packet::ID_DOWNLOAD_USER_PROFILE_INFO << query.value("description")
+                             << avatarData;
+            }
         }
         else
-        {
-            qDebug() << "Profile loading error";
             responseData << Packet::ID_ERROR << QString("Couldn't load user data");
-        }
+
         emit response(responseData);
     }
 

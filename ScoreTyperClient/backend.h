@@ -13,6 +13,7 @@
 #include <user.h>
 #include <tournament.h>
 #include <match.h>
+#include <imageprovider.h>
 
 class BackEnd : public QObject
 {
@@ -24,6 +25,7 @@ private:
     Client::PacketProcessorWrapper * packetProcessorWrapper;
     User * currentUser;
     Tournament * currentTournament;
+    ImageProvider * imageProvider;
 
 public:
     explicit BackEnd(QObject * parent = nullptr);
@@ -73,6 +75,7 @@ public:
     Client::PacketProcessorWrapper * getPacketProcessorWrapper() const;
     User * getCurrentUser() const;
     Tournament * getCurrentTournament() const;
+    ImageProvider * getImageProvider() const;
 };
 
 #endif // BACKEND_H
