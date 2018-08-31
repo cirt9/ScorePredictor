@@ -89,16 +89,18 @@ Page {
                         anchors.bottomMargin: -height/2
                         anchors.leftMargin: 10
                         color: mainWindow.colorA
-                        width: textMetrics.width * 1.25
-                        height: nicknameText.font.pixelSize * 1.25
+                        width: textMetrics.width < userInfoArea.width - 30 ? textMetrics.width + 10 : userInfoArea.width * 0.95
+                        height: nicknameText.font.pixelSize * 1.01
                         radius: 5
 
                         Text {
                             id: nicknameText
+                            width: parent.width
                             text: qsTr("Nickname")
                             color: mainWindow.fontColor
                             font.pixelSize: 22
                             font.bold: true
+                            elide: Text.ElideRight
                             anchors.centerIn: parent
                         }
 
