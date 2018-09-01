@@ -7,7 +7,7 @@ import "pages"
 ApplicationWindow {
     id: mainWindow
     visible: true
-    title: "Score Typer"
+    title: "Score Predictor"
     width: Screen.desktopAvailableWidth / 1.5
     height: Screen.desktopAvailableHeight / 1.5
     minimumWidth: 1150

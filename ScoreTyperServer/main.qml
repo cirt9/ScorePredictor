@@ -5,7 +5,7 @@ import QtQuick.Window 2.2
 ApplicationWindow {
     id: mainWindow
     visible: true
-    title: "Score Typer Server"
+    title: "Score Predictor Server"
 
     width: Screen.desktopAvailableWidth / 1.5
     height: Screen.desktopAvailableHeight / 1.5

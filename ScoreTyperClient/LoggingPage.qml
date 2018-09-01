@@ -35,7 +35,7 @@ Page {
 
                 Text {
                     id: title
-                    text: "Score Typer"
+                    text: "Score Predictor"
                     color: mainWindow.colorA
                     font { family: titleFont.name; pixelSize: 50; bold: true}
                     anchors.centerIn: parent
