@@ -4,8 +4,8 @@
 #include <dbconnection.h>
 #include <QSqlQuery>
 #include <QSharedPointer>
-#include <../ScoreTyperClient/tournament.h>
-#include <../ScoreTyperClient/match.h>
+#include <../ScorePredictorClient/tournament.h>
+#include <../ScorePredictorClient/match.h>
 
 #include <QDebug>
 

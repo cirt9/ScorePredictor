@@ -1,7 +1,7 @@
 #ifndef PACKETPROCESSOR_H
 #define PACKETPROCESSOR_H
 
-#include <../ScoreTyperServer/packet.h>
+#include <../ScorePredictorServer/packet.h>
 #include <tournament.h>
 #include <match.h>
 

@@ -5,8 +5,8 @@
 #include <dbconnection.h>
 #include <query.h>
 #include <QSharedPointer>
-#include <../ScoreTyperClient/tournament.h>
-#include <../ScoreTyperClient/match.h>
+#include <../ScorePredictorClient/tournament.h>
+#include <../ScorePredictorClient/match.h>
 #include <QBuffer>
 #include <QImage>
 #include <QFile>

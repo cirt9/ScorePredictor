@@ -2,7 +2,7 @@
 #define TCPCLIENT_H
 
 #include <QTcpSocket>
-#include <../ScoreTyperServer/packet.h>
+#include <../ScorePredictorServer/packet.h>
 
 class TcpClient : public QObject
 {

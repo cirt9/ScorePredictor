@@ -1,4 +1,4 @@
-QT += quick network sql
+QT += quick
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -13,19 +13,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp \
-    tcpserver.cpp \
-    tcpconnection.cpp \
-    tcpconnections.cpp \
-    dbconnection.cpp \
-    tcpconnectionswrapper.cpp \
-    packet.cpp \
-    query.cpp \
-    ../ScoreTyperClient/tournament.cpp \
+    backend.cpp \
+    tcpclient.cpp \
+    tcpclientwrapper.cpp \
+    ../ScorePredictorServer/packet.cpp \
+    user.cpp \
+    tournament.cpp \
     packetprocessor.cpp \
-    ../ScoreTyperClient/match.cpp
+    packetprocessorwrapper.cpp \
+    match.cpp \
+    filestream.cpp \
+    imageprovider.cpp
 
 RESOURCES += qml.qrc \
-    ../ScoreTyperClient/assets.qrc
+    assets.qrc \
+    resources.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -39,13 +41,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    tcpserver.h \
-    tcpconnection.h \
-    tcpconnections.h \
-    dbconnection.h \
-    tcpconnectionswrapper.h \
-    packet.h \
-    query.h \
-    ../ScoreTyperClient/tournament.h \
+    backend.h \
+    tcpclient.h \
+    tcpclientwrapper.h \
+    ../ScorePredictorServer/packet.h \
+    user.h \
+    tournament.h \
     packetprocessor.h \
-    ../ScoreTyperClient/match.h
+    packetprocessorwrapper.h \
+    match.h \
+    filestream.h \
+    imageprovider.h
+
+DISTFILES +=
