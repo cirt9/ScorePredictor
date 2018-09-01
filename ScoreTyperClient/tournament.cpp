@@ -6,8 +6,8 @@ Tournament::Tournament(QObject * parent) : QObject(parent)
     hostName = QString("Host");
     passwordRequired = false;
     entriesEndTime = QDateTime::currentDateTime();
-    typersNumber = 0;
-    typersLimit = 0;
+    predictorsNumber = 0;
+    predictorsLimit = 0;
 }
 
 Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : QObject(parent)
@@ -18,8 +18,8 @@ Tournament::Tournament(const QVariantList & tournamentData, QObject * parent) : 
         hostName = tournamentData[1].toString();
         passwordRequired = tournamentData[2].toBool();
         entriesEndTime = tournamentData[3].toDateTime();
-        typersNumber = tournamentData[4].toUInt();
-        typersLimit = tournamentData[5].toUInt();
+        predictorsNumber = tournamentData[4].toUInt();
+        predictorsLimit = tournamentData[5].toUInt();
     }
 }
 
@@ -29,8 +29,8 @@ void Tournament::reset()
     setHostName(QString(""));
     setPasswordRequired(false);
     setEntriesEndTime(QDateTime::currentDateTime());
-    setTypersNumber(0);
-    setTypersLimit(0);
+    setPredictorsNumber(0);
+    setPredictorsLimit(0);
 }
 
 QString Tournament::getName() const
@@ -53,14 +53,14 @@ QDateTime Tournament::getEntriesEndTime() const
     return entriesEndTime;
 }
 
-unsigned int Tournament::getTypersNumber() const
+unsigned int Tournament::getPredictorsNumber() const
 {
-    return typersNumber;
+    return predictorsNumber;
 }
 
-unsigned int Tournament::getTypersLimit() const
+unsigned int Tournament::getPredictorsLimit() const
 {
-    return typersLimit;
+    return predictorsLimit;
 }
 
 void Tournament::setName(const QString & value)
@@ -87,16 +87,16 @@ void Tournament::setEntriesEndTime(const QDateTime & value)
     emit entriesEndTimeChanged();
 }
 
-void Tournament::setTypersNumber(unsigned int value)
+void Tournament::setPredictorsNumber(unsigned int value)
 {
-    typersNumber = value;
-    emit typersNumberChanged();
+    predictorsNumber = value;
+    emit predictorsNumberChanged();
 }
 
-void Tournament::setTypersLimit(unsigned int value)
+void Tournament::setPredictorsLimit(unsigned int value)
 {
-    typersLimit = value;
-    emit typersLimitChanged();
+    predictorsLimit = value;
+    emit predictorsLimitChanged();
 }
 
 QVariantList & operator<<(QVariantList & list, const Tournament & tournament)
@@ -105,8 +105,8 @@ QVariantList & operator<<(QVariantList & list, const Tournament & tournament)
     list << tournament.hostName;
     list << tournament.passwordRequired;
     list << tournament.entriesEndTime;
-    list << tournament.typersNumber;
-    list << tournament.typersLimit;
+    list << tournament.predictorsNumber;
+    list << tournament.predictorsLimit;
 
     return list;
 }

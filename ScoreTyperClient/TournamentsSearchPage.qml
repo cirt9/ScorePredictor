@@ -129,8 +129,8 @@ Page {
                             }
 
                             Text {
-                                id: typersHeader
-                                text: qsTr("Typers")
+                                id: predictorsHeader
+                                text: qsTr("Predictors")
                                 color: mainWindow.fontColor
                                 font.pointSize: 12
                                 verticalAlignment: Text.AlignVCenter
@@ -208,8 +208,8 @@ Page {
                         }
 
                         Text {
-                            id: typersData
-                            text: typers
+                            id: predictorsData
+                            text: predictors
                             color: mainWindow.fontColor
                             font.pointSize: 10
                             verticalAlignment: Text.AlignVCenter
@@ -407,7 +407,7 @@ Page {
             item.tournamentName = tournamentData[0]
             item.hostName = tournamentData[1]
             item.entriesEndTime = tournamentData[2]
-            item.typers = tournamentData[3]
+            item.predictors = tournamentData[3]
             item.passwordRequired = tournamentData[4]
 
             if(visibleTournamentsList.count < itemsForPage)

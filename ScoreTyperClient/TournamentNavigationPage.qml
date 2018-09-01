@@ -117,7 +117,7 @@ Page {
                 iconSource: "qrc://assets/icons/icons/icons8_Question_Mark.png"
                 text: "Password Required: ...\n" +
                       "Entries End Time: ...\n" +
-                      "Typers: ..."
+                      "Predictors: ..."
                 margins: 3
                 marginsOnHovered: 6
                 anchors.top: parent.top
@@ -367,12 +367,12 @@ Page {
 
         tournamentInfoToolTip.text = "Password Required: " + tournamentInfo[0] + "\n" +
                                      "Entries End Time: " + tournamentInfo[1] + "\n" +
-                                     "Typers: " + tournamentInfo[2] + "/" + tournamentInfo[3]
+                                     "Predictors: " + tournamentInfo[2] + "/" + tournamentInfo[3]
 
         currentTournament.passwordRequired = tournamentInfo[0] === "Yes" ? true : false
         currentTournament.entriesEndTime = Date.fromLocaleString(Qt.locale(), tournamentInfo[1], "dd.MM.yyyy hh:mm")
-        currentTournament.typersNumber = parseInt(tournamentInfo[2])
-        currentTournament.typersLimit = parseInt(tournamentInfo[3])
+        currentTournament.predictorsNumber = parseInt(tournamentInfo[2])
+        currentTournament.predictorsLimit = parseInt(tournamentInfo[3])
 
         if(currentTournament.hostName === currentUser.username)
             enableHostTools(opened)

@@ -52,7 +52,7 @@ Page {
             maximumLength: 30
             selectedTextColor: mainWindow.fontColor
             selectionColor: mainWindow.accentColor
-            labelWidth: 105
+            labelWidth: 130
             inputWidth: parent.width * 0.15
             anchors.left: headerLine.left
             anchors.top: headerLine.bottom
@@ -60,18 +60,18 @@ Page {
         }
 
         Rectangle {
-            id: typersLimitArea
+            id: predictorsLimitArea
             color: mainWindow.backgroundColor
             width: entriesEndTimeArea.width
-            height: typersLimit.height
+            height: predictorsLimit.height
             radius: 10
             anchors.left: tournamentPasswordInput.left
             anchors.top: tournamentPasswordInput.bottom
             anchors.topMargin: 10
 
             Text {
-                id: typersLimitText
-                text: qsTr("Typers Limit:")
+                id: predictorsLimitText
+                text: qsTr("Predictors Limit:")
                 font.pointSize: 14
                 color: mainWindow.fontColor
                 anchors.left: parent.left
@@ -82,7 +82,7 @@ Page {
             Rectangle {
                 color: mainWindow.colorB
                 radius: 5
-                anchors.left: typersLimitText.right
+                anchors.left: predictorsLimitText.right
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -90,7 +90,7 @@ Page {
                 anchors.leftMargin: 7
 
                 SpinBox {
-                    id: typersLimit
+                    id: predictorsLimit
                     width: parent.width * 0.95
                     editable: true
                     from: 1
@@ -171,8 +171,8 @@ Page {
             width: tournamentPasswordInput.width
             color: mainWindow.backgroundColor
             radius: 10
-            anchors.left: typersLimitArea.left
-            anchors.top: typersLimitArea.bottom
+            anchors.left: predictorsLimitArea.left
+            anchors.top: predictorsLimitArea.bottom
             anchors.topMargin: 10
 
             Text {
@@ -279,8 +279,8 @@ Page {
                     tournament.hostName = currentUser.username
                     tournament.passwordRequired = tournamentPasswordInput.text === "" ? false : true
                     tournament.entriesEndTime = date
-                    tournament.typersNumber = 0
-                    tournament.typersLimit = typersLimit.value
+                    tournament.predictorsNumber = 0
+                    tournament.predictorsLimit = predictorsLimit.value
                     backend.createTournament(tournament, tournamentPasswordInput.text)
                     tournament.destroy()
 
@@ -347,8 +347,8 @@ Page {
         tournamentNameInput.inputFocus = false
         tournamentPasswordInput.text = ""
         tournamentPasswordInput.inputFocus = false
-        typersLimit.focus = false
-        typersLimit.value = 16
+        predictorsLimit.focus = false
+        predictorsLimit.value = 16
         entriesEndTimePicker.reset()
         entriesEndDatePicker.reset()
     }

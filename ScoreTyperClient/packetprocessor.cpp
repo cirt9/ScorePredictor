@@ -137,8 +137,8 @@ namespace Client
 
             tournamentData << tournament.getName() << tournament.getHostName()
                            << tournament.getEntriesEndTime().toString("dd.MM.yyyy hh:mm")
-                           << QString::number(tournament.getTypersNumber()) + "/" +
-                              QString::number(tournament.getTypersLimit())
+                           << QString::number(tournament.getPredictorsNumber()) + "/" +
+                              QString::number(tournament.getPredictorsLimit())
                            << (tournament.getPasswordRequired() ? QString("Yes") : QString("No"));
 
             emit tournamentsListItemArrived(tournamentData);

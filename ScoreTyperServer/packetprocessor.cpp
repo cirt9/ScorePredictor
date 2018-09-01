@@ -318,7 +318,7 @@ namespace Server
                 QVariantList tournamentData;
                 tournamentData << query.value("name") << query.value("host_name")
                                << query.value("password_required") << query.value("entries_end_time")
-                               << query.value("typers") << query.value("typers_limit");
+                               << query.value("predictors") << query.value("predictors_limit");
                 responseData << QVariant::fromValue(tournamentData);
             }
         }
@@ -435,7 +435,7 @@ namespace Server
             QVariantList tournamentInfo;
 
             tournamentInfo << query.value("password_required").toBool() << query.value("entries_end_time")
-                           << query.value("typers").toUInt() << query.value("typers_limit").toUInt();
+                           << query.value("predictors").toUInt() << query.value("predictors_limit").toUInt();
 
             responseData << Packet::ID_DOWNLOAD_TOURNAMENT_INFO << QVariant::fromValue(tournamentInfo)
                          << query.value("opened").toBool();

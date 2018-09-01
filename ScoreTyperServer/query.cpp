@@ -107,13 +107,13 @@ bool Query::tournamentExists(const QString & tournamentName, unsigned int hostId
 
 bool Query::createTournament(const Tournament & tournament, unsigned int hostId, const QString & password)
 {
-    prepare("INSERT INTO tournament (name, host_user_id, password, entries_end_time, typers_limit, opened) "
-                  "VALUES (:tournamentName, :hostId, :password, :entriesEndTime, :typersLimit, :opened)");
+    prepare("INSERT INTO tournament (name, host_user_id, password, entries_end_time, predictors_limit, opened) "
+                  "VALUES (:tournamentName, :hostId, :password, :entriesEndTime, :predictorsLimit, :opened)");
     bindValue(":tournamentName", tournament.getName());
     bindValue(":hostId", hostId);
     bindValue(":password", password);
     bindValue(":entriesEndTime", tournament.getEntriesEndTime());
-    bindValue(":typersLimit", tournament.getTypersLimit());
+    bindValue(":predictorsLimit", tournament.getPredictorsLimit());
     bindValue(":opened", true);
     exec();
 
@@ -134,8 +134,8 @@ void Query::findTournaments(unsigned int hostId, const QDateTime & dateTime, int
             "entries_end_time, "
             "(SELECT count(tournament_participant.id) FROM tournament_participant "
             "INNER JOIN tournament AS t ON tournament_participant.tournament_id = tournament.id "
-            "WHERE t.id = tournament.id) as 'typers', "
-            "typers_limit FROM tournament "
+            "WHERE t.id = tournament.id) as 'predictors', "
+            "predictors_limit FROM tournament "
             "INNER JOIN user ON host_user_id = user.id "
             "WHERE entries_end_time > :minDateTime AND tournament.id IN "
             "(SELECT tournament_id FROM tournament_participant WHERE tournament_id NOT IN "
@@ -218,7 +218,7 @@ bool Query::tournamentPasswordIsCorrect(unsigned int tournamentId, const QString
 bool Query::tournamentIsFull(unsigned int tournamentId)
 {
     prepare("SELECT CASE WHEN (SELECT count(id) FROM tournament_participant WHERE "
-            "tournament_id = :tournamentId) < typers_limit THEN 0 ELSE 1 END as is_full "
+            "tournament_id = :tournamentId) < predictors_limit THEN 0 ELSE 1 END as is_full "
             "FROM tournament WHERE id = :tournamentId");
     bindValue(":tournamentId", tournamentId);
     exec();
@@ -243,7 +243,7 @@ void Query::findTournamentInfo(unsigned int tournamentId)
     prepare("SELECT (SELECT CASE WHEN length(password) > 0 THEN 1 ELSE 0 END "
             "FROM tournament WHERE id = :tournamentId) AS password_required, entries_end_time, "
             "(SELECT count(id) FROM tournament_participant WHERE tournament_id = :tournamentId) "
-            "AS typers, typers_limit, opened FROM tournament "
+            "AS predictors, predictors_limit, opened FROM tournament "
             "INNER JOIN user ON tournament.host_user_id = user.id "
             "WHERE tournament.id = :tournamentId");
     bindValue(":tournamentId", tournamentId);

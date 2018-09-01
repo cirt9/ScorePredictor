@@ -12,16 +12,16 @@ class Tournament : public QObject
     Q_PROPERTY(QString hostName READ getHostName WRITE setHostName NOTIFY hostNameChanged)
     Q_PROPERTY(bool passwordRequired READ getPasswordRequired WRITE setPasswordRequired NOTIFY passwordRequiredChanged)
     Q_PROPERTY(QDateTime entriesEndTime READ getEntriesEndTime WRITE setEntriesEndTime NOTIFY entriesEndTimeChanged)
-    Q_PROPERTY(unsigned int typersNumber READ getTypersNumber WRITE setTypersNumber NOTIFY typersNumberChanged)
-    Q_PROPERTY(unsigned int typersLimit READ getTypersLimit WRITE setTypersLimit NOTIFY typersLimitChanged)
+    Q_PROPERTY(unsigned int predictorsNumber READ getPredictorsNumber WRITE setPredictorsNumber NOTIFY predictorsNumberChanged)
+    Q_PROPERTY(unsigned int predictorsLimit READ getPredictorsLimit WRITE setPredictorsLimit NOTIFY predictorsLimitChanged)
 
 private:
     QString name;
     QString hostName;
     bool passwordRequired;
     QDateTime entriesEndTime;
-    unsigned int typersNumber;
-    unsigned int typersLimit;
+    unsigned int predictorsNumber;
+    unsigned int predictorsLimit;
 
 public:
     explicit Tournament(QObject * parent = nullptr);
@@ -34,14 +34,14 @@ public:
     QString getHostName() const;
     bool getPasswordRequired() const;
     QDateTime getEntriesEndTime() const;
-    unsigned int getTypersNumber() const;
-    unsigned int getTypersLimit() const;
+    unsigned int getPredictorsNumber() const;
+    unsigned int getPredictorsLimit() const;
     void setName(const QString & value);
     void setHostName(const QString & value);
     void setPasswordRequired(bool required);
     void setEntriesEndTime(const QDateTime & value);
-    void setTypersNumber(unsigned int value);
-    void setTypersLimit(unsigned int value);
+    void setPredictorsNumber(unsigned int value);
+    void setPredictorsLimit(unsigned int value);
 
     static const int NUMBER_OF_FIELDS = 6;
 
@@ -52,8 +52,8 @@ signals:
     void hostNameChanged();
     void passwordRequiredChanged();
     void entriesEndTimeChanged();
-    void typersNumberChanged();
-    void typersLimitChanged();
+    void predictorsNumberChanged();
+    void predictorsLimitChanged();
 };
 
 #endif // TOURNAMENT_H
