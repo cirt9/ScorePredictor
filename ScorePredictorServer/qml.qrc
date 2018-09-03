@@ -4,4 +4,10 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
     </qresource>
+    <qresource prefix="/pages">
+        <file>MainPage.qml</file>
+    </qresource>
+    <qresource prefix="/components">
+        <file>SwitchButton.qml</file>
+    </qresource>
 </RCC>
