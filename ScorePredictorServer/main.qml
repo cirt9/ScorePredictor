@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
+import Qt.labs.platform 1.0
 import "pages"
 
 ApplicationWindow {
@@ -16,12 +17,37 @@ ApplicationWindow {
     property color accentColor: "#E8CDD0"
     property color fontColor: "white"
     property color colorA: "#8D2F23"
+    property color colorB: "#641409"
     property color acceptedColor: "green"
     property color deniedColor: "#d1474e"
 
     MainPage {
         id: mainPage
         anchors.fill: parent
+    }
+
+    SystemTrayIcon {
+        visible: true
+        iconSource: "qrc://assets/icons/icons/icons8_About.png"
+        tooltip: "Score Predictor Server"
+        menu: Menu {
+
+            MenuItem {
+                text: qsTr("Show")
+                onTriggered: mainWindow.show()
+            }
+
+            MenuItem {
+                text: qsTr("Hide")
+                onTriggered: mainWindow.hide()
+            }
+
+            MenuItem {
+                text: qsTr("Close")
+                shortcut: StandardKey.Close
+                onTriggered: mainWindow.close()
+            }
+        }
     }
 
     onClosing: {

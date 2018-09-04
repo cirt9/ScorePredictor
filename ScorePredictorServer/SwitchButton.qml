@@ -11,7 +11,10 @@ Item {
     property color textColor: "black"
     property int fontSize: 10
     property bool fontBold: false
+    property bool autoSwitch: true
     signal clicked()
+    signal trueStateActivated()
+    signal falseStateActivated()
 
     Rectangle {
         id: background
@@ -25,7 +28,19 @@ Item {
             hoverEnabled: true
             anchors.fill: parent
 
-            onClicked: root.clicked()
+            onClicked: {
+                if(root.autoSwitch)
+                {
+                    root.state = !root.state
+
+                    if(root.state)
+                        root.trueStateActivated()
+                    else
+                        root.falseStateActivated()
+                }
+                else
+                    root.clicked()
+            }
         }
 
         states: [
