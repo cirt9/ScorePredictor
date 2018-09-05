@@ -57,13 +57,13 @@ void TcpConnectionsWrapper::terminate()
 void TcpConnectionsWrapper::connectionsIncreased()
 {
     numberOfConnections++;
-    emit updated();
+    emit clientsIncreased();
 }
 
 void TcpConnectionsWrapper::connectionsDecreased()
 {
     numberOfConnections--;
-    emit updated();
+    emit clientsDecreased();
 }
 
 int TcpConnectionsWrapper::getNumberOfConnections() const

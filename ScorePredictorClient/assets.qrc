@@ -26,5 +26,6 @@
         <file>icons/icons8_Save.png</file>
         <file>icons/icons8_Delete_Accent.png</file>
         <file>icons/icons8_Minimize_Window.png</file>
+        <file>icons/icons8_Broom.png</file>
     </qresource>
 </RCC>

@@ -34,8 +34,9 @@ public slots:
 signals:
     void finished();
     void pendingConnection(qintptr descriptor);
-    void updated();
     void quit();
+    void clientsIncreased();
+    void clientsDecreased();
 };
 
 #endif // TCPCONNECTIONSWRAPPER_H

@@ -20,6 +20,8 @@ bool TcpServer::startServer(quint16 port, const QHostAddress & address)
     for(int i=0; i<QThreadPool::globalInstance()->maxThreadCount(); i++)
         createConnectionPool();
 
+    emit started();
+
     return true;
 }
 
@@ -31,6 +33,8 @@ void TcpServer::closeServer()
     emit quit();
     qDebug() << "Terminating listening";
     close();
+
+    emit closed();
 }
 
 void TcpServer::createConnectionPool()
@@ -41,7 +45,10 @@ void TcpServer::createConnectionPool()
     connect(this, &TcpServer::quit, pool, &TcpConnectionsWrapper::close);
     connect(pool, &TcpConnectionsWrapper::finished, this, &TcpServer::poolFinished);
     connect(this, &TcpServer::connectionPending, pool, &TcpConnectionsWrapper::connectionPending);
-    connect(pool, &TcpConnectionsWrapper::updated, this, &TcpServer::poolUpdated);
+    connect(pool, &TcpConnectionsWrapper::clientsIncreased, this, &TcpServer::clientsIncreased);
+    connect(pool, &TcpConnectionsWrapper::clientsDecreased, this, &TcpServer::clientsDecreased);
+    connect(pool, &TcpConnectionsWrapper::clientsIncreased, this, &TcpServer::poolUpdated);
+    connect(pool, &TcpConnectionsWrapper::clientsDecreased, this, &TcpServer::poolUpdated);
 }
 
 void TcpServer::incomingConnection(qintptr descriptor)
@@ -106,6 +113,11 @@ bool TcpServer::isSafeToTerminate()
         return true;
 
     return false;
+}
+
+QString TcpServer::lastError() const
+{
+    return errorString();
 }
 
 int TcpServer::numberOfClients() const

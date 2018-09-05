@@ -10,5 +10,6 @@
     <qresource prefix="/components">
         <file>SwitchButton.qml</file>
         <file>ToolTipIconButton.qml</file>
+        <file>LogsWidget.qml</file>
     </qresource>
 </RCC>

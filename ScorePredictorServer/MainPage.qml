@@ -70,6 +70,48 @@ Page {
         anchors.topMargin: 20
         anchors.bottomMargin: 20
         radius: 10
+
+        Text {
+            id: logsTitle
+            text: qsTr("Logs")
+            color: mainWindow.fontColor
+            font.pointSize: 25
+            font.bold: true
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 10
+        }
+
+        LogsWidget {
+            id: logs
+            color: mainWindow.colorB
+            fontColor: mainWindow.fontColor
+            fontSize: 12
+            dateTimeFontSize: 8
+            radius: 3
+            anchors.fill: parent
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 40
+            anchors.topMargin: 60
+
+            Component.onCompleted: logs.addLog(qsTr("Welcome!"))
+        }
+
+        ToolTipIconButton {
+            id: clearLogsButton
+            width: 30
+            height: 30
+            iconSource: "qrc://assets/icons/icons/icons8_Broom.png"
+            text: qsTr("Clear")
+            enabled: logs.numberOfLogs > 1 ? true : false
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.bottomMargin: 10
+
+            onClicked: logs.remove(1, logs.numberOfLogs - 1)
+        }
     }
 
     Rectangle {
@@ -143,6 +185,9 @@ Page {
                     }
 
                     startStopServerButton.state = server.startServer(chosenPort)
+
+                    if(!startStopServerButton.state)
+                        logs.addLog(qsTr("The following error occured: ") + qsTr(server.lastError()))
                 }
             }
         }
@@ -171,15 +216,15 @@ Page {
         MouseArea {
             id: portInputMouseArea
             hoverEnabled: true
-            cursorShape: Qt.IBeamCursor
+            cursorShape: startStopServerButton.state ? Qt.ArrowCursor : Qt.IBeamCursor
             anchors.fill: parent
         }
 
         Text {
             id: portInputPlaceholder
-            text: "00000"
+            text: qsTr("Number")
             color: mainWindow.fontColor
-            font.pointSize: 14
+            font.pointSize: 13
             font.bold: true
             opacity: 0.5
             visible: portInput.text.length === 0 && !portInput.activeFocus ? true : false
@@ -219,17 +264,36 @@ Page {
         anchors.verticalCenter: footerBar.verticalCenter
         anchors.left: startStopServerButtonBackground.right
         anchors.leftMargin: 70
-        property int numberOfUsersOnline: 50
+        property int numberOfUsersOnline: 0
     }
 
     Rectangle {
         width: 16
         height: 16
-        color: mainWindow.deniedColor
+        color: startStopServerButton.state ? mainWindow.acceptedColor : mainWindow.deniedColor
         border.width: 4
         border.color: mainWindow.backgroundColor
         radius: width / 2
         anchors.verticalCenter: footerBar.verticalCenter
         anchors.horizontalCenter: hideButton.horizontalCenter
+    }
+
+    Connections {
+        target: server
+
+        onStarted: logs.addLog(qsTr("Server started on port " + portInput.text + "."))
+        onClosed: logs.addLog(qsTr("Server was closed."))
+
+        onClientsIncreased: {
+            usersOnlineText.numberOfUsersOnline += 1
+            logs.addLog(qsTr("The user has connected to the server."))
+        }
+
+        onClientsDecreased: {
+            usersOnlineText.numberOfUsersOnline -= 1
+            logs.addLog(qsTr("The user has disconnected from the server."))
+        }
+
+        onAcceptError: logs.addLog(qsTr("Accepting the connection with the client resulted in an error."))
     }
 }
