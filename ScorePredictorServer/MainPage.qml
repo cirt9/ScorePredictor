@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import FileStream 1.0
 import "../components"
 
 Page {
@@ -84,11 +85,13 @@ Page {
 
         LogsWidget {
             id: logs
-            color: mainWindow.colorB
+            backgroundColor: mainWindow.colorB
+            backgroundRadius: 5
+            itemColor: mainWindow.colorB
             fontColor: mainWindow.fontColor
             fontSize: 12
             dateTimeFontSize: 8
-            radius: 3
+            itemRadius: 3
             anchors.fill: parent
             anchors.leftMargin: 20
             anchors.rightMargin: 20
@@ -100,31 +103,31 @@ Page {
 
         ToolTipIconButton {
             id: clearLogsButton
-            width: 30
-            height: 30
+            width: 25
+            height: 25
             iconSource: "qrc://assets/icons/icons/icons8_Broom.png"
             text: qsTr("Clear")
             enabled: logs.numberOfLogs > 1 ? true : false
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            anchors.rightMargin: 10
-            anchors.bottomMargin: 10
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 5
 
             onClicked: logs.remove(1, logs.numberOfLogs - 1)
         }
     }
 
     Rectangle {
-        id: messageForUsersLeftRadiusDisabler
-        width: messageForUsersArea.radius
-        color: messageForUsersArea.color
-        anchors.right: messageForUsersArea.right
-        anchors.top: messageForUsersArea.top
-        anchors.bottom: messageForUsersArea.bottom
+        id: startingMessageLeftRadiusDisabler
+        width: startingMessageArea.radius
+        color: startingMessageArea.color
+        anchors.right: startingMessageArea.right
+        anchors.top: startingMessageArea.top
+        anchors.bottom: startingMessageArea.bottom
     }
 
     Rectangle {
-        id: messageForUsersArea
+        id: startingMessageArea
         width: (parent.width / 2) - 10
         color: mainWindow.colorA
         anchors.right: parent.right
@@ -133,6 +136,60 @@ Page {
         anchors.topMargin: 20
         anchors.bottomMargin: 20
         radius: 10
+
+        FileStream {
+            id: startingMessageFile
+            source: "data/starting_message.txt"
+        }
+
+        Text {
+            id: startingMessageTitle
+            text: qsTr("Starting Message")
+            color: mainWindow.fontColor
+            font.pointSize: 25
+            font.bold: true
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 10
+        }
+
+        TextInputArea {
+            id: startingMessageInput
+            text: startingMessageFile.read()
+            backgroundColor: mainWindow.colorB
+            backgroundRadius: 5
+            fontSize: 12
+            fontColor: mainWindow.fontColor
+            counterFontSize: 10
+            maximumLength: 2500
+            charactersCounterVisible: true
+            scrollBarColor: mainWindow.colorB
+            scrollBarWidth: 10
+            scrollBarRadius: 10
+            selectByMouse: true
+            selectedTextColor: mainWindow.fontColor
+            selectionColor: mainWindow.accentColor
+            anchors.fill: parent
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 40
+            anchors.topMargin: 60
+        }
+
+        ToolTipIconButton {
+            id: saveStartingMessageButton
+            width: 25
+            height: 25
+            iconSource: "qrc://assets/icons/icons/icons8_Save.png"
+            text: qsTr("Save Starting Message")
+            enabled: startingMessageInput.text.length > 0 ? true : false
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 5
+
+            onClicked: startingMessageFile.write(startingMessageInput.text)
+        }
     }
 
     Rectangle {
@@ -244,6 +301,7 @@ Page {
             verticalAlignment: Text.AlignVCenter
             validator : RegExpValidator { regExp: /([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])/ }
             enabled: startStopServerButton.state ? false : true
+            activeFocusOnTab: true
             anchors.fill: parent
         }
 

@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     query.cpp \
     ../ScorePredictorClient/tournament.cpp \
     packetprocessor.cpp \
-    ../ScorePredictorClient/match.cpp
+    ../ScorePredictorClient/match.cpp \
+    ../ScorePredictorClient/filestream.cpp
 
 RESOURCES += qml.qrc \
     ../ScorePredictorClient/assets.qrc
@@ -48,4 +49,5 @@ HEADERS += \
     query.h \
     ../ScorePredictorClient/tournament.h \
     packetprocessor.h \
-    ../ScorePredictorClient/match.h
+    ../ScorePredictorClient/match.h \
+    ../ScorePredictorClient/filestream.h

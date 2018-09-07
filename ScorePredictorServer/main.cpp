@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQMLContext>
 #include <tcpserver.h>
+#include <../ScorePredictorClient/filestream.h>
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    qmlRegisterType<FileStream>("FileStream", 1, 0, "FileStream");
 
     QScopedPointer<TcpServer> server(new TcpServer);
     engine.rootContext()->setContextProperty("server", server.data());

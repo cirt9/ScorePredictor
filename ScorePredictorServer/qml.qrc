@@ -11,5 +11,6 @@
         <file>SwitchButton.qml</file>
         <file>ToolTipIconButton.qml</file>
         <file>LogsWidget.qml</file>
+        <file>TextInputArea.qml</file>
     </qresource>
 </RCC>

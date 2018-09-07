@@ -4,12 +4,20 @@ Item {
     id: root
     clip: true
 
-    property color color: "black"
+    property alias backgroundColor: background.color
+    property alias backgroundRadius: background.radius
+    property color itemColor: "black"
     property color fontColor: "white"
     property int fontSize: 12
     property int dateTimeFontSize: 8
-    property int radius: 0
+    property int itemRadius: 0
     property int numberOfLogs: logsModel.count
+
+    Rectangle {
+        id: background
+        opacity: 0.2
+        anchors.fill: parent
+    }
 
     ListView {
         id: logsView
@@ -17,6 +25,7 @@ Item {
         delegate: logDelegate
         spacing: 5
         anchors.fill: parent
+        anchors.margins: 5
     }
 
     Component {
@@ -26,8 +35,8 @@ Item {
             id: delegateBackground
             width: logsView.width
             height: delegateDateTime.contentHeight + delegateText.contentHeight + 7
-            color: root.color
-            radius: root.radius
+            color: root.itemColor
+            radius: root.itemRadius
 
             Text {
                 id: delegateDateTime
