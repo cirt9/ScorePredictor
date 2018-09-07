@@ -8,6 +8,8 @@ namespace Client
 
         connect(packetProcessor, &Client::PacketProcessor::requestError,
                 this, &PacketProcessorWrapper::requestError);
+        connect(packetProcessor, &Client::PacketProcessor::startingMessageArrived,
+                this, &PacketProcessorWrapper::startingMessageArrived);
         connect(packetProcessor, &Client::PacketProcessor::registrationReply,
                 this, &PacketProcessorWrapper::registrationReply);
         connect(packetProcessor, &Client::PacketProcessor::loggingReply,

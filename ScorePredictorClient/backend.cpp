@@ -43,6 +43,13 @@ void BackEnd::disconnectFromServer()
     emit clientWrapper->disconnectFromServer();
 }
 
+void BackEnd::downloadStartingMessage()
+{
+    QVariantList data;
+    data << Packet::ID_DOWNLOAD_STARTING_MESSAGE;
+    emit clientWrapper->sendData(data);
+}
+
 void BackEnd::login(const QString & nickname, const QString & password)
 {
     QVariantList data;

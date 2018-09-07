@@ -112,6 +112,7 @@ Page {
         onConnected: {
             connectingIndicator.running = false
             mainWindow.pushPage("qrc:/pages/LoggingPage.qml")
+            backend.downloadStartingMessage()
         }
 
         onServerClosed: {

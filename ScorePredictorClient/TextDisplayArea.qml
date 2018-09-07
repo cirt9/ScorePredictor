@@ -10,6 +10,7 @@ Item {
     property int textRightMargin: 10
     property alias fontSize: textDisplayArea.font.pointSize
     property alias textColor: textDisplayArea.color
+    property alias textHorizontalAlignment: textDisplayArea.horizontalAlignment
 
     ScrollView {
         id: scrollView
@@ -40,6 +41,7 @@ Item {
             id: textDisplayArea
             width: root.width - textRightMargin
             wrapMode: Text.Wrap
+            horizontalAlignment: Text.AlignLeft
         }
     }
 }

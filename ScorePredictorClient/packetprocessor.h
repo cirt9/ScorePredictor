@@ -15,6 +15,7 @@ namespace Client
 
     private:
         void manageReplyError(const QVariantList & errorData);
+        void manageDownloadingStartingMessageReply(const QVariantList & replyData);
         void manageRegistrationReply(const QVariantList & replyData);
         void manageLoggingReply(const QVariantList & replyData);
 
@@ -66,6 +67,7 @@ namespace Client
 
     signals:
         void requestError(const QString & errorMessage);
+        void startingMessageArrived(const QString & startingMessage);
         void registrationReply(bool replyState, const QString & message);
         void loggingReply(bool nicknameState, bool passwordState, const QString & message);
 

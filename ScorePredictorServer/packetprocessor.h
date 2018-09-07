@@ -21,6 +21,10 @@ namespace Server
     private:
         QSharedPointer<DbConnection> dbConnection;
 
+        const static QString STARTING_MESSAGE_PATH;
+        const static QString DEFAULT_AVATAR_PATH;
+
+        void manageDownloadingStartingMessage();
         void registerUser(const QVariantList & userData);
         void loginUser(const QVariantList & userData);
 

@@ -35,6 +35,7 @@ public:
     Q_INVOKABLE void connectToServer();
     Q_INVOKABLE void disconnectFromServer();
 
+    Q_INVOKABLE void downloadStartingMessage();
     Q_INVOKABLE void login(const QString & nickname, const QString & password);
     Q_INVOKABLE void registerAccount(const QString & nickname, const QString & password);
 

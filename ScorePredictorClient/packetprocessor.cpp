@@ -16,6 +16,7 @@ namespace Client
         switch(packetId)
         {
         case Packet::ID_ERROR: manageReplyError(data); break;
+        case Packet::ID_DOWNLOAD_STARTING_MESSAGE: manageDownloadingStartingMessageReply(data); break;
         case Packet::ID_REGISTER: manageRegistrationReply(data); break;
         case Packet::ID_LOGIN: manageLoggingReply(data); break;
         case Packet::ID_DOWNLOAD_USER_PROFILE_INFO: manageUserInfoReply(data); break;
@@ -55,6 +56,11 @@ namespace Client
     void PacketProcessor::manageReplyError(const QVariantList & errorData)
     {
         emit requestError(errorData[0].toString());
+    }
+
+    void PacketProcessor::manageDownloadingStartingMessageReply(const QVariantList & replyData)
+    {
+        emit startingMessageArrived(replyData[0].toString());
     }
 
     void PacketProcessor::manageRegistrationReply(const QVariantList & replyData)

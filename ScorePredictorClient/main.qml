@@ -37,30 +37,86 @@ ApplicationWindow {
 
         PopupBox {
             id: errorPopup
-            width: 600
-            height: 200
+            width: 450
+            height: 250
+
+            Text {
+                id: errorPopupTitle
+                text: qsTr("Error")
+                color: mainWindow.fontColor
+                font.bold: true
+                font.pointSize: 25
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 15
+            }
 
             TextEdit {
-                id: popupText
+                id: errorPopupText
                 font.pointSize: 12
-                color: fontColor
+                color: mainWindow.fontColor
                 readOnly: true
                 wrapMode: TextEdit.Wrap
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors.fill: parent
+                anchors.topMargin: 70
+                anchors.leftMargin: 15
+                anchors.rightMargin: 15
+                anchors.bottomMargin: 15
             }
         }
+    }
 
-        Connections {
-            target: packetProcessor
-            onRequestError: {
-                backend.disconnectFromServer()
-                showErrorPopup(errorMessage)
+    Item {
+        width: startingMessagePopup.width
+        height: startingMessagePopup.height
+        anchors.centerIn: parent
+
+        PopupBox {
+            id: startingMessagePopup
+            width: 600
+            height: 300
+
+            Text {
+                id: startingMessagePopupTitle
+                text: qsTr("Starting Message")
+                color: mainWindow.fontColor
+                font.bold: true
+                font.pointSize: 25
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 15
             }
+
+            TextDisplayArea {
+                id: startingMessagePopupText
+                fontSize: 12
+                textColor: mainWindow.fontColor
+                scrollBarColor: mainWindow.colorB
+                scrollBarWidth: 8
+                textRightMargin: 9
+                textHorizontalAlignment: Text.AlignHCenter
+                anchors.fill: parent
+                anchors.leftMargin: 29
+                anchors.rightMargin: 22
+                anchors.bottomMargin: 15
+                anchors.topMargin: 70
+            }
+        }
+    }
+
+    Connections {
+        target: packetProcessor
+
+        onRequestError: {
+            backend.disconnectFromServer()
+            showErrorPopup(errorMessage)
+        }
+
+        onStartingMessageArrived: {
+            startingMessagePopupText.text = startingMessage
+            startingMessagePopup.open()
         }
     }
 
@@ -108,7 +164,7 @@ ApplicationWindow {
 
     function showErrorPopup(message)
     {
-        popupText.text = message
+        errorPopupText.text = message
         errorPopup.open()
     }
 

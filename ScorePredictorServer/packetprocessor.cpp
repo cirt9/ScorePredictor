@@ -2,6 +2,9 @@
 
 namespace Server
 {
+    const QString PacketProcessor::STARTING_MESSAGE_PATH = QString("data/starting_message.txt");
+    const QString PacketProcessor::DEFAULT_AVATAR_PATH = QString("avatars/default_avatar.png");
+
     PacketProcessor::PacketProcessor(QSharedPointer<DbConnection> connection, QObject * parent) : QObject(parent)
     {
         dbConnection = connection;
@@ -18,6 +21,7 @@ namespace Server
 
         switch(packetId)
         {
+        case Packet::ID_DOWNLOAD_STARTING_MESSAGE: manageDownloadingStartingMessage(); break;
         case Packet::ID_REGISTER: registerUser(data); break;
         case Packet::ID_LOGIN: loginUser(data); break;
         case Packet::ID_DOWNLOAD_USER_PROFILE_INFO: manageDownloadingUserInfo(data); break;
@@ -44,6 +48,27 @@ namespace Server
 
         default: break;
         }
+    }
+
+    void PacketProcessor::manageDownloadingStartingMessage()
+    {
+        QVariantList responseData;
+        QFile file(STARTING_MESSAGE_PATH);
+
+        if(!file.open(QIODevice::ReadOnly))
+            responseData << Packet::ID_ERROR << QString("Couldn't load starting message.");
+        else
+        {
+            QTextStream fileStream(&file);
+            fileStream.setCodec("UTF-8");
+
+            QString startingMessage = fileStream.readAll();
+
+            file.close();
+            responseData << Packet::ID_DOWNLOAD_STARTING_MESSAGE << startingMessage;
+        }
+
+        emit response(responseData);
     }
 
     void PacketProcessor::registerUser(const QVariantList & userData)
@@ -202,9 +227,8 @@ namespace Server
             unsigned int userId = query.value("id").toUInt();
 
             query.findUserProfileAvatarPath(userId);
-            QString defaultAvatarPath = "avatars/default_avatar.png";
             QString oldAvatarPath = query.value("avatar_path").toString();
-            QString newAvatarPath = defaultAvatarPath.left(defaultAvatarPath.lastIndexOf('/')) + "/" +
+            QString newAvatarPath = DEFAULT_AVATAR_PATH.left(DEFAULT_AVATAR_PATH.lastIndexOf('/')) + "/" +
                                     requestData[0].toString() + "." + requestData[2].toString();
 
             QImage avatar;
@@ -212,7 +236,7 @@ namespace Server
 
             if(!avatar.isNull())
             {
-                if(oldAvatarPath != defaultAvatarPath)
+                if(oldAvatarPath != DEFAULT_AVATAR_PATH)
                 {
                     QFile oldAvatar(oldAvatarPath);
                     oldAvatar.remove();
