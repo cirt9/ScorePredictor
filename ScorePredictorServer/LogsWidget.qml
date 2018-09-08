@@ -11,6 +11,7 @@ Item {
     property int fontSize: 12
     property int dateTimeFontSize: 8
     property int itemRadius: 0
+    property real itemOpacity: 1.0
     property int numberOfLogs: logsModel.count
 
     Rectangle {
@@ -31,12 +32,18 @@ Item {
     Component {
         id: logDelegate
 
-        Rectangle {
-            id: delegateBackground
+        Item {
+            id: delegateItem
             width: logsView.width
             height: delegateDateTime.contentHeight + delegateText.contentHeight + 7
-            color: root.itemColor
-            radius: root.itemRadius
+
+            Rectangle {
+                id: delegateBackground
+                color: root.itemColor
+                radius: root.itemRadius
+                opacity: root.itemOpacity
+                anchors.fill: parent
+            }
 
             Text {
                 id: delegateDateTime

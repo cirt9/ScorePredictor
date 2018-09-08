@@ -27,5 +27,6 @@
         <file>icons/icons8_Delete_Accent.png</file>
         <file>icons/icons8_Minimize_Window.png</file>
         <file>icons/icons8_Broom.png</file>
+        <file>icons/tray_icon.jpg</file>
     </qresource>
 </RCC>

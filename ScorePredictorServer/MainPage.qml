@@ -92,6 +92,7 @@ Page {
             fontSize: 12
             dateTimeFontSize: 8
             itemRadius: 3
+            itemOpacity: 0.5
             anchors.fill: parent
             anchors.leftMargin: 20
             anchors.rightMargin: 20

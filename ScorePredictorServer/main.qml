@@ -28,7 +28,7 @@ ApplicationWindow {
 
     SystemTrayIcon {
         visible: true
-        iconSource: "qrc://assets/icons/icons/icons8_About.png"
+        iconSource: "qrc://assets/icons/icons/tray_icon.jpg"
         tooltip: "Score Predictor Server"
         menu: Menu {
 
