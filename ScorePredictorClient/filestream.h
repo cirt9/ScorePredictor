@@ -24,6 +24,10 @@ public:
 
 signals:
     void sourceChanged();
+    void readingError(const QString & error);
+    void writingError(const QString & error);
+    void readingSuccess();
+    void writingSuccess();
 };
 
 #endif // FILESTREAM_H

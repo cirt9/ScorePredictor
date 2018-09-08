@@ -140,6 +140,20 @@ Page {
         FileStream {
             id: startingMessageFile
             source: "data/starting_message.txt"
+
+            onReadingError: startingMessageInput.text = qsTr("Couldn't read starting message.")
+
+            onWritingSuccess: {
+                startingMessageResponseText.text = qsTr("Starting message has been saved.")
+                animateShowingStartingMessageResponseText.start()
+                startingMessageResponseTimer.restart()
+            }
+
+            onWritingError: {
+                startingMessageResponseText.text = qsTr(error)
+                animateShowingStartingMessageResponseText.start()
+                startingMessageResponseTimer.restart()
+            }
         }
 
         Text {
@@ -174,6 +188,45 @@ Page {
             anchors.rightMargin: 20
             anchors.bottomMargin: 40
             anchors.topMargin: 60
+        }
+
+        Text {
+            id: startingMessageResponseText
+            color: mainWindow.fontColor
+            font.pointSize: 10
+            font.bold: true
+            opacity: 0.0
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 20
+            anchors.bottomMargin: 10
+
+            NumberAnimation {
+                id: animateShowingStartingMessageResponseText
+                target: startingMessageResponseText
+                property: "opacity"
+                from: startingMessageResponseText.opacity
+                to: 1.0
+                duration: 200
+                easing.type: Easing.Linear
+            }
+
+            NumberAnimation {
+                id: animateHidingStartingMessageResponseText
+                target: startingMessageResponseText
+                property: "opacity"
+                from: startingMessageResponseText.opacity
+                to: 0.0
+                duration: 200
+                easing.type: Easing.Linear
+            }
+
+            Timer {
+                id: startingMessageResponseTimer
+                interval: 5000
+
+                onTriggered: animateHidingStartingMessageResponseText.start()
+            }
         }
 
         ToolTipIconButton {
