@@ -5,11 +5,6 @@ import FileStream 1.0
 Page {
     id: aboutPage
 
-    FileStream {
-        id: aboutFile
-        source: ":/txt/about.txt"
-    }
-
     Text {
         id: title
         text: qsTr("About")
@@ -19,6 +14,11 @@ Page {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 10
+    }
+
+    FileStream {
+        id: aboutFile
+        source: ":/txt/about.txt"
     }
 
     TextEdit {

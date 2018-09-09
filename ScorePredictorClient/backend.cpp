@@ -19,8 +19,6 @@ BackEnd::BackEnd(QObject * parent) : QObject(parent)
     workerThread->start();
     clientWrapper->getClient()->moveToThread(workerThread);
     packetProcessorWrapper->getPacketProcessor()->moveToThread(workerThread);
-
-    connectToServer();
 }
 
 void BackEnd::close()
@@ -33,9 +31,9 @@ void BackEnd::close()
     qDebug() << "Closing";
 }
 
-void BackEnd::connectToServer()
+void BackEnd::connectToServer(const QString & address, unsigned int port)
 {
-    emit clientWrapper->connectToServer(QHostAddress("127.0.0.1"), 5000);
+    emit clientWrapper->connectToServer(QHostAddress(address), port);
 }
 
 void BackEnd::disconnectFromServer()

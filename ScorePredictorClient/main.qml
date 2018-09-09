@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
+import FileStream 1.0
 import "components"
 import "pages"
 
@@ -12,7 +13,6 @@ ApplicationWindow {
     height: Screen.desktopAvailableHeight / 1.5
     minimumWidth: 1150
     minimumHeight: 650
-    onClosing: closeApp()
 
     property color backgroundColor: "#212027"
     property color accentColor: "#E8CDD0"
@@ -23,12 +23,14 @@ ApplicationWindow {
     property color acceptedColor: "green"
     property color deniedColor: "#d1474e"
     property int serverResponseWaitingTimeMsec: 60000
+    property var config: new Object
+    signal configurationChanged()
 
     StackView {
-       id: pagesView
-       anchors.fill: parent
-       initialItem: ConnectingPage {}
-   }
+        id: pagesView
+        anchors.fill: parent
+        initialItem: ConnectingPage {}
+    }
 
     Item {
         width: errorPopup.width
@@ -130,6 +132,18 @@ ApplicationWindow {
         anchors.bottomMargin: 15
     }
 
+    FileStream {
+        id: configFile
+        source: "config.txt"
+    }
+
+    onClosing: closeApp()
+
+    Component.onCompleted: {
+        mainWindow.loadConfig()
+        backend.connectToServer(mainWindow.config.ip, mainWindow.config.port)
+    }
+
     function pushPage(page)
     {
         pagesView.push(page)
@@ -184,5 +198,46 @@ ApplicationWindow {
 
         busyTimer.stop()
         mainWindow.stopBusyIndicator()
+    }
+
+    function saveConfig(newConfig)
+    {
+        setConfig(newConfig)
+
+        var configData = mainWindow.config.ip + ";" + mainWindow.config.port + ";" +
+                         mainWindow.config.fullScreenState + ";" + mainWindow.config.startingMessageState + ";"
+
+        configFile.write(configData)
+    }
+
+    function loadConfig()
+    {
+        var loadedData = configFile.read().split(";")
+        var loadedConfig = {}
+
+        loadedConfig.ip = loadedData[0]
+        loadedConfig.port = loadedData[1]
+        loadedConfig.fullScreenState = loadedData[2] === "true"
+        loadedConfig.startingMessageState = loadedData[3] === "true"
+
+        setConfig(loadedConfig)
+    }
+
+    function setConfig(newConfig)
+    {
+        mainWindow.config.ip = newConfig.ip
+        mainWindow.config.port = newConfig.port
+        mainWindow.config.fullScreenState = newConfig.fullScreenState
+        mainWindow.config.startingMessageState = newConfig.startingMessageState
+
+        mainWindow.processConfigChanges()
+    }
+
+    function processConfigChanges()
+    {
+        if(mainWindow.config.fullScreenState)
+            mainWindow.showFullScreen()
+        else
+            mainWindow.showNormal()
     }
 }

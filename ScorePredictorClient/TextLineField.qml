@@ -20,6 +20,7 @@ Rectangle {
     property alias selectByMouse: inputText.selectByMouse
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
+    property alias validator: inputText.validator
     property bool whitespacesAllowed: false
     signal focused()
 
@@ -48,6 +49,7 @@ Rectangle {
             {
                 if(inputText.text.length === 0)
                     animateMinimizingPlaceholder.start()
+
                 underline.color = underlineColorOnFocus
                 underline.height = 2
                 underline.opacity = 1.0
@@ -67,6 +69,7 @@ Rectangle {
                 underline.opacity = 0.3
             }
         }
+
         onTextChanged: {
             if(inputText.text.length === 0 && !focus)
             {
@@ -77,6 +80,11 @@ Rectangle {
             }
             if(!whitespacesAllowed)
                 inputText.text = inputText.text.split(' ').join('')
+        }
+
+        Component.onCompleted: {
+            if(inputText.text.length > 0)
+                animateMinimizingPlaceholder.start()
         }
 
         MouseArea {

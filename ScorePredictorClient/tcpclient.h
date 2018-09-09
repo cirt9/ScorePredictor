@@ -37,6 +37,7 @@ signals:
     void hostNotFound();
     void connectionRefused();
     void networkError();
+    void socketTimeoutError();
     void unidentifiedError();
     void packetArrived(const Packet & packet);
 };

@@ -32,7 +32,7 @@ public:
     ~BackEnd() {}
 
     Q_INVOKABLE void close();
-    Q_INVOKABLE void connectToServer();
+    Q_INVOKABLE void connectToServer(const QString & address, unsigned int port);
     Q_INVOKABLE void disconnectFromServer();
 
     Q_INVOKABLE void downloadStartingMessage();

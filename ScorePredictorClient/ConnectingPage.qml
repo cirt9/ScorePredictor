@@ -71,7 +71,7 @@ Page {
                 disableButtons()
                 stateMessage.hidden = true
                 connectingIndicator.running = true
-                backend.connectToServer()
+                backend.connectToServer(mainWindow.config.ip, mainWindow.config.port)
             }
         }
 
@@ -112,7 +112,9 @@ Page {
         onConnected: {
             connectingIndicator.running = false
             mainWindow.pushPage("qrc:/pages/LoggingPage.qml")
-            backend.downloadStartingMessage()
+
+            if(mainWindow.config.startingMessageState)
+                backend.downloadStartingMessage()
         }
 
         onServerClosed: {
@@ -136,13 +138,30 @@ Page {
         onNetworkError: {
             mainWindow.popToInitialPage()
             enableButtons()
+
+            if(connectingIndicator.running)
+                connectingIndicator.running = false
+
             displayStateMessage(qsTr("Network Error"), mainWindow.deniedColor)
+        }
+
+        onSocketTimeoutError: {
+            enableButtons()
+
+            if(connectingIndicator.running)
+                connectingIndicator.running = false
+
+            if(stateMessage.hidden)
+                displayStateMessage(qsTr("The Connection Has Timed Out"), mainWindow.deniedColor)
         }
 
         onUnidentifiedError: {
             mainWindow.popToInitialPage()
             enableButtons()
-            connectingIndicator.running = false
+
+            if(connectingIndicator.running)
+                connectingIndicator.running = false
+
             displayStateMessage(qsTr("An Error Occured"), mainWindow.deniedColor)
         }
 

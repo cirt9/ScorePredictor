@@ -26,6 +26,7 @@ signals:
     void serverNotFound();
     void connectionRefused();
     void networkError();
+    void socketTimeoutError();
     void unidentifiedError();
     void sendData(const QVariantList & data);
 };
