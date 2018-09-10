@@ -36,7 +36,6 @@ Page {
                 selectedTextColor: mainWindow.fontColor
                 selectionColor: mainWindow.accentColor
                 underlineColorOnFocus: mainWindow.accentColor
-                underlineColorBadData: mainWindow.deniedColor
                 validator: RegExpValidator { regExp: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/ }
             }
 
@@ -52,7 +51,7 @@ Page {
                 selectedTextColor: mainWindow.fontColor
                 selectionColor: mainWindow.accentColor
                 underlineColorOnFocus: mainWindow.accentColor
-                underlineColorBadData: mainWindow.deniedColor
+                toolTipText: qsTr("Range") + ": [" + mainWindow.minPort + "-" + mainWindow.maxPort + "]"
                 validator : RegExpValidator { regExp: /([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])/ }
             }
         }
@@ -74,7 +73,22 @@ Page {
         }
     }
 
+    ResponseText {
+        id: savingConfigReplyText
+        acceptedColor: mainWindow.acceptedColor
+        deniedColor: mainWindow.deniedColor
+        fontSize: 10
+        bold: true
+        visibilityTime: 5000
+        showingDuration: 250
+        hidingDuration: 500
+        anchors.horizontalCenter: buttonsRow.horizontalCenter
+        anchors.bottom: buttonsRow.top
+        anchors.bottomMargin: 25
+    }
+
     Row {
+        id: buttonsRow
         spacing: 10
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -90,9 +104,12 @@ Page {
         Button {
             id: saveButton
             text: qsTr("Save")
-            enabled: ipInput.text.length > 0 && portInput.text.length > 0 ? true : false
+            enabled: ipInput.text.length > 0 && portInput.text.length > 0
 
             onClicked: {
+                if(parseInt(portInput.text) < mainWindow.minPort)
+                    portInput.text = mainWindow.minPort
+
                 var newConfig = {}
                 newConfig.ip = ipInput.text
                 newConfig.port = portInput.text
@@ -102,5 +119,12 @@ Page {
                 mainWindow.saveConfig(newConfig)
             }
         }
+    }
+
+    Connections {
+        target: mainWindow
+
+        onConfigSaved: savingConfigReplyText.showAcceptedResponse(qsTr("Configuration has been saved."))
+        onConfigSavingError: savingConfigReplyText.showDeniedResponse(qsTr(error))
     }
 }

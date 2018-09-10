@@ -23,8 +23,12 @@ ApplicationWindow {
     property color acceptedColor: "green"
     property color deniedColor: "#d1474e"
     property int serverResponseWaitingTimeMsec: 60000
+    readonly property int minPort: 1024
+    readonly property int maxPort: 65535
     property var config: new Object
     signal configurationChanged()
+    signal configSaved()
+    signal configSavingError(var error)
 
     StackView {
         id: pagesView
@@ -135,6 +139,9 @@ ApplicationWindow {
     FileStream {
         id: configFile
         source: "config.txt"
+
+        onWritingSuccess: mainWindow.configSaved();
+        onWritingError: mainWindow.configSavingError(error);
     }
 
     onClosing: closeApp()

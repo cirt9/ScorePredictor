@@ -1,4 +1,5 @@
 import QtQuick 2.9
+import QtQuick.Controls 2.3
 
 Rectangle {
     id: root
@@ -21,6 +22,7 @@ Rectangle {
     property alias maximumLength: inputText.maximumLength
     property alias echoMode: inputText.echoMode
     property alias validator: inputText.validator
+    property alias toolTipText: toolTip.text
     property bool whitespacesAllowed: false
     signal focused()
 
@@ -88,6 +90,7 @@ Rectangle {
         }
 
         MouseArea {
+            id: mouseArea
             anchors.fill: parent
             hoverEnabled: true
             acceptedButtons: Qt.NoButton
@@ -115,6 +118,12 @@ Rectangle {
         radius: 1
         opacity: 0.3
         anchors.bottom: parent.bottom
+    }
+
+    ToolTip {
+        id: toolTip
+        parent: root
+        visible: mouseArea.containsMouse && text.length > 0
     }
 
     ParallelAnimation {
