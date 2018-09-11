@@ -81,7 +81,7 @@ ApplicationWindow {
 
         PopupBox {
             id: startingMessagePopup
-            width: 600
+            width: 500
             height: 300
 
             Text {
