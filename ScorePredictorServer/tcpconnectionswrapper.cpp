@@ -20,8 +20,6 @@ TcpConnectionsWrapper::TcpConnectionsWrapper(QObject * parent) : QObject(parent)
 
     workerThread->start();
     connectionPool->moveToThread(workerThread);
-
-    qDebug() << "Connections starting in wrapper " << this;
 }
 
 TcpConnectionsWrapper::~TcpConnectionsWrapper()
@@ -31,8 +29,6 @@ TcpConnectionsWrapper::~TcpConnectionsWrapper()
 
 void TcpConnectionsWrapper::close()
 {
-    qDebug() << "Closing connection pool in wrapper" << this;
-
     emit quit();
 }
 
@@ -48,8 +44,6 @@ void TcpConnectionsWrapper::terminate()
 {
     workerThread->quit();
     workerThread->wait();
-
-    qDebug() << "Connection pool in" << this << "finished";
 
     emit finished();
 }

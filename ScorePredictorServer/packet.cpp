@@ -84,10 +84,6 @@ void Packet::unserialize(QDataStream & in)
         clean();
         return;
     }
-
-    qDebug() << "Packet data: ";
-    for(auto dataElement : data)
-        qDebug() << dataElement;
 }
 
 void Packet::validatePacket()

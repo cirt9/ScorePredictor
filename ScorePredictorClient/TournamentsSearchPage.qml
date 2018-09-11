@@ -367,6 +367,7 @@ Page {
                 textColor: mainWindow.fontColor
                 selectedTextColor: mainWindow.fontColor
                 selectionColor: mainWindow.accentColor
+                echoMode: TextInput.Password
                 underlineColorOnFocus: mainWindow.accentColor
                 anchors.centerIn: parent
             }

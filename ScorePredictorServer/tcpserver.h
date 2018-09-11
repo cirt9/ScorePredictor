@@ -6,15 +6,12 @@
 #include <QTimer>
 #include <tcpconnectionswrapper.h>
 
-#include <QDebug>
-
 class TcpServer : public QTcpServer
 {
     Q_OBJECT
 
 private:
     QList<TcpConnectionsWrapper *> connectionPools;
-    void info();
 
 protected:
     void incomingConnection(qintptr descriptor);

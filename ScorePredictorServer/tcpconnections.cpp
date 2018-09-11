@@ -4,7 +4,7 @@ QMutex TcpConnections::mutex;
 
 TcpConnections::TcpConnections(QObject * parent) : QObject(parent)
 {
-    qDebug() << "Connections created" << this;
+
 }
 
 void TcpConnections::init()
@@ -25,8 +25,6 @@ void TcpConnections::connectionStarted()
 
     if(!connection)
         return;
-
-    qDebug() << "Connection started" << this;
 }
 
 void TcpConnections::connectionFinished()
@@ -36,33 +34,24 @@ void TcpConnections::connectionFinished()
     if(!connection)
         return;
 
-    qDebug() << this << "Connection finished" << connection;
-
     connections.removeAll(connection);
     connection->deleteLater();
-
-    qDebug() << this << "Connection was removed";
 
     emit connectionsDecreased();
 }
 
 void TcpConnections::connectionPending(qintptr descriptor)
 {
-    qDebug() << this << "Accepting connection" << descriptor;
-
     QPointer<TcpConnection> connection = createConnection(descriptor);
 
     if(!connection)
-    {
-        qDebug() << "Could not add connection in " << this;
         return;
-    }
+
     emit connectionsIncreased();
 }
 
 void TcpConnections::close()
 {
-    qDebug() << this << "Closing connections";
     QMutexLocker locker(&mutex);
     dbConnection->close();
 
@@ -88,8 +77,6 @@ QPointer<TcpConnection> TcpConnections::createConnection(qintptr descriptor)
 
 void TcpConnections::processPacket(const Packet & packet)
 {
-    qDebug() << packet.getUnserializedData();
-
     QPointer<TcpConnection> connection = qobject_cast<TcpConnection *>(sender());
     Server::PacketProcessor * packetProcessor = new Server::PacketProcessor(dbConnection, this);
     connect(packetProcessor, &Server::PacketProcessor::response, connection, &TcpConnection::send);

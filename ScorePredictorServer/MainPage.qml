@@ -99,8 +99,10 @@ Page {
             anchors.bottomMargin: 40
             anchors.topMargin: 60
 
-            Component.onCompleted: logs.addLog(qsTr("Welcome! If you want someone to be able to connect to this " +
-                                                    "server, remember to set port forwarding on the router."))
+            Component.onCompleted: logs.addLog(qsTr("Welcome! If you want someone from global network to be " +
+                                                    "able to connect to this server, remember to set port " +
+                                                    "forwarding on the router. However for the local " +
+                                                    "network it is not required."))
         }
 
         ToolTipIconButton {

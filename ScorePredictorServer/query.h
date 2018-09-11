@@ -7,8 +7,6 @@
 #include <../ScorePredictorClient/tournament.h>
 #include <../ScorePredictorClient/match.h>
 
-#include <QDebug>
-
 class Query : public QSqlQuery
 {
 public:

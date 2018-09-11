@@ -78,24 +78,15 @@ namespace Server
         responseData << Packet::ID_REGISTER;
 
         if(query.isUserRegistered(userData[0].toString()))
-        {
-            qDebug() << "User is registered";
             responseData << false << QString("This nickname is already occupied");
-        }
         else
         {
-            qDebug() << "User is not registered";
             if(query.registerUser(userData[0].toString(), userData[1].toString()))
-            {
-                qDebug() << "User registered";
                 responseData << true << QString("Your account has been successfully created");
-            }
             else
-            {
-                qDebug() << "User not registered";
                 responseData << false << QString("A problem occured. Account could not be created");
-            }
         }
+
         emit response(responseData);
     }
 
@@ -107,25 +98,16 @@ namespace Server
 
         if(query.isUserRegistered(userData[0].toString()))
         {
-            qDebug() << "User exists";
             responseData << true;
 
             if(query.isPasswordCorrect(userData[0].toString(), userData[1].toString()))
-            {
-                qDebug() << "Password is correct";
                 responseData << true << userData[0].toString();
-            }
             else
-            {
-                qDebug() << "Invalid password";
                 responseData << false << QString("Invalid password");
-            }
         }
         else
-        {
-            qDebug() << "User does not exists";
             responseData << false << false << QString("Invalid nickname");
-        }
+
         emit response(responseData);
     }
 
@@ -167,15 +149,10 @@ namespace Server
         if(query.findUserId(userData[0].toString()))
         {
             if(opened)
-            {
-                qDebug() << "Request for ongoing tournaments";
                 responseData << Packet::ID_PULL_ONGOING_TOURNAMENTS;
-            }
             else
-            {
-                qDebug() << "Request for finished tournaments";
                 responseData << Packet::ID_PULL_FINISHED_TOURNAMENTS;
-            }
+
             query.findUserTournaments(query.value("id").toUInt(), opened);
 
             while(query.next())
@@ -277,32 +254,27 @@ namespace Server
         if(query.findUserId(tournament.getHostName()))
         {
             unsigned int hostId = query.value("id").toUInt();
-            qDebug() << "Host ID: " << hostId;
 
             if(!query.tournamentExists(tournament.getName(), hostId))
             {
                 if(tournament.getEntriesEndTime() < QDateTime::currentDateTime())
                 {
-                    qDebug() << "Entries end time must be greater than the current time";
                     responseData << Packet::ID_CREATE_TOURNAMENT << false
                                  << QString("Entries end time must be greater than the current time");
                 }
                 else if(query.createTournament(tournament, hostId, tournamentData[1].toString()))
                 {
-                    qDebug() << "New tournament created";
                     responseData << Packet::ID_CREATE_TOURNAMENT << true
                                  << QString("Tournament created successfully");
                 }
                 else
                 {
-                    qDebug() << "Tournament couldn't be created";
                     responseData << Packet::ID_CREATE_TOURNAMENT << false
                                  << QString("Tournament couldn't be created. Try again later.");
                 }
             }
             else
             {
-                qDebug() << "User already created tournament with the same name";
                 responseData << Packet::ID_CREATE_TOURNAMENT << false <<
                                 QString("You can't create two tournaments with the same name!");
             }
@@ -324,15 +296,9 @@ namespace Server
             QDateTime startFromTime;
 
             if(requestData.size() == 4)
-            {
-                qDebug() << "Pulling another found tournaments pages";
                 startFromTime = requestData[3].toDateTime();
-            }
             else
-            {
-                qDebug() << "Pulling found tournaments pages";
                 startFromTime = QDateTime::currentDateTime();
-            }
 
             query.findTournaments(query.value("id").toUInt(), startFromTime, requestData[1].toInt(),
                                   requestData[2].toString());

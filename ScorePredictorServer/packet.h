@@ -5,8 +5,6 @@
 #include <QVariantList>
 #include <QDataStream>
 
-#include <QDebug>
-
 class Packet
 {
 private:

@@ -5,8 +5,6 @@
 #include <tournament.h>
 #include <match.h>
 
-#include <QDebug>
-
 namespace Client
 {
     class PacketProcessor : public QObject

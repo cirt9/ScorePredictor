@@ -1,8 +1,8 @@
 #ifndef TCPCLIENTWRAPPER_H
 #define TCPCLIENTWRAPPER_H
 
-#include <tcpclient.h>
 #include <QHostAddress>
+#include <tcpclient.h>
 
 class TcpClientWrapper : public QObject
 {

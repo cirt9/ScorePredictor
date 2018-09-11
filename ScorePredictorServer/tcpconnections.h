@@ -2,16 +2,15 @@
 #define TCPCONNECTIONS_H
 
 #include <QObject>
-#include <tcpconnection.h>
-#include <dbconnection.h>
+#include <QSharedPointer>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QPointer>
+#include <tcpconnection.h>
+#include <dbconnection.h>
 #include <packet.h>
 #include <packetprocessor.h>
-#include <QSharedPointer>
 
-#include <QDebug>
 
 class TcpConnections : public QObject
 {

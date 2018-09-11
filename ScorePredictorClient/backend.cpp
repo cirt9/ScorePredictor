@@ -23,12 +23,8 @@ BackEnd::BackEnd(QObject * parent) : QObject(parent)
 
 void BackEnd::close()
 {
-    qDebug() << "Quitting thread";
-
     workerThread->quit();
     workerThread->wait();
-
-    qDebug() << "Closing";
 }
 
 void BackEnd::connectToServer(const QString & address, unsigned int port)

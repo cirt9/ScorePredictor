@@ -4,8 +4,6 @@
 #include <QTcpSocket>
 #include <packet.h>
 
-#include <QDebug>
-
 class TcpConnection : public QObject
 {
     Q_OBJECT

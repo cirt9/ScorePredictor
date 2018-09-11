@@ -1,11 +1,10 @@
 #ifndef DBCONNECTION_H
 #define DBCONNECTION_H
 
+#include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-
-#include <QDebug>
 
 class DbConnection : public QObject
 {

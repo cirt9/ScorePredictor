@@ -1,16 +1,17 @@
 #ifndef PACKETPROCESSOR_H
 #define PACKETPROCESSOR_H
 
-#include <packet.h>
-#include <dbconnection.h>
 #include <query.h>
 #include <QSharedPointer>
-#include <../ScorePredictorClient/tournament.h>
-#include <../ScorePredictorClient/match.h>
 #include <QBuffer>
 #include <QImage>
 #include <QFile>
 #include <QFileInfo>
+#include <QTextStream>
+#include <packet.h>
+#include <dbconnection.h>
+#include <../ScorePredictorClient/tournament.h>
+#include <../ScorePredictorClient/match.h>
 
 namespace Server
 {

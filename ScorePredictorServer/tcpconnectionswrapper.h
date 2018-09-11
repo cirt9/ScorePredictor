@@ -5,8 +5,6 @@
 #include <QThread>
 #include <tcpconnections.h>
 
-#include <QDebug>
-
 class TcpConnectionsWrapper : public QObject
 {
     Q_OBJECT

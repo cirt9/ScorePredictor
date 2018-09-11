@@ -35,18 +35,16 @@ void TcpClient::disconnectFromServer()
     if(!(socket->state() == QTcpSocket::ConnectedState))
         return;
 
-    qDebug() << "Disconnecting from server";
     socket->disconnectFromHost();
 }
 
 void TcpClient::connected()
 {
-    qDebug() << "Connected";
+
 }
 
 void TcpClient::disconnected()
 {
-    qDebug() << "Disconnected";
     emit finished();
 }
 
@@ -58,28 +56,21 @@ void TcpClient::read()
     if(nextPacketSize == 0)
     {
         if(socket->bytesAvailable() < sizeof(quint16))
-        {
-            qDebug() << "No bytes to read.";
             return;
-        }
+
         in >> nextPacketSize;
-        qDebug() << "Packet size: " << nextPacketSize;
     }
 
     if(socket->bytesAvailable() < nextPacketSize)
-    {
-        qDebug() << "Not enough bytes to read packet. Bytes: " << socket->bytesAvailable() << "Packet size: " << nextPacketSize;
         return;
-    }
 
     Packet packet(in);
+
     if(packet.isCorrupted())
-    {
         flushSocket();
-        qDebug() << packet.lastError();
-    }
     else
         emit packetArrived(packet);
+
     nextPacketSize = 0;
 
     if(socket->bytesAvailable() >= sizeof(quint16))
@@ -91,14 +82,10 @@ void TcpClient::send(const QVariantList & data)
     if(socket->state() != QTcpSocket::ConnectedState)
         return;
 
-    qDebug() << "Sending data:" << data;
-
     Packet packet(data);
 
     if(!packet.isCorrupted())
         socket->write(packet.getSerializedData());
-    else
-        qDebug() << packet.lastError();
 }
 
 void TcpClient::flushSocket()
@@ -109,13 +96,11 @@ void TcpClient::flushSocket()
 
 void TcpClient::stateChanged(QAbstractSocket::SocketState state)
 {
-    qDebug() << "State changed" << state;
+    Q_UNUSED(state)
 }
 
 void TcpClient::error(QAbstractSocket::SocketError error)
 {
-    qDebug() << "Error:" << error;
-
     if(error == QAbstractSocket::RemoteHostClosedError)
         emit remoteHostClosed();
 
